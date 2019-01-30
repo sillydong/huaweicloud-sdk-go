@@ -5,11 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/gophercloud/gophercloud"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
 
-	"github.com/gophercloud/gophercloud/openstack/compute/v2/flavors"
-	"github.com/gophercloud/gophercloud/openstack/compute/v2/images"
-	"github.com/gophercloud/gophercloud/pagination"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/compute/v2/flavors"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/compute/v2/images"
+	"github.com/huaweicloud/huaweicloud-sdk-go/pagination"
 )
 
 // ListOptsBuilder allows extensions to add additional parameters to the
@@ -228,7 +228,6 @@ type CreateOpts struct {
 
 	// whether support return server reservation_id .
 	ReturnReservationID *bool `json:"return_reservation_id,omitempty"`
-
 }
 
 // ToServerCreateMap assembles a request body based on the contents of a

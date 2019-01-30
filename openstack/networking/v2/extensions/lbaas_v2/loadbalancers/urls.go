@@ -1,12 +1,12 @@
 package loadbalancers
 
-import "github.com/gophercloud/gophercloud"
+import "github.com/huaweicloud/huaweicloud-sdk-go"
 
 const (
 	rootPath     = "lbaas"
 	resourcePath = "loadbalancers"
 	statusPath   = "statuses"
-	statsPath = "stats"
+	statsPath    = "stats"
 )
 
 func rootURL(c *gophercloud.ServiceClient) string {
@@ -21,6 +21,6 @@ func statusRootURL(c *gophercloud.ServiceClient, id string) string {
 	return c.ServiceURL(rootPath, resourcePath, id, statusPath)
 }
 
-func statsRootURL(c *gophercloud.ServiceClient,id string)string{
-	return c.ServiceURL(rootPath,resourcePath,id,statsPath)
+func statsRootURL(c *gophercloud.ServiceClient, id string) string {
+	return c.ServiceURL(rootPath, resourcePath, id, statsPath)
 }

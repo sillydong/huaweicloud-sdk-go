@@ -3,10 +3,10 @@ package testing
 import (
 	"testing"
 
-	fake "github.com/gophercloud/gophercloud/openstack/networking/v2/common"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/portsbinding"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/ports"
-	th "github.com/gophercloud/gophercloud/testhelper"
+	fake "github.com/huaweicloud/huaweicloud-sdk-go/openstack/networking/v2/common"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/networking/v2/extensions/portsbinding"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/networking/v2/ports"
+	th "github.com/huaweicloud/huaweicloud-sdk-go/testhelper"
 )
 
 func TestList(t *testing.T) {
@@ -37,9 +37,11 @@ func TestList(t *testing.T) {
 						IPAddress: "172.24.4.2",
 					},
 				},
-				ID:             "d80b1a3b-4fc1-49f3-952e-1e2ab7081d8b",
-				SecurityGroups: []string{},
-				DeviceID:       "9ae135f4-b6e0-4dad-9e91-3c223e385824",
+				ID:              "d80b1a3b-4fc1-49f3-952e-1e2ab7081d8b",
+				SecurityGroups:  []string{},
+				DeviceID:        "9ae135f4-b6e0-4dad-9e91-3c223e385824",
+				BindingHostId:   "devstack",
+				BindingVnicType: "normal",
 			},
 			PortsBindingExt: portsbinding.PortsBindingExt{
 				VNICType: "normal",

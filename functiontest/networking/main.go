@@ -2,14 +2,15 @@ package main
 
 import (
 	"fmt"
-	"github.com/gophercloud/gophercloud/functiontest/common"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/lbaas_v2/pools"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/networks"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/ports"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/nat"
+	"github.com/huaweicloud/huaweicloud-sdk-go/functiontest/common"
+
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/networking/v2/extensions/lbaas_v2/pools"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/networking/v2/nat"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/networking/v2/networks"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/networking/v2/ports"
 )
 
 func main() {
@@ -49,20 +50,17 @@ func main() {
 	fmt.Println("main end...")
 }
 
+func TestNatGatwayCreate(sc *gophercloud.ServiceClient) {
 
-
-func TestNatGatwayCreate(sc *gophercloud.ServiceClient){
-
-
-	opts:=nat.CreateOpts{
-		Description:"thisistest",
-		Name:"newgateway",
-		Spec:"1",
-		RouterId:"2342342134",
-		InternalNetworkId:"3d34r23erd",
+	opts := nat.CreateOpts{
+		Description:       "thisistest",
+		Name:              "newgateway",
+		Spec:              "1",
+		RouterId:          "2342342134",
+		InternalNetworkId: "3d34r23erd",
 	}
 
-	resp,err:=nat.CreateNatGateway(sc,opts).Extract()
+	resp, err := nat.CreateNatGateway(sc, opts).Extract()
 
 	if err != nil {
 		fmt.Println(err)
@@ -76,13 +74,6 @@ func TestNatGatwayCreate(sc *gophercloud.ServiceClient){
 	fmt.Println("Pools Create nat success!")
 	fmt.Println("member:", resp)
 }
-
-
-
-
-
-
-
 
 func TestPoolsListPorts(sc *gophercloud.ServiceClient) {
 	allPages, err := ports.List(sc, &ports.ListOpts{}).AllPages()

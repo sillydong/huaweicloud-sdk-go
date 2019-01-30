@@ -1,8 +1,8 @@
 package certificates
 
 import (
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/pagination"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/pagination"
 )
 
 type ListOptsBuilder interface {
@@ -12,7 +12,7 @@ type ListOptsBuilder interface {
 type ListOpts struct {
 	Marker      string `q:"marker"`
 	Limit       int    `q:"limit"`
-	PageReverse *bool   `q:"page_reverse"`
+	PageReverse *bool  `q:"page_reverse"`
 }
 
 func (opts ListOpts) ToPolicyListMap() (string, error) {

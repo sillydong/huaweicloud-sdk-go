@@ -5,12 +5,12 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/gophercloud/gophercloud"
-	fake "github.com/gophercloud/gophercloud/openstack/networking/v2/common"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/provider"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/networks"
-	nettest "github.com/gophercloud/gophercloud/openstack/networking/v2/networks/testing"
-	th "github.com/gophercloud/gophercloud/testhelper"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	fake "github.com/huaweicloud/huaweicloud-sdk-go/openstack/networking/v2/common"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/networking/v2/extensions/provider"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/networking/v2/networks"
+	nettest "github.com/huaweicloud/huaweicloud-sdk-go/openstack/networking/v2/networks/testing"
+	th "github.com/huaweicloud/huaweicloud-sdk-go/testhelper"
 )
 
 func TestList(t *testing.T) {
@@ -102,7 +102,7 @@ func TestCreate(t *testing.T) {
 	th.AssertEquals(t, "db193ab3-96e3-4cb3-8fc5-05f4296d0324", s.ID)
 	th.AssertEquals(t, "", s.PhysicalNetwork)
 	th.AssertEquals(t, "local", s.NetworkType)
-	th.AssertEquals(t, "9876543210", s.SegmentationID)
+	th.AssertEquals(t, "1234567890", s.SegmentationID)
 }
 
 func TestCreateWithMultipleProvider(t *testing.T) {

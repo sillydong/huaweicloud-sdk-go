@@ -2,17 +2,18 @@ package main
 
 import (
 	"fmt"
-	"github.com/gophercloud/gophercloud/functiontest/common"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack"
-	"github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/bootfromvolume"
-	"github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/bootwithscheduler"
-	"github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/schedulerhints"
-	"github.com/gophercloud/gophercloud/openstack/compute/v2/servers"
-	"github.com/gophercloud/gophercloud/openstack/compute/v2/serversext"
+	"github.com/huaweicloud/huaweicloud-sdk-go/functiontest/common"
 
-	tokens3 "github.com/gophercloud/gophercloud/openstack/identity/v3/tokens"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/compute/v2/extensions/bootfromvolume"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/compute/v2/extensions/bootwithscheduler"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/compute/v2/extensions/schedulerhints"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/compute/v2/servers"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/compute/v2/serversext"
+
+	tokens3 "github.com/huaweicloud/huaweicloud-sdk-go/openstack/identity/v3/tokens"
 )
 
 func main() {
@@ -52,21 +53,19 @@ func main() {
 	fmt.Println("main end...")
 }
 
-func TestServerextGET(sc *gophercloud.ServiceClient)  {
+func TestServerextGET(sc *gophercloud.ServiceClient) {
 
-	ID:="93899eb0-f092-4e74-bef1-0a8cf0ee4e16"
-	resp,err:=serversext.Get(sc,ID)
+	ID := "93899eb0-f092-4e74-bef1-0a8cf0ee4e16"
+	resp, err := serversext.Get(sc, ID)
 
-	if err!=nil{
+	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
 	fmt.Println(resp)
 
-
 }
-
 
 func TestListBrief(sc *gophercloud.ServiceClient) {
 	allPages, err := servers.ListBrief(sc, servers.ListOpts{Limit: 3}).AllPages()
@@ -163,9 +162,9 @@ func TestExtGet(sc *gophercloud.ServiceClient) {
 	//fmt.Println("serverExt.Addresses['addr']:", )
 }
 
-func TestDelete(sc *gophercloud.ServiceClient)  {
+func TestDelete(sc *gophercloud.ServiceClient) {
 
-		serverId := "73238006-4b4b-4b93-b93e-f78404495e3b" //"1778e268-b577-430b-90e4-b656cc997290"
+	serverId := "73238006-4b4b-4b93-b93e-f78404495e3b" //"1778e268-b577-430b-90e4-b656cc997290"
 	err := servers.Delete(sc, serverId).ExtractErr()
 	if err != nil {
 		fmt.Println("err:", err)
@@ -179,7 +178,6 @@ func TestDelete(sc *gophercloud.ServiceClient)  {
 	fmt.Println("ext delete success!")
 
 }
-
 
 func TestGet(sc *gophercloud.ServiceClient) {
 	server, err := servers.Get(sc, "2251f59c-b1ef-4398-bfa8-321782f670a5").Extract()

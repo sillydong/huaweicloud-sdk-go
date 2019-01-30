@@ -1,12 +1,13 @@
 package testing
 
 import (
-	"testing"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/lbaas_v2/whitelist"
-	th "github.com/gophercloud/gophercloud/testhelper"
-	"net/http"
-	"github.com/gophercloud/gophercloud/testhelper/client"
 	"fmt"
+	"net/http"
+	"testing"
+
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/networking/v2/extensions/lbaas_v2/whitelist"
+	th "github.com/huaweicloud/huaweicloud-sdk-go/testhelper"
+	"github.com/huaweicloud/huaweicloud-sdk-go/testhelper/client"
 )
 
 var CreateResp = `

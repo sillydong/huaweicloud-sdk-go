@@ -26,5 +26,5 @@ type PortsBindingExt struct {
 	// A dictionary that enables the application running on the specified
 	// host to pass and receive virtual network interface (VIF) port-specific
 	// information to the plug-in.
-	Profile map[string]string `json:"binding:profile"`
+	Profile map[string]interface{} `json:"binding:profile"`
 }

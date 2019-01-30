@@ -6,13 +6,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack/identity/v3/tokens"
-	"github.com/gophercloud/gophercloud/testhelper"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/identity/v3/tokens"
+	"github.com/huaweicloud/huaweicloud-sdk-go/testhelper"
 )
 
 // authTokenPost verifies that providing certain AuthOptions and Scope results in an expected JSON structure.
-func authTokenPost(t *testing.T, options tokens.AuthOptions, scope *tokens.Scope, requestJSON string) {
+func authTokenPost(t *testing.T, options tokens.TokenOptions, scope *tokens.Scope, requestJSON string) {
 	testhelper.SetupHTTP()
 	defer testhelper.TeardownHTTP()
 
@@ -47,7 +47,7 @@ func authTokenPost(t *testing.T, options tokens.AuthOptions, scope *tokens.Scope
 	testhelper.CheckDeepEquals(t, expected, actual)
 }
 
-func authTokenPostErr(t *testing.T, options tokens.AuthOptions, scope *tokens.Scope, includeToken bool, expectedErr error) {
+func authTokenPostErr(t *testing.T, options tokens.TokenOptions, scope *tokens.Scope, includeToken bool, expectedErr error) {
 	testhelper.SetupHTTP()
 	defer testhelper.TeardownHTTP()
 
@@ -67,13 +67,14 @@ func authTokenPostErr(t *testing.T, options tokens.AuthOptions, scope *tokens.Sc
 	if err == nil {
 		t.Errorf("Create did NOT return an error")
 	}
-	if err != expectedErr {
+
+	if err.Error() != expectedErr.Error() {
 		t.Errorf("Create returned an unexpected error: wanted %v, got %v", expectedErr, err)
 	}
 }
 
 func TestCreateUserIDAndPassword(t *testing.T) {
-	authTokenPost(t, tokens.AuthOptions{UserID: "me", Password: "squirrel!"}, nil, `
+	authTokenPost(t, tokens.TokenOptions{UserID: "me", Password: "squirrel!"}, nil, `
 		{
 			"auth": {
 				"identity": {
@@ -88,7 +89,7 @@ func TestCreateUserIDAndPassword(t *testing.T) {
 }
 
 func TestCreateUsernameDomainIDPassword(t *testing.T) {
-	authTokenPost(t, tokens.AuthOptions{Username: "fakey", Password: "notpassword", DomainID: "abc123"}, nil, `
+	authTokenPost(t, tokens.TokenOptions{Username: "fakey", Password: "notpassword", DomainID: "abc123"}, nil, `
 		{
 			"auth": {
 				"identity": {
@@ -109,7 +110,7 @@ func TestCreateUsernameDomainIDPassword(t *testing.T) {
 }
 
 func TestCreateUsernameDomainNamePassword(t *testing.T) {
-	authTokenPost(t, tokens.AuthOptions{Username: "frank", Password: "swordfish", DomainName: "spork.net"}, nil, `
+	authTokenPost(t, tokens.TokenOptions{Username: "frank", Password: "swordfish", DomainName: "spork.net"}, nil, `
 		{
 			"auth": {
 				"identity": {
@@ -130,7 +131,7 @@ func TestCreateUsernameDomainNamePassword(t *testing.T) {
 }
 
 func TestCreateTokenID(t *testing.T) {
-	authTokenPost(t, tokens.AuthOptions{TokenID: "12345abcdef"}, nil, `
+	authTokenPost(t, tokens.TokenOptions{TokenID: "12345abcdef"}, nil, `
 		{
 			"auth": {
 				"identity": {
@@ -145,7 +146,7 @@ func TestCreateTokenID(t *testing.T) {
 }
 
 func TestCreateProjectIDScope(t *testing.T) {
-	options := tokens.AuthOptions{UserID: "fenris", Password: "g0t0h311"}
+	options := tokens.TokenOptions{UserID: "fenris", Password: "g0t0h311"}
 	scope := &tokens.Scope{ProjectID: "123456"}
 	authTokenPost(t, options, scope, `
 		{
@@ -170,7 +171,7 @@ func TestCreateProjectIDScope(t *testing.T) {
 }
 
 func TestCreateDomainIDScope(t *testing.T) {
-	options := tokens.AuthOptions{UserID: "fenris", Password: "g0t0h311"}
+	options := tokens.TokenOptions{UserID: "fenris", Password: "g0t0h311"}
 	scope := &tokens.Scope{DomainID: "1000"}
 	authTokenPost(t, options, scope, `
 		{
@@ -195,7 +196,7 @@ func TestCreateDomainIDScope(t *testing.T) {
 }
 
 func TestCreateDomainNameScope(t *testing.T) {
-	options := tokens.AuthOptions{UserID: "fenris", Password: "g0t0h311"}
+	options := tokens.TokenOptions{UserID: "fenris", Password: "g0t0h311"}
 	scope := &tokens.Scope{DomainName: "evil-plans"}
 	authTokenPost(t, options, scope, `
                 {
@@ -220,7 +221,7 @@ func TestCreateDomainNameScope(t *testing.T) {
 }
 
 func TestCreateProjectNameAndDomainIDScope(t *testing.T) {
-	options := tokens.AuthOptions{UserID: "fenris", Password: "g0t0h311"}
+	options := tokens.TokenOptions{UserID: "fenris", Password: "g0t0h311"}
 	scope := &tokens.Scope{ProjectName: "world-domination", DomainID: "1000"}
 	authTokenPost(t, options, scope, `
 		{
@@ -248,7 +249,7 @@ func TestCreateProjectNameAndDomainIDScope(t *testing.T) {
 }
 
 func TestCreateProjectNameAndDomainNameScope(t *testing.T) {
-	options := tokens.AuthOptions{UserID: "fenris", Password: "g0t0h311"}
+	options := tokens.TokenOptions{UserID: "fenris", Password: "g0t0h311"}
 	scope := &tokens.Scope{ProjectName: "world-domination", DomainName: "evil-plans"}
 	authTokenPost(t, options, scope, `
 		{
@@ -295,7 +296,7 @@ func TestCreateExtractsTokenFromResponse(t *testing.T) {
 		}`)
 	})
 
-	options := tokens.AuthOptions{UserID: "me", Password: "shhh"}
+	options := tokens.TokenOptions{UserID: "me", Password: "shhh"}
 	token, err := tokens.Create(&client, &options).Extract()
 	if err != nil {
 		t.Fatalf("Create returned an error: %v", err)
@@ -307,103 +308,103 @@ func TestCreateExtractsTokenFromResponse(t *testing.T) {
 }
 
 func TestCreateFailureEmptyAuth(t *testing.T) {
-	authTokenPostErr(t, tokens.AuthOptions{}, nil, false, gophercloud.ErrMissingPassword{})
+	authTokenPostErr(t, tokens.TokenOptions{}, nil, false, gophercloud.NewSystemCommonError("Com.2000", "You must provide a password to authenticate"))
 }
 
 func TestCreateFailureTokenIDUsername(t *testing.T) {
-	authTokenPostErr(t, tokens.AuthOptions{Username: "something", TokenID: "12345"}, nil, true, gophercloud.ErrUsernameWithToken{})
+	authTokenPostErr(t, tokens.TokenOptions{Username: "something", TokenID: "12345"}, nil, true, gophercloud.NewSystemCommonError("Com.2000", "Username may not be provided when authenticating with a TokenID"))
 }
 
 func TestCreateFailureTokenIDUserID(t *testing.T) {
-	authTokenPostErr(t, tokens.AuthOptions{UserID: "something", TokenID: "12345"}, nil, true, gophercloud.ErrUserIDWithToken{})
+	authTokenPostErr(t, tokens.TokenOptions{UserID: "something", TokenID: "12345"}, nil, true, gophercloud.NewSystemCommonError("Com.2000", "UserID may not be provided when authenticating with a TokenID"))
 }
 
 func TestCreateFailureTokenIDDomainID(t *testing.T) {
-	authTokenPostErr(t, tokens.AuthOptions{DomainID: "something", TokenID: "12345"}, nil, true, gophercloud.ErrDomainIDWithToken{})
+	authTokenPostErr(t, tokens.TokenOptions{DomainID: "something", TokenID: "12345"}, nil, true, gophercloud.NewSystemCommonError("Com.2000", "DomainID may not be provided when authenticating with a TokenID"))
 }
 
 func TestCreateFailureTokenIDDomainName(t *testing.T) {
-	authTokenPostErr(t, tokens.AuthOptions{DomainName: "something", TokenID: "12345"}, nil, true, gophercloud.ErrDomainNameWithToken{})
+	authTokenPostErr(t, tokens.TokenOptions{DomainName: "something", TokenID: "12345"}, nil, true, gophercloud.NewSystemCommonError("Com.2000", "DomainName may not be provided when authenticating with a TokenID"))
 }
 
 func TestCreateFailureMissingUser(t *testing.T) {
-	options := tokens.AuthOptions{Password: "supersecure"}
-	authTokenPostErr(t, options, nil, false, gophercloud.ErrUsernameOrUserID{})
+	options := tokens.TokenOptions{Password: "supersecure"}
+	authTokenPostErr(t, options, nil, false, gophercloud.NewSystemCommonError("Com.2000", "Exactly one of Username and UserID must be provided for password authentication"))
 }
 
 func TestCreateFailureBothUser(t *testing.T) {
-	options := tokens.AuthOptions{
+	options := tokens.TokenOptions{
 		Password: "supersecure",
 		Username: "oops",
 		UserID:   "redundancy",
 	}
-	authTokenPostErr(t, options, nil, false, gophercloud.ErrUsernameOrUserID{})
+	authTokenPostErr(t, options, nil, false, gophercloud.NewSystemCommonError("Com.2000", "Exactly one of Username and UserID must be provided for password authentication"))
 }
 
 func TestCreateFailureMissingDomain(t *testing.T) {
-	options := tokens.AuthOptions{
+	options := tokens.TokenOptions{
 		Password: "supersecure",
 		Username: "notuniqueenough",
 	}
-	authTokenPostErr(t, options, nil, false, gophercloud.ErrDomainIDOrDomainName{})
+	authTokenPostErr(t, options, nil, false, gophercloud.NewSystemCommonError("Com.2000", "You must provide exactly one of DomainID or DomainName to authenticate by Username"))
 }
 
 func TestCreateFailureBothDomain(t *testing.T) {
-	options := tokens.AuthOptions{
+	options := tokens.TokenOptions{
 		Password:   "supersecure",
 		Username:   "someone",
 		DomainID:   "hurf",
 		DomainName: "durf",
 	}
-	authTokenPostErr(t, options, nil, false, gophercloud.ErrDomainIDOrDomainName{})
+	authTokenPostErr(t, options, nil, false, gophercloud.NewSystemCommonError("Com.2000", "You must provide exactly one of DomainID or DomainName to authenticate by Username"))
 }
 
 func TestCreateFailureUserIDDomainID(t *testing.T) {
-	options := tokens.AuthOptions{
+	options := tokens.TokenOptions{
 		UserID:   "100",
 		Password: "stuff",
 		DomainID: "oops",
 	}
-	authTokenPostErr(t, options, nil, false, gophercloud.ErrDomainIDWithUserID{})
+	authTokenPostErr(t, options, nil, false, gophercloud.NewSystemCommonError("Com.2000", "DomainID may not be provided when authenticating with a UserID"))
 }
 
 func TestCreateFailureUserIDDomainName(t *testing.T) {
-	options := tokens.AuthOptions{
+	options := tokens.TokenOptions{
 		UserID:     "100",
 		Password:   "sssh",
 		DomainName: "oops",
 	}
-	authTokenPostErr(t, options, nil, false, gophercloud.ErrDomainNameWithUserID{})
+	authTokenPostErr(t, options, nil, false, gophercloud.NewSystemCommonError("Com.2000", "DomainName may not be provided when authenticating with a UserID"))
 }
 
 func TestCreateFailureScopeProjectNameAlone(t *testing.T) {
-	options := tokens.AuthOptions{UserID: "myself", Password: "swordfish"}
+	options := tokens.TokenOptions{UserID: "myself", Password: "swordfish"}
 	scope := &tokens.Scope{ProjectName: "notenough"}
-	authTokenPostErr(t, options, scope, false, gophercloud.ErrScopeDomainIDOrDomainName{})
+	authTokenPostErr(t, options, scope, false, gophercloud.NewSystemCommonError("Com.2000", "You must provide exactly one of DomainID or DomainName in a Scope with ProjectName"))
 }
 
 func TestCreateFailureScopeProjectNameAndID(t *testing.T) {
-	options := tokens.AuthOptions{UserID: "myself", Password: "swordfish"}
+	options := tokens.TokenOptions{UserID: "myself", Password: "swordfish"}
 	scope := &tokens.Scope{ProjectName: "whoops", ProjectID: "toomuch", DomainID: "1234"}
-	authTokenPostErr(t, options, scope, false, gophercloud.ErrScopeProjectIDOrProjectName{})
+	authTokenPostErr(t, options, scope, false, gophercloud.NewSystemCommonError("Com.2000", "You must provide at most one of ProjectID or ProjectName in a Scope"))
 }
 
 func TestCreateFailureScopeProjectIDAndDomainID(t *testing.T) {
-	options := tokens.AuthOptions{UserID: "myself", Password: "swordfish"}
+	options := tokens.TokenOptions{UserID: "myself", Password: "swordfish"}
 	scope := &tokens.Scope{ProjectID: "toomuch", DomainID: "notneeded"}
-	authTokenPostErr(t, options, scope, false, gophercloud.ErrScopeProjectIDAlone{})
+	authTokenPostErr(t, options, scope, false, gophercloud.NewSystemCommonError("Com.2000", "ProjectID must be supplied alone in a Scope"))
 }
 
 func TestCreateFailureScopeProjectIDAndDomainNAme(t *testing.T) {
-	options := tokens.AuthOptions{UserID: "myself", Password: "swordfish"}
+	options := tokens.TokenOptions{UserID: "myself", Password: "swordfish"}
 	scope := &tokens.Scope{ProjectID: "toomuch", DomainName: "notneeded"}
-	authTokenPostErr(t, options, scope, false, gophercloud.ErrScopeProjectIDAlone{})
+	authTokenPostErr(t, options, scope, false, gophercloud.NewSystemCommonError("Com.2000", "ProjectID must be supplied alone in a Scope"))
 }
 
 func TestCreateFailureScopeDomainIDAndDomainName(t *testing.T) {
-	options := tokens.AuthOptions{UserID: "myself", Password: "swordfish"}
+	options := tokens.TokenOptions{UserID: "myself", Password: "swordfish"}
 	scope := &tokens.Scope{DomainID: "toomuch", DomainName: "notneeded"}
-	authTokenPostErr(t, options, scope, false, gophercloud.ErrScopeDomainIDOrDomainName{})
+	authTokenPostErr(t, options, scope, false, gophercloud.NewSystemCommonError("Com.2000", "You must provide exactly one of DomainID or DomainName in a Scope with ProjectName"))
 }
 
 /*
@@ -545,7 +546,7 @@ func TestNoTokenInResponse(t *testing.T) {
 		fmt.Fprintf(w, `{}`)
 	})
 
-	options := tokens.AuthOptions{UserID: "me", Password: "squirrel!"}
+	options := tokens.TokenOptions{UserID: "me", Password: "squirrel!"}
 	_, err := tokens.Create(&client, &options).Extract()
 	testhelper.AssertNoErr(t, err)
 }

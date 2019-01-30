@@ -5,11 +5,11 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/gophercloud/gophercloud"
-	fake "github.com/gophercloud/gophercloud/openstack/networking/v2/common"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/lbaas/monitors"
-	"github.com/gophercloud/gophercloud/pagination"
-	th "github.com/gophercloud/gophercloud/testhelper"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	fake "github.com/huaweicloud/huaweicloud-sdk-go/openstack/networking/v2/common"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/networking/v2/extensions/lbaas/monitors"
+	"github.com/huaweicloud/huaweicloud-sdk-go/pagination"
+	th "github.com/huaweicloud/huaweicloud-sdk-go/testhelper"
 )
 
 func TestList(t *testing.T) {
@@ -97,6 +97,9 @@ func TestList(t *testing.T) {
 }
 
 func TestDelayMustBeGreaterOrEqualThanTimeout(t *testing.T) {
+	th.SetupHTTP()
+	defer th.TeardownHTTP()
+
 	_, err := monitors.Create(fake.ServiceClient(), monitors.CreateOpts{
 		Type:          "HTTP",
 		Delay:         1,

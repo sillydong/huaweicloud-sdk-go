@@ -1,8 +1,8 @@
 package policies
 
 import (
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/pagination"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/pagination"
 )
 
 type RuleId struct {
@@ -10,42 +10,42 @@ type RuleId struct {
 }
 type Policies struct {
 	// Specifies the ID of the backend server group to which the requests are forwarded.
-	RedirectPoolID     string  `json:"redirect_pool_id"`
+	RedirectPoolID string `json:"redirect_pool_id"`
 
 	// Provides supplementary information about the forwarding policy.
-	Description        string  `json:"description"`
+	Description string `json:"description"`
 
 	// Specifies the administrative status.
-	AdminStateUp       bool    `json:"admin_state_up"`
+	AdminStateUp bool `json:"admin_state_up"`
 
 	// Lists the forwarding rules under a forwarding policy.
-	Rules              []RuleId `json:"rules"`
+	Rules []RuleId `json:"rules"`
 
 	// Specifies the project ID.
-	TenantID           string  `json:"tenant_id"`
+	TenantID string `json:"tenant_id"`
 
 	// Specifies the ID of the listener for which the forwarding policy is added.
-	ListenerID         string  `json:"listener_id"`
+	ListenerID string `json:"listener_id"`
 
 	// This field is not in use yet.
-	RedirectURL        string  `json:"redirect_url"`
+	RedirectURL string `json:"redirect_url"`
 
 	// Specifies the URL matching rule.
 	// The value can be REDIRECT_TO_POOL or REDIRECT_TO_LISTENER.
-	Action             string  `json:"action"`
+	Action string `json:"action"`
 
 	// Specifies the forwarding priority. The value ranges from 1 to 100.
-	Position           int     `json:"position"`
+	Position int `json:"position"`
 
 	// Specifies the forwarding policy ID.
-	ID                 string  `json:"id"`
+	ID string `json:"id"`
 
 	// Specifies the forwarding policy name.
-	Name               string  `json:"name"`
+	Name string `json:"name"`
 
 	// Specifies the provisioning status.
 	// The value can be ACTIVE, PENDING_CREATE, or ERROR.
-	ProvisioningStatus string  `json:"provisioning_status"`
+	ProvisioningStatus string `json:"provisioning_status"`
 }
 
 type commonResult struct {
@@ -166,29 +166,29 @@ type Rules struct {
 
 type PolicyRule struct {
 	// Specifies the forwarding rule ID.
-	ID           string `json:"id"`
+	ID string `json:"id"`
 
 	// Specifies the project ID.
-	TenantId     string `json:"tenant_id"`
+	TenantId string `json:"tenant_id"`
 
 	// Specifies the administrative status.
-	AdminStateUp bool   `json:"admin_state_up"`
+	AdminStateUp bool `json:"admin_state_up"`
 
 	// Specifies the matching content.
 	// The value can be HOST_NAME or PATH.
-	Type         string `json:"type"`
+	Type string `json:"type"`
 
 	// Specifies the matching mode.
-	CompareType  string `json:"compare_type"`
+	CompareType string `json:"compare_type"`
 
 	// Specifies whether reverse match is supported.
-	Invert       bool   `json:"invert"`
+	Invert bool `json:"invert"`
 
 	// Specifies the Key of the matching content.
-	Key          string `json:"key"`
+	Key string `json:"key"`
 
 	// Specifies the Value of the matching content.
-	Value        string `json:"value"`
+	Value string `json:"value"`
 }
 
 type rulecommonResult struct {

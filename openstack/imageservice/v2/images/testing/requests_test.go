@@ -3,10 +3,10 @@ package testing
 import (
 	"testing"
 
-	"github.com/gophercloud/gophercloud/openstack/imageservice/v2/images"
-	"github.com/gophercloud/gophercloud/pagination"
-	th "github.com/gophercloud/gophercloud/testhelper"
-	fakeclient "github.com/gophercloud/gophercloud/testhelper/client"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/imageservice/v2/images"
+	"github.com/huaweicloud/huaweicloud-sdk-go/pagination"
+	th "github.com/huaweicloud/huaweicloud-sdk-go/testhelper"
+	fakeclient "github.com/huaweicloud/huaweicloud-sdk-go/testhelper/client"
 )
 
 func TestListImage(t *testing.T) {
@@ -89,10 +89,10 @@ func TestCreateImage(t *testing.T) {
 	schema := "/v2/schemas/image"
 
 	expectedImage := images.Image{
-		ID:   "e7db3b45-8db7-47ad-8109-3fb55c2c24fd",
-		Name: "Ubuntu 12.10",
-		Tags: []string{"ubuntu", "quantal"},
-		Self: "/v2/images/e7db3b45-8db7-47ad-8109-3fb55c2c24fd",
+		ID:     "e7db3b45-8db7-47ad-8109-3fb55c2c24fd",
+		Name:   "Ubuntu 12.10",
+		Tags:   []string{"ubuntu", "quantal"},
+		Self:   "/v2/images/e7db3b45-8db7-47ad-8109-3fb55c2c24fd",
 		Status: images.ImageStatusQueued,
 
 		ContainerFormat: containerFormat,
@@ -113,7 +113,7 @@ func TestCreateImage(t *testing.T) {
 			"hw_disk_bus":       "scsi",
 			"hw_disk_bus_model": "virtio-scsi",
 			"hw_scsi_model":     "virtio-scsi",
-			"__os_version": "Ubuntu 14.04 server 64bit",
+			"__os_version":      "Ubuntu 14.04 server 64bit",
 		},
 	}
 
@@ -148,10 +148,10 @@ func TestCreateImageNulls(t *testing.T) {
 	schema := "/v2/schemas/image"
 
 	expectedImage := images.Image{
-		ID:   "e7db3b45-8db7-47ad-8109-3fb55c2c24fd",
-		Name: "Ubuntu 12.10",
-		Tags: []string{"ubuntu", "quantal"},
-		Self: "/v2/images/e7db3b45-8db7-47ad-8109-3fb55c2c24fd",
+		ID:     "e7db3b45-8db7-47ad-8109-3fb55c2c24fd",
+		Name:   "Ubuntu 12.10",
+		Tags:   []string{"ubuntu", "quantal"},
+		Self:   "/v2/images/e7db3b45-8db7-47ad-8109-3fb55c2c24fd",
 		Status: images.ImageStatusQueued,
 
 		ContainerFormat: containerFormat,
@@ -195,10 +195,10 @@ func TestGetImage(t *testing.T) {
 	schema := "/v2/schemas/image"
 
 	expectedImage := images.Image{
-		ID:   "1bea47ed-f6a9-463b-b423-14b9cca9ad27",
-		Name: "cirros-0.3.2-x86_64-disk",
-		Tags: []string{},
-		Self: "/v2/images/1bea47ed-f6a9-463b-b423-14b9cca9ad27",
+		ID:     "1bea47ed-f6a9-463b-b423-14b9cca9ad27",
+		Name:   "cirros-0.3.2-x86_64-disk",
+		Tags:   []string{},
+		Self:   "/v2/images/1bea47ed-f6a9-463b-b423-14b9cca9ad27",
 		Status: images.ImageStatusActive,
 
 		ContainerFormat: containerFormat,
@@ -223,8 +223,8 @@ func TestGetImage(t *testing.T) {
 			"hw_disk_bus":       "scsi",
 			"hw_disk_bus_model": "virtio-scsi",
 			"hw_scsi_model":     "virtio-scsi",
-			"__os_version": "Ubuntu 14.04 server 64bit",
-			"__platform": "Ubuntu",
+			"__os_version":      "Ubuntu 14.04 server 64bit",
+			"__platform":        "Ubuntu",
 		},
 	}
 
@@ -267,8 +267,8 @@ func TestUpdateImage(t *testing.T) {
 		Status:     images.ImageStatusActive,
 		Visibility: images.ImageVisibilityPublic,
 		Self:       "/v2/images/da3b75d9-3f4a-40e7-8a2c-bfab23927dea",
-		SizeBytes: sizebytes,
-		Checksum:  checksum,
+		SizeBytes:  sizebytes,
+		Checksum:   checksum,
 
 		Tags: []string{
 			"fedora",

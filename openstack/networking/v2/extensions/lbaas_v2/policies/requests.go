@@ -3,8 +3,8 @@ package policies
 import (
 	"fmt"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/pagination"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/pagination"
 )
 
 // ListOptsBuilder allows extensions to add additional parameters to the
@@ -19,44 +19,44 @@ type ListOptsBuilder interface {
 //Marker and Limit are used for pagination.
 type ListOpts struct {
 	// Specifies the ID of the backend server group to which the requests are forwarded.
-	RedirectPoolID     string `q:"redirect_pool_id"`
+	RedirectPoolID string `q:"redirect_pool_id"`
 
 	// Provides supplementary information about the forwarding policy.
-	Description        string `q:"description"`
+	Description string `q:"description"`
 
 	// Specifies the administrative status.
-	AdminStateUp       *bool  `q:"admin_state_up"`
+	AdminStateUp *bool `q:"admin_state_up"`
 
 	// Specifies the project ID.
-	TenantID           string `q:"tenant_id"`
+	TenantID string `q:"tenant_id"`
 
 	// Specifies the ID of the listener for which the forwarding policy is added.
-	ListenerID         string `q:"listener_id"`
+	ListenerID string `q:"listener_id"`
 
 	// This field is not in use yet.
-	RedirectURL        string `q:"redirect_url"`
+	RedirectURL string `q:"redirect_url"`
 
 	// Specifies the URL matching rule.
 	// The value can be REDIRECT_TO_POOL or REDIRECT_TO_LISTENER.
-	Action             string `q:"action"`
+	Action string `q:"action"`
 
 	// Specifies the forwarding priority. The value ranges from 1 to 100.
-	Position           int    `q:"position"`
+	Position int `q:"position"`
 
 	// Specifies the forwarding policy ID.
-	ID                 string `q:"id"`
+	ID string `q:"id"`
 
 	// Specifies the forwarding policy name.
-	Name               string `q:"name"`
+	Name string `q:"name"`
 
 	// Specifies the number of records on each page.
-	Limit              int    `q:"limit"`
+	Limit int `q:"limit"`
 
 	// Specifies the ID of the last forwarding policy on the previous page.
-	Marker             string `q:"marker"`
+	Marker string `q:"marker"`
 
 	// Specifies the pagination direction.
-	PageReverse        *bool  `q:"page_reverse"`
+	PageReverse *bool `q:"page_reverse"`
 
 	// Specifies the provisioning status.
 	// The value can be ACTIVE, PENDING_CREATE, or ERROR.
@@ -85,29 +85,29 @@ type CreateOpts struct {
 	RedirectPoolID string `json:"redirect_pool_id" required:"true"`
 
 	// Provides supplementary information about the forwarding policy.
-	Description    string `json:"description,omitempty"`
+	Description string `json:"description,omitempty"`
 
 	// Specifies the administrative status.
-	AdminStateUp   *bool  `json:"admin_state_up,omitempty"`
+	AdminStateUp *bool `json:"admin_state_up,omitempty"`
 
 	// Specifies the project ID.
-	TenantID       string `json:"tenant_id,omitempty"`
+	TenantID string `json:"tenant_id,omitempty"`
 
 	// Specifies the ID of the listener for which the forwarding policy is added.
-	ListenerID     string `json:"listener_id" required:"true"`
+	ListenerID string `json:"listener_id" required:"true"`
 
 	// This field is not in use yet.
-	RedirectURL    string `json:"redirect_url,omitempty"`
+	RedirectURL string `json:"redirect_url,omitempty"`
 
 	// Specifies the URL matching rule.
 	// The value can be REDIRECT_TO_POOL or REDIRECT_TO_LISTENER.
-	Action         string `json:"action" required:"true"`
+	Action string `json:"action" required:"true"`
 
 	// Specifies the forwarding priority. The value ranges from 1 to 100.
-	Position       int    `json:"position,omitempty"`
+	Position int `json:"position,omitempty"`
 
 	// Specifies the forwarding policy name.
-	Name           string `json:"name,omitempty"`
+	Name string `json:"name,omitempty"`
 }
 
 const RedirectToPool = "REDIRECT_TO_POOL"
@@ -231,29 +231,29 @@ type RulesListOptsBuilder interface {
 //that map the policyrules attributes you want to see returned.
 type RulesListOpts struct {
 	// Specifies the forwarding rule ID.
-	ID           string `q:"id"`
+	ID string `q:"id"`
 
 	// Specifies the project ID.
-	TenantID     string `q:"tenant_id"`
+	TenantID string `q:"tenant_id"`
 
 	// Specifies the administrative status.
-	AdminStateUp *bool  `q:"admin_state_up"`
+	AdminStateUp *bool `q:"admin_state_up"`
 
 	// Specifies the matching content.
 	// The value can be HOST_NAME or PATH.
-	Type         string `q:"type"`
+	Type string `q:"type"`
 
 	// Specifies the matching mode.
-	CompareType  string `q:"compare_type"`
+	CompareType string `q:"compare_type"`
 
 	// Specifies whether reverse match is supported.
-	Invert       *bool  `q:"invert"`
+	Invert *bool `q:"invert"`
 
 	// Specifies the Key of the matching content.
-	Key          string `q:"key"`
+	Key string `q:"key"`
 
 	// Specifies the value of the matching content.
-	Values       string `q:"values"`
+	Values string `q:"values"`
 }
 
 // ToPolicyRulesListMap formats a RulesListOpts into a query string.
@@ -305,23 +305,23 @@ type CreateRuleOptsBuilder interface {
 // CreateRuleOpts represents options for creating a policyrule.
 type CreateRuleOpts struct {
 	// Specifies the project ID.
-	TenantId     string `json:"tenant_id,omitempty"`
+	TenantId string `json:"tenant_id,omitempty"`
 
 	// Specifies the administrative status.
-	AdminStateUp *bool   `json:"admin_state_up,omitempty"`
+	AdminStateUp *bool `json:"admin_state_up,omitempty"`
 
 	// Specifies the matching content.
 	// The value can be HOST_NAME or PATH.
-	Type         string `json:"type" required:"true"`
+	Type string `json:"type" required:"true"`
 
 	// Specifies the matching mode.
-	CompareType  string `json:"compare_type" required:"true"`
+	CompareType string `json:"compare_type" required:"true"`
 
 	// Specifies the Key of the matching content.
-	Key          string `json:"key,omitempty"`
+	Key string `json:"key,omitempty"`
 
 	// Specifies the value of the matching content.
-	Value        string `json:"value" required:"true"`
+	Value string `json:"value" required:"true"`
 }
 
 // ToPolicyRuleCreateMap builds a request body from CreateRuleOpts.
@@ -359,19 +359,19 @@ type UpdateRuleOptsBuilder interface {
 // RuleUpdateOpts represents options for updating a policyrule.
 type RuleUpdateOpts struct {
 	// Specifies the administrative status.
-	AdminStateUp *bool  `json:"admin_state_up,omitempty"`
+	AdminStateUp *bool `json:"admin_state_up,omitempty"`
 
 	// Specifies the matching mode.
-	CompareType  string `json:"compare_type,omitempty"`
+	CompareType string `json:"compare_type,omitempty"`
 
 	// Specifies whether reverse match is supported.
-	Invert       string `json:"invert,omitempty"`
+	Invert string `json:"invert,omitempty"`
 
 	// Specifies the Key of the matching content.
-	Key          string `json:"key,omitempty"`
+	Key string `json:"key,omitempty"`
 
 	// Specifies the value of the matching content.
-	Value        string `json:"value,omitempty"`
+	Value string `json:"value,omitempty"`
 }
 
 // ToPolicyRuleUpdateMap builds a request body from RuleUpdateOpts.

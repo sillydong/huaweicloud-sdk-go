@@ -1,11 +1,10 @@
 package account
 
 import (
-	"github.com/gophercloud/gophercloud"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
 )
 
 type ResourceDaily struct {
-
 	ErrorCode string `json:"error_code"`
 
 	ErrorMsg string `json:"error_msg"`
@@ -19,7 +18,6 @@ type ResourceDaily struct {
 	MeasureId int `json:"measureId"`
 
 	DailyRecords []DailyRecord `json:"dailyRecords"`
-
 }
 
 type DailyRecord struct {
@@ -95,13 +93,11 @@ type DeductDetailInfo struct {
 
 	//The amount of the unit is 1: yuan 2: angle 3: points.
 	MeasureId int `json:"measureId"`
-
 }
 
 type commonResult struct {
 	gophercloud.Result
 }
-
 
 func (r commonResult) Extract() (ResourceDaily, error) {
 	var res ResourceDaily

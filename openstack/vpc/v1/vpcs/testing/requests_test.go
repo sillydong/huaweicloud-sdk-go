@@ -3,9 +3,9 @@ package testing
 import (
 	"testing"
 
-	"github.com/gophercloud/gophercloud/openstack/vpc/v1/vpcs"
-	th "github.com/gophercloud/gophercloud/testhelper"
-	"github.com/gophercloud/gophercloud/testhelper/client"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/vpc/v1/vpcs"
+	th "github.com/huaweicloud/huaweicloud-sdk-go/testhelper"
+	"github.com/huaweicloud/huaweicloud-sdk-go/testhelper/client"
 )
 
 func TestCreate(t *testing.T) {
@@ -53,7 +53,7 @@ func TestList(t *testing.T) {
 		Limit: 2,
 	}).AllPages()
 	th.AssertNoErr(t, err)
-	vpcs,err :=vpcs.ExtractVpcs(allpages)
+	vpcs, err := vpcs.ExtractVpcs(allpages)
 	th.AssertNoErr(t, err)
 	th.CheckDeepEquals(t, ListResponse, vpcs)
 }

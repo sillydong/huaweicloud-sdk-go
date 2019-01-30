@@ -1,7 +1,7 @@
 package bandwidths
 
 import (
-	"github.com/gophercloud/gophercloud"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
 )
 
 type PrePaid struct {
@@ -9,14 +9,14 @@ type PrePaid struct {
 }
 
 type PostPaid struct {
-	Name                string         `json:"name"`
-	Size                int           `json:"size"`
-	ID                  string         `json:"id"`
-	ShareType           string         `json:"share_type"`
-	ChargeMode          string         `json:"charge_mode"`
-	BandwidthType       string         `json:"bandwidth_type"`
-	TenantID            string         `json:"tenant_id"`
-	PublicipInfo        []PublicipInfo `json:"publicip_info"`
+	Name          string         `json:"name"`
+	Size          int            `json:"size"`
+	ID            string         `json:"id"`
+	ShareType     string         `json:"share_type"`
+	ChargeMode    string         `json:"charge_mode"`
+	BandwidthType string         `json:"bandwidth_type"`
+	TenantID      string         `json:"tenant_id"`
+	PublicipInfo  []PublicipInfo `json:"publicip_info"`
 	//EnterpriseProjectID string         `json:"enterprise_project_id"`
 	//BillingInfo         string         `json:"billing_info"`
 }

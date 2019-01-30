@@ -2,12 +2,14 @@ package main
 
 import (
 	"fmt"
-	"github.com/gophercloud/gophercloud/functiontest/common"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack"
-	"github.com/gophercloud/gophercloud/openstack/vpc/v1/security/groups"
+	"github.com/huaweicloud/huaweicloud-sdk-go/functiontest/common"
+
 	"encoding/json"
+
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/vpc/v1/security/groups"
 )
 
 func main() {
@@ -40,8 +42,8 @@ func main() {
 func TestGroupsList(sc *gophercloud.ServiceClient) {
 
 	allPages, err := groups.List(sc, groups.ListOpts{
-		Marker:"199d019f-a742-4cf6-ae75-68f78d242b2c",
-		Limit:3,
+		Marker: "199d019f-a742-4cf6-ae75-68f78d242b2c",
+		Limit:  3,
 	}).AllPages()
 	if err != nil {
 		fmt.Println(err)
@@ -59,7 +61,7 @@ func TestGroupsList(sc *gophercloud.ServiceClient) {
 		return
 	}
 	for _, v := range allData {
-		p,_:=json.MarshalIndent(v,""," ")
+		p, _ := json.MarshalIndent(v, "", " ")
 		fmt.Println(string(p))
 	}
 

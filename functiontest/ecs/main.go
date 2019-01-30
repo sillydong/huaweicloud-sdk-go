@@ -2,13 +2,14 @@ package main
 
 import (
 	"fmt"
-	"github.com/gophercloud/gophercloud/functiontest/common"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack"
-	"github.com/gophercloud/gophercloud/openstack/ecs/v1_1/cloudservers"
-	"github.com/gophercloud/gophercloud/openstack/ecs/v1_1/cloudserversext"
-	cloudserversV2 "github.com/gophercloud/gophercloud/openstack/ecs/v2/cloudservers"
+	"github.com/huaweicloud/huaweicloud-sdk-go/functiontest/common"
+
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/ecs/v1_1/cloudservers"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/ecs/v1_1/cloudserversext"
+	cloudserversV2 "github.com/huaweicloud/huaweicloud-sdk-go/openstack/ecs/v2/cloudservers"
 )
 
 func main() {
@@ -34,7 +35,6 @@ func main() {
 	//TestCreate(sc)
 	//TestExtCreateServer(sc)
 	TestGetJobResult(sc)
-
 
 	//v2
 	//sc, err := openstack.NewECSV2(provider, gophercloud.EndpointOpts{})

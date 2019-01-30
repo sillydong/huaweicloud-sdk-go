@@ -1,12 +1,13 @@
 package testing
 
 import (
-	"testing"
 	"fmt"
 	"net/http"
-	th "github.com/gophercloud/gophercloud/testhelper"
-	fakeclient "github.com/gophercloud/gophercloud/testhelper/client"
-	"github.com/gophercloud/gophercloud/openstack/ims/v2/cloudimages"
+	"testing"
+
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/ims/v2/cloudimages"
+	th "github.com/huaweicloud/huaweicloud-sdk-go/testhelper"
+	fakeclient "github.com/huaweicloud/huaweicloud-sdk-go/testhelper/client"
 )
 
 var GetJobReuslt = `
@@ -98,7 +99,6 @@ var listResult = `
   ]
 }
 `
-
 
 var createResult = cloudimages.Job{
 	Id: "ff8080814dbd65d7014dbe0d84db0013",

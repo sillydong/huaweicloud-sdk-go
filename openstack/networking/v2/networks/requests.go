@@ -3,8 +3,8 @@ package networks
 import (
 	"fmt"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/pagination"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/pagination"
 )
 
 // ListOptsBuilder allows extensions to add additional parameters to the
@@ -76,7 +76,7 @@ type CreateOpts struct {
 
 	// Specifies the physical network used by this network.
 	// This is an extended attribute.This attribute is available only to administrators.
-	ProviderPhysicalNetwork  string `json:"provider:physical_network,omitempty"`
+	ProviderPhysicalNetwork string `json:"provider:physical_network,omitempty"`
 
 	// Specifies the network type. Only the VXLAN and GENEVE networks are supported.
 	ProviderNetworkType string `json:"provider:network_type,omitempty"`

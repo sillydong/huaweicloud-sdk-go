@@ -7,9 +7,10 @@ import (
 	"os"
 	"testing"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack"
-	th "github.com/gophercloud/gophercloud/testhelper"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/auth"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	th "github.com/huaweicloud/huaweicloud-sdk-go/testhelper"
 )
 
 var template = fmt.Sprintf(`
@@ -30,7 +31,7 @@ var template = fmt.Sprintf(`
 }`, os.Getenv("OS_FLAVOR_ID"), os.Getenv("OS_IMAGE_ID"))
 
 func newClient(t *testing.T) *gophercloud.ServiceClient {
-	ao, err := openstack.AuthOptionsFromEnv()
+	ao, err := auth.TokenOptionsFromEnv()
 	th.AssertNoErr(t, err)
 
 	client, err := openstack.AuthenticatedClient(ao)

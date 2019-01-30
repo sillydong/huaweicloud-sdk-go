@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/gophercloud/gophercloud/auth/aksk"
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/lbaas_v2/certificates"
+
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/auth/aksk"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/networking/v2/extensions/lbaas_v2/certificates"
 
 	"encoding/json"
 )
@@ -40,7 +41,7 @@ func main() {
 		return
 	}
 
-	id:=CertCreate(sc)
+	id := CertCreate(sc)
 	CertList(sc)
 	CertUpdate(sc, id)
 	CertGet(sc, id)
@@ -52,17 +53,17 @@ func main() {
 func CertCreate(sc *gophercloud.ServiceClient) (id string) {
 
 	//('HTTP', 'TCP', 'UDP_CONNECT')
-	opts:=certificates.CreateOpts{
-		Certificate:"*******************",
-		PrivateKey:"******************",
+	opts := certificates.CreateOpts{
+		Certificate: "*******************",
+		PrivateKey:  "******************",
 		//not necessary
-		Name:"mmmmm",
-		Type:"client",
-		Description:"test create cert",
-		Domain:"www.test.com",
+		Name:        "mmmmm",
+		Type:        "client",
+		Description: "test create cert",
+		Domain:      "www.test.com",
 	}
 
-	resp,err:=certificates.Create(sc,opts).Extract()
+	resp, err := certificates.Create(sc, opts).Extract()
 
 	if err != nil {
 		fmt.Println(err)
@@ -74,15 +75,15 @@ func CertCreate(sc *gophercloud.ServiceClient) (id string) {
 	}
 
 	fmt.Println("certificates Create success!")
-	p,_:=json.MarshalIndent(*resp,""," ")
+	p, _ := json.MarshalIndent(*resp, "", " ")
 	fmt.Println(string(p))
-	id=(*resp).ID
+	id = (*resp).ID
 	return id
 }
 
-func CertList(sc *gophercloud.ServiceClient)  {
+func CertList(sc *gophercloud.ServiceClient) {
 	allPages, err := certificates.List(sc, certificates.ListOpts{}).AllPages()
-		if err != nil {
+	if err != nil {
 		fmt.Println(err)
 		if ue, ok := err.(*gophercloud.UnifiedError); ok {
 			fmt.Println("ErrCode:", ue.ErrorCode())
@@ -93,68 +94,66 @@ func CertList(sc *gophercloud.ServiceClient)  {
 
 	fmt.Println("Test Cert List success!")
 
-	allData,_:=certificates.ExtractCertificates(allPages)
+	allData, _ := certificates.ExtractCertificates(allPages)
 
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	for _,v :=range allData{
+	for _, v := range allData {
 
-		p,_:=json.MarshalIndent(v,""," ")
+		p, _ := json.MarshalIndent(v, "", " ")
 		fmt.Println(string(p))
 	}
 
 }
 
-func CertGet(sc *gophercloud.ServiceClient, id string)  {
+func CertGet(sc *gophercloud.ServiceClient, id string) {
 
-	resp,err:= certificates.Get(sc,id).Extract()
+	resp, err := certificates.Get(sc, id).Extract()
 
-	if err!=nil{
+	if err != nil {
 		fmt.Println(err)
-		if ue,ok:=err.(*gophercloud.UnifiedError); ok{
-			fmt.Println("ErrCode",ue.ErrCode)
-			fmt.Println("ErrMessage",ue.ErrMessage)
+		if ue, ok := err.(*gophercloud.UnifiedError); ok {
+			fmt.Println("ErrCode", ue.ErrCode)
+			fmt.Println("ErrMessage", ue.ErrMessage)
 		}
 	}
-	fmt.Println("Cert get success!",resp)
+	fmt.Println("Cert get success!", resp)
 
-	p,_:=json.MarshalIndent(*resp,""," ")
+	p, _ := json.MarshalIndent(*resp, "", " ")
 	fmt.Println(string(p))
-
 
 }
 
-func CertUpdate(sc *gophercloud.ServiceClient, id string)  {
+func CertUpdate(sc *gophercloud.ServiceClient, id string) {
 
-	updatOpts:=certificates.UpdateOpts{
+	updatOpts := certificates.UpdateOpts{
 		//not necessary
-		Name:"mmmmm",
-		Domain:"tt",
-		Description:"test cert update",
-		PrivateKey:"*********************",
-		Certificate:"********************",
+		Name:        "mmmmm",
+		Domain:      "tt",
+		Description: "test cert update",
+		PrivateKey:  "*********************",
+		Certificate: "********************",
 	}
 
-	resp,err:=certificates.Update(sc,id,updatOpts).Extract()
+	resp, err := certificates.Update(sc, id, updatOpts).Extract()
 
-
-	if err!=nil{
+	if err != nil {
 		fmt.Println(err)
-		if ue,ok:=err.(*gophercloud.UnifiedError); ok{
-			fmt.Println("ErrCode",ue.ErrCode)
-			fmt.Println("ErrMessage",ue.ErrMessage)
+		if ue, ok := err.(*gophercloud.UnifiedError); ok {
+			fmt.Println("ErrCode", ue.ErrCode)
+			fmt.Println("ErrMessage", ue.ErrMessage)
 		}
 	}
 	fmt.Println("Cert update success!")
-	p,_:=json.MarshalIndent(*resp,""," ")
+	p, _ := json.MarshalIndent(*resp, "", " ")
 	fmt.Println(string(p))
 }
 
-func CertDelete(sc *gophercloud.ServiceClient, id string)  {
-	err:=certificates.Delete(sc,id).ExtractErr()
+func CertDelete(sc *gophercloud.ServiceClient, id string) {
+	err := certificates.Delete(sc, id).ExtractErr()
 
 	if err != nil {
 		fmt.Println(err)
@@ -167,6 +166,3 @@ func CertDelete(sc *gophercloud.ServiceClient, id string)  {
 
 	fmt.Println("delete Cert success!")
 }
-
-
-

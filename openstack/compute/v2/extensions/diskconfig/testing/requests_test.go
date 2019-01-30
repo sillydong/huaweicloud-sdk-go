@@ -3,9 +3,9 @@ package testing
 import (
 	"testing"
 
-	"github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/diskconfig"
-	"github.com/gophercloud/gophercloud/openstack/compute/v2/servers"
-	th "github.com/gophercloud/gophercloud/testhelper"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/compute/v2/extensions/diskconfig"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/compute/v2/servers"
+	th "github.com/huaweicloud/huaweicloud-sdk-go/testhelper"
 )
 
 func TestCreateOpts(t *testing.T) {
@@ -13,6 +13,7 @@ func TestCreateOpts(t *testing.T) {
 		Name:      "createdserver",
 		ImageRef:  "asdfasdfasdf",
 		FlavorRef: "performance1-1",
+		Networks:  []servers.Network{},
 	}
 
 	ext := diskconfig.CreateOptsExt{
@@ -26,6 +27,7 @@ func TestCreateOpts(t *testing.T) {
 				"name": "createdserver",
 				"imageRef": "asdfasdfasdf",
 				"flavorRef": "performance1-1",
+				"networks": [],
 				"OS-DCF:diskConfig": "MANUAL"
 			}
 		}

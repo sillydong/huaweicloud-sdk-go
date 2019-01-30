@@ -3,9 +3,11 @@ package testing
 import (
 	"testing"
 
-	"github.com/gophercloud/gophercloud/openstack"
-	"github.com/gophercloud/gophercloud/openstack/objectstorage/v1/swauth"
-	th "github.com/gophercloud/gophercloud/testhelper"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/objectstorage/v1/swauth"
+	th "github.com/huaweicloud/huaweicloud-sdk-go/testhelper"
 )
 
 func TestAuth(t *testing.T) {
@@ -18,7 +20,7 @@ func TestAuth(t *testing.T) {
 	defer th.TeardownHTTP()
 	HandleAuthSuccessfully(t, authOpts)
 
-	providerClient, err := openstack.NewClient(th.Endpoint())
+	providerClient, err := openstack.NewClient(th.Endpoint(), "domainID", "projectID", gophercloud.NewConfig())
 	th.AssertNoErr(t, err)
 
 	swiftClient, err := swauth.NewObjectStorageV1(providerClient, authOpts)

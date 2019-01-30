@@ -1,11 +1,11 @@
 package cloudserversext
 
 import (
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack"
-	"github.com/gophercloud/gophercloud/openstack/ecs/v1/cloudservers"
-	"github.com/gophercloud/gophercloud/openstack/blockstorage/v2/volumes"
-	"github.com/gophercloud/gophercloud/openstack/bss/v1/resource"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/blockstorage/v2/volumes"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/bss/v1/resource"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/ecs/v1/cloudservers"
 )
 
 const ECSCLOUDSERVICETYPECODE = "hws.service.type.ec2"
@@ -123,7 +123,7 @@ func getChargingInfo(client *gophercloud.ServiceClient, serverId, orderId string
 	return resources, nil
 }
 
-func fmtChargingInfo(res resource.Resources) (Charging) {
+func fmtChargingInfo(res resource.Resources) Charging {
 	var charging Charging
 	data := res.Data
 	//如果data没数据，则表示为按需server（非包周期server）

@@ -3,8 +3,8 @@ package volumes
 import (
 	"fmt"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/pagination"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/pagination"
 )
 
 // CreateOptsBuilder allows extensions to add additional parameters to the
@@ -175,15 +175,15 @@ type UpdateOptsBuilder interface {
 // the Volume object.
 type UpdateOpts struct {
 	// The volume name
-	Name               string            `json:"name,omitempty"`
+	Name string `json:"name,omitempty"`
 	// The volume description
-	Description        string            `json:"description,omitempty"`
+	Description string `json:"description,omitempty"`
 	// Metadata will filter results based on specified metadata.
-	Metadata           map[string]string `json:"metadata,omitempty"`
+	Metadata map[string]string `json:"metadata,omitempty"`
 	// The volume name show for users
-	DisplayName        string            `json:"display_name,omitempty"`
+	DisplayName string `json:"display_name,omitempty"`
 	// The volume description show for users
-	DisplayDescription string            `json:"display_description,omitempty"`
+	DisplayDescription string `json:"display_description,omitempty"`
 }
 
 // ToVolumeUpdateMap assembles a request body based on the contents of an

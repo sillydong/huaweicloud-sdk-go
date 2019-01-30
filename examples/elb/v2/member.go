@@ -1,14 +1,13 @@
 package main
 
-
 import (
 	"fmt"
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/lbaas_v2/pools"
-	"github.com/gophercloud/gophercloud/auth/aksk"
-	"github.com/gophercloud/gophercloud/pagination"
 
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/auth/aksk"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/networking/v2/extensions/lbaas_v2/pools"
+	"github.com/huaweicloud/huaweicloud-sdk-go/pagination"
 )
 
 func main() {
@@ -24,7 +23,6 @@ func main() {
 		Region:           "cn-north-1",
 		DomainID:         "{domainID}",
 	}
-
 
 	provider, err_auth := openstack.AuthenticatedClient(opts)
 	if err_auth != nil {
@@ -42,36 +40,33 @@ func main() {
 		return
 	}
 
-	poolId:="13a887d0-cce3-4d2a-8961-7ad855d054c9"
+	poolId := "13a887d0-cce3-4d2a-8961-7ad855d054c9"
 
-	memId:=MemberCreate(sc, poolId)
+	memId := MemberCreate(sc, poolId)
 	MemberList(sc, poolId)
 	MemberGet(sc, poolId, memId)
 	MemberUpdate(sc, poolId, memId)
 	MemberDelete(sc, poolId, memId)
 
-
 	fmt.Println("main end...")
 }
 
-
-
 func MemberCreate(sc *gophercloud.ServiceClient, poolId string) (memId string) {
 
-	weight:=100
-	TrueValue:=true
+	weight := 100
+	TrueValue := true
 
-	opts:=pools.CreateMemberOpts{
-		SubnetID:"5de13914-bd0c-4387-81a7-2d6618cd4824",
-		Address:"192.168.0.50",
-		ProtocolPort:1234,
-		Name:"kaka new",
-		TenantID:"601240b9c5c94059b63d484c92cfe308",
-		AdminStateUp:&TrueValue,
-		Weight:&weight,
+	opts := pools.CreateMemberOpts{
+		SubnetID:     "5de13914-bd0c-4387-81a7-2d6618cd4824",
+		Address:      "192.168.0.50",
+		ProtocolPort: 1234,
+		Name:         "kaka new",
+		TenantID:     "601240b9c5c94059b63d484c92cfe308",
+		AdminStateUp: &TrueValue,
+		Weight:       &weight,
 	}
 
-	resp,err:=pools.CreateMember(sc, poolId, opts).Extract()
+	resp, err := pools.CreateMember(sc, poolId, opts).Extract()
 
 	if err != nil {
 		fmt.Println(err)
@@ -87,11 +82,10 @@ func MemberCreate(sc *gophercloud.ServiceClient, poolId string) (memId string) {
 	return memId
 }
 
-
 func MemberList(sc *gophercloud.ServiceClient, poolId string) (allPages pagination.Page) {
 
 	allPages, err := pools.ListMembers(sc, poolId, pools.ListMembersOpts{}).AllPages()
-		if err != nil {
+	if err != nil {
 		fmt.Println(err)
 		if ue, ok := err.(*gophercloud.UnifiedError); ok {
 			fmt.Println("ErrCode:", ue.ErrorCode())
@@ -101,19 +95,19 @@ func MemberList(sc *gophercloud.ServiceClient, poolId string) (allPages paginati
 	}
 
 	fmt.Println("Test member List success!")
-	return  allPages
+	return allPages
 
 }
 
 func MemberGet(sc *gophercloud.ServiceClient, poolId string, memId string) (resp *pools.Member) {
 
-	resp,err:= pools.GetMember(sc, poolId, memId).Extract()
+	resp, err := pools.GetMember(sc, poolId, memId).Extract()
 
-	if err!=nil{
+	if err != nil {
 		fmt.Println(err)
-		if ue,ok:=err.(*gophercloud.UnifiedError); ok{
-			fmt.Println("ErrCode",ue.ErrCode)
-			fmt.Println("ErrMessage",ue.ErrMessage)
+		if ue, ok := err.(*gophercloud.UnifiedError); ok {
+			fmt.Println("ErrCode", ue.ErrCode)
+			fmt.Println("ErrMessage", ue.ErrMessage)
 		}
 	}
 	fmt.Println("member get success!")
@@ -122,22 +116,21 @@ func MemberGet(sc *gophercloud.ServiceClient, poolId string, memId string) (resp
 
 func MemberUpdate(sc *gophercloud.ServiceClient, poolId string, memId string) (resp *pools.Member) {
 
-	TrueValue:=true
+	TrueValue := true
 	wei := 10
-	updatOpts:=pools.UpdateMemberOpts{
-		Name:"KAKAK A member",
-		Weight:&wei,
-		AdminStateUp:&TrueValue,
+	updatOpts := pools.UpdateMemberOpts{
+		Name:         "KAKAK A member",
+		Weight:       &wei,
+		AdminStateUp: &TrueValue,
 	}
 
-	resp,err:=pools.UpdateMember(sc, poolId, memId, updatOpts).Extract()
+	resp, err := pools.UpdateMember(sc, poolId, memId, updatOpts).Extract()
 
-
-	if err!=nil{
+	if err != nil {
 		fmt.Println(err)
-		if ue,ok:=err.(*gophercloud.UnifiedError); ok{
-			fmt.Println("ErrCode",ue.ErrCode)
-			fmt.Println("ErrMessage",ue.ErrMessage)
+		if ue, ok := err.(*gophercloud.UnifiedError); ok {
+			fmt.Println("ErrCode", ue.ErrCode)
+			fmt.Println("ErrMessage", ue.ErrMessage)
 		}
 	}
 	fmt.Println("member update success!")
@@ -145,9 +138,9 @@ func MemberUpdate(sc *gophercloud.ServiceClient, poolId string, memId string) (r
 
 }
 
-func MemberDelete(sc *gophercloud.ServiceClient, poolId string, memId string)  {
+func MemberDelete(sc *gophercloud.ServiceClient, poolId string, memId string) {
 
-	err:=pools.DeleteMember(sc, poolId, memId).ExtractErr()
+	err := pools.DeleteMember(sc, poolId, memId).ExtractErr()
 
 	if err != nil {
 		fmt.Println(err)
@@ -160,6 +153,3 @@ func MemberDelete(sc *gophercloud.ServiceClient, poolId string, memId string)  {
 
 	fmt.Println("delete member success!")
 }
-
-
-

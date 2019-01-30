@@ -1,13 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"encoding/json"
+	"fmt"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/functiontest/common"
-	"github.com/gophercloud/gophercloud/openstack"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/layer3/floatingips"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/functiontest/common"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/networking/v2/extensions/layer3/floatingips"
 )
 
 var floatingIpid string
@@ -44,7 +44,6 @@ func main() {
 
 	fmt.Println("main end...")
 }
-
 
 func TestFloatingIPList(sc *gophercloud.ServiceClient) {
 	allpages, err := floatingips.List(sc, floatingips.ListOpts{}).AllPages()
@@ -90,8 +89,8 @@ func TestFloatingIPGet(sc *gophercloud.ServiceClient) {
 
 func TestFloatingIPCreate(sc *gophercloud.ServiceClient) {
 	opts := floatingips.CreateOpts{
-		FloatingNetworkID:"0a2228f2-7f8a-45f1-8e09-9039e1d09975",
-		PortID:"2f8254a3-c7ec-4600-bc10-cdfdf9a4384b",
+		FloatingNetworkID: "0a2228f2-7f8a-45f1-8e09-9039e1d09975",
+		PortID:            "2f8254a3-c7ec-4600-bc10-cdfdf9a4384b",
 	}
 
 	floatingip, err := floatingips.Create(sc, opts).Extract()
@@ -105,7 +104,7 @@ func TestFloatingIPCreate(sc *gophercloud.ServiceClient) {
 	}
 
 	fmt.Println("Test create floatingip success!")
-	floatingIpid=floatingip.ID
+	floatingIpid = floatingip.ID
 	p, _ := json.MarshalIndent(floatingip, "", " ")
 	fmt.Println(string(p))
 }
@@ -116,11 +115,11 @@ func TestFloatingIPUpdate(sc *gophercloud.ServiceClient) {
 	opts := floatingips.UpdateOpts{
 		//PortID:&newportid,
 		//FixedIP:&fixedip,
-		PortID:nil,
-		FixedIP:nil,
+		PortID:  nil,
+		FixedIP: nil,
 	}
 
-	floatingip,err := floatingips.Update(sc, floatingIpid,opts).Extract()
+	floatingip, err := floatingips.Update(sc, floatingIpid, opts).Extract()
 	if err != nil {
 		fmt.Println(err)
 		if ue, ok := err.(*gophercloud.UnifiedError); ok {

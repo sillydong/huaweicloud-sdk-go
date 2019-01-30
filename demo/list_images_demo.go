@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack"
-	"github.com/gophercloud/gophercloud/auth/aksk"
-	"github.com/gophercloud/gophercloud/openstack/ims/v2/cloudimages"
+
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/auth/aksk"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/ims/v2/cloudimages"
 )
 
 func main() {
@@ -19,7 +20,6 @@ func main() {
 		Region:           "cn-north-1",
 		DomainID:         "{domainID}",
 	}
-
 
 	provider, err_auth := openstack.AuthenticatedClient(opts)
 	if err_auth != nil {
@@ -38,7 +38,7 @@ func main() {
 		Isregistered: "true",
 	}
 
-	allPages, err_list := cloudimages.List(client,listOpts ).AllPages()
+	allPages, err_list := cloudimages.List(client, listOpts).AllPages()
 
 	if err_list != nil {
 		if ue, ok := err_list.(*gophercloud.UnifiedError); ok {
@@ -52,11 +52,9 @@ func main() {
 	allImages, err_extract := cloudimages.ExtractImages(allPages)
 
 	if err_extract != nil {
-		fmt.Println("Unable to extract images: ",err_extract)
+		fmt.Println("Unable to extract images: ", err_extract)
 	}
 
 	fmt.Println("Succeed to list images!")
-	fmt.Println("First image ID is:",allImages[0].ID)
+	fmt.Println("First image ID is:", allImages[0].ID)
 }
-
-

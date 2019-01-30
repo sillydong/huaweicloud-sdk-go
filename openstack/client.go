@@ -8,19 +8,19 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/auth"
-	akskAuth "github.com/gophercloud/gophercloud/auth/aksk"
-	tokenAuth "github.com/gophercloud/gophercloud/auth/token"
-	tokens2 "github.com/gophercloud/gophercloud/openstack/identity/v2/tokens"
-	tokens3 "github.com/gophercloud/gophercloud/openstack/identity/v3/tokens"
-	"github.com/gophercloud/gophercloud/openstack/utils"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/auth"
+	akskAuth "github.com/huaweicloud/huaweicloud-sdk-go/auth/aksk"
+	tokenAuth "github.com/huaweicloud/huaweicloud-sdk-go/auth/token"
+	tokens2 "github.com/huaweicloud/huaweicloud-sdk-go/openstack/identity/v2/tokens"
+	tokens3 "github.com/huaweicloud/huaweicloud-sdk-go/openstack/identity/v3/tokens"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/utils"
 
-	"github.com/gophercloud/gophercloud/openstack/identity/v3/endpoints"
-	"github.com/gophercloud/gophercloud/openstack/identity/v3/services"
-	"github.com/gophercloud/gophercloud/pagination"
 	"time"
 
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/identity/v3/endpoints"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/identity/v3/services"
+	"github.com/huaweicloud/huaweicloud-sdk-go/pagination"
 )
 
 const (
@@ -117,7 +117,7 @@ are available, then chooses the most recent or most supported version.
 
 Example:
 
-	ao, err := openstack.AuthOptionsFromEnv()
+	ao, err := auth.TokenOptionsFromEnv()
 	provider, err := openstack.AuthenticatedClient(ao)
 	client, err := openstack.NewNetworkV2(client, EndpointOpts{
 		Region: os.Getenv("OS_REGION_NAME"),
@@ -146,7 +146,7 @@ service that's used for authentication explicitly, for example.
 
 A basic example of using this would be:
 
-	ao, err := openstack.AuthOptionsFromEnv()
+	ao, err := auth.TokenOptionsFromEnv()
 	provider, err := openstack.NewClient(ao.IdentityEndpoint)
 	client, err := openstack.NewIdentityV3(provider, gophercloud.EndpointOpts{})
 */
@@ -261,7 +261,7 @@ func akskAuthV3(client *gophercloud.ProviderClient, endpoint string, options aks
 	v3Client.AKSKOptions = options
 
 	var entries = make([]tokens3.CatalogEntry, 0, 1)
-	serviceListErr:=services.List(v3Client, services.ListOpts{}).EachPage(func(page pagination.Page) (bool, error) {
+	serviceListErr := services.List(v3Client, services.ListOpts{}).EachPage(func(page pagination.Page) (bool, error) {
 		serviceLst, err := services.ExtractServices(page)
 		if err != nil {
 			return false, err
@@ -279,11 +279,11 @@ func akskAuthV3(client *gophercloud.ProviderClient, endpoint string, options aks
 		return true, nil
 	})
 
-	if serviceListErr!=nil{
+	if serviceListErr != nil {
 		return serviceListErr
 	}
 
-	endpointListErr:=endpoints.List(v3Client, endpoints.ListOpts{}).EachPage(func(page pagination.Page) (bool, error) {
+	endpointListErr := endpoints.List(v3Client, endpoints.ListOpts{}).EachPage(func(page pagination.Page) (bool, error) {
 		endpointList, err := endpoints.ExtractEndpoints(page)
 		if err != nil {
 			return false, err
@@ -291,7 +291,6 @@ func akskAuthV3(client *gophercloud.ProviderClient, endpoint string, options aks
 
 		for _, endpoint := range endpointList {
 			entry := getEntryByServiceId(entries, endpoint.ServiceID)
-
 
 			if entry != nil {
 				entry.Endpoints = append(entry.Endpoints, tokens3.Endpoint{
@@ -312,7 +311,7 @@ func akskAuthV3(client *gophercloud.ProviderClient, endpoint string, options aks
 		return true, nil
 	})
 
-	if endpointListErr!=nil{
+	if endpointListErr != nil {
 		return endpointListErr
 	}
 
@@ -515,17 +514,17 @@ func getMicoreVersion(client *gophercloud.ProviderClient, url string) (versionDa
 		Base string `json:"base"`
 	}
 	type version struct {
-		MinVersion string        `json:"min_version"`
-		Links      [] Links      `json:"links"`
-		ID         string        `json:"id"`
-		Updated    time.Time     `json:"updated"`
-		Version    string        `json:"version"`
-		Status     string        `json:"status"`
-		MediaTypes [] MediaTypes `json:"media-types"`
+		MinVersion string       `json:"min_version"`
+		Links      []Links      `json:"links"`
+		ID         string       `json:"id"`
+		Updated    time.Time    `json:"updated"`
+		Version    string       `json:"version"`
+		Status     string       `json:"status"`
+		MediaTypes []MediaTypes `json:"media-types"`
 	}
 
 	type Versions struct {
-		Versions [] version `json:"versions"`
+		Versions []version `json:"versions"`
 	}
 
 	var to Versions
@@ -575,7 +574,7 @@ func initClientOpts(client *gophercloud.ProviderClient, eo gophercloud.EndpointO
 // NewObjectStorageV1 creates a ServiceClient that may be used with the v1
 // object storage package.
 func NewObjectStorageV1(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	return initClientOpts(client, eo, "object-store",objectSstoreMicroVersion )
+	return initClientOpts(client, eo, "object-store", objectSstoreMicroVersion)
 }
 
 // NewComputeV2 creates a ServiceClient that may be used with the v2 compute
@@ -587,7 +586,7 @@ func NewComputeV2(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpt
 // NewNetworkV2 creates a ServiceClient that may be used with the v2 network
 // package.
 func NewNetworkV2(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	sc, err := initClientOpts(client, eo, "network",networkMicroVersion)
+	sc, err := initClientOpts(client, eo, "network", networkMicroVersion)
 	sc.ResourceBase = sc.Endpoint + "v2.0/"
 	return sc, err
 }
@@ -595,46 +594,46 @@ func NewNetworkV2(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpt
 // NewBlockStorageV1 creates a ServiceClient that may be used to access the v1
 // block storage service.
 func NewBlockStorageV1(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	return initClientOpts(client, eo, "volume",volumeMicroVersion)
+	return initClientOpts(client, eo, "volume", volumeMicroVersion)
 }
 
 // NewBlockStorageV2 creates a ServiceClient that may be used to access the v2
 // block storage service.
 func NewBlockStorageV2(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	return initClientOpts(client, eo, "volumev2",volumev2MicroVersion)
+	return initClientOpts(client, eo, "volumev2", volumev2MicroVersion)
 }
 
 // NewBlockStorageV3 creates a ServiceClient that may be used to access the v3 block storage service.
 func NewBlockStorageV3(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	return initClientOpts(client, eo, "volumev3",volumev3MicroVersion)
+	return initClientOpts(client, eo, "volumev3", volumev3MicroVersion)
 }
 
 // NewSharedFileSystemV2 creates a ServiceClient that may be used to access the v2 shared file system service.
 func NewSharedFileSystemV2(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	return initClientOpts(client, eo, "sharev2",sharev2MicroVersion)
+	return initClientOpts(client, eo, "sharev2", sharev2MicroVersion)
 }
 
 // NewCDNV1 creates a ServiceClient that may be used to access the OpenStack v1
 // CDN service.
 func NewCDNV1(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	return initClientOpts(client, eo, "cdn",cdnMicroVersion)
+	return initClientOpts(client, eo, "cdn", cdnMicroVersion)
 }
 
 // NewOrchestrationV1 creates a ServiceClient that may be used to access the v1
 // orchestration service.
 func NewOrchestrationV1(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	return initClientOpts(client, eo, "orchestration",orchestrationMicroVersion)
+	return initClientOpts(client, eo, "orchestration", orchestrationMicroVersion)
 }
 
 // NewDBV1 creates a ServiceClient that may be used to access the v1 DB service.
 func NewDBV1(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	return initClientOpts(client, eo, "database",databaseMicroVersion)
+	return initClientOpts(client, eo, "database", databaseMicroVersion)
 }
 
 // NewDNSV2 creates a ServiceClient that may be used to access the v2 DNS
 // service.
 func NewDNSV2(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	sc, err := initClientOpts(client, eo, "dns",dnsMicroVersion)
+	sc, err := initClientOpts(client, eo, "dns", dnsMicroVersion)
 	sc.ResourceBase = sc.Endpoint + "v2/"
 	return sc, err
 }
@@ -642,7 +641,7 @@ func NewDNSV2(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (
 // NewImageServiceV2 creates a ServiceClient that may be used to access the v2
 // image service.
 func NewImageServiceV2(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	sc, err := initClientOpts(client, eo, "image",imageMicroVersion)
+	sc, err := initClientOpts(client, eo, "image", imageMicroVersion)
 	sc.ResourceBase = sc.Endpoint + "v2/"
 	return sc, err
 }
@@ -650,7 +649,7 @@ func NewImageServiceV2(client *gophercloud.ProviderClient, eo gophercloud.Endpoi
 // NewLoadBalancerV2 creates a ServiceClient that may be used to access the v2
 // load balancer service.
 func NewLoadBalancerV2(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	sc, err := initClientOpts(client, eo, "load-balancer",loadBalancerMicroVersion)
+	sc, err := initClientOpts(client, eo, "load-balancer", loadBalancerMicroVersion)
 	sc.ResourceBase = sc.Endpoint + "v2.0/"
 	return sc, err
 }
@@ -658,25 +657,25 @@ func NewLoadBalancerV2(client *gophercloud.ProviderClient, eo gophercloud.Endpoi
 /* 自研 */
 
 func NewECSV1(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	return initClientOpts(client, eo, "ecs",ecsMicroVersion)
+	return initClientOpts(client, eo, "ecs", ecsMicroVersion)
 }
 
 func NewECSV1_1(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	return initClientOpts(client, eo, "ecsv1.1",ecsv1_1MicroVersion)
+	return initClientOpts(client, eo, "ecsv1.1", ecsv1_1MicroVersion)
 }
 
 func NewECSV2(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	return initClientOpts(client, eo, "ecsv2",ecsv2MicroVersion)
+	return initClientOpts(client, eo, "ecsv2", ecsv2MicroVersion)
 }
 
 func NewIMSV2(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	sc, err := initClientOpts(client, eo, "image",imageSelfDevMicroVersion)
+	sc, err := initClientOpts(client, eo, "image", imageSelfDevMicroVersion)
 	sc.ResourceBase = sc.Endpoint + "v2/"
 	return sc, err
 }
 
 func NewBSSV1(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	sc, err := initClientOpts(client, eo, "bss",bssMicroVersion)
+	sc, err := initClientOpts(client, eo, "bss", bssMicroVersion)
 	sc.ResourceBase = sc.Endpoint + "v1.0/"
 	return sc, err
 }

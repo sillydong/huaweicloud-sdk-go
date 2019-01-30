@@ -1,15 +1,18 @@
 package testing
 
 import (
+	"fmt"
 	"testing"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack/identity/v2/tokens"
-	th "github.com/gophercloud/gophercloud/testhelper"
-	"github.com/gophercloud/gophercloud/testhelper/client"
+	"github.com/huaweicloud/huaweicloud-sdk-go/auth/token"
+
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/identity/v2/tokens"
+	th "github.com/huaweicloud/huaweicloud-sdk-go/testhelper"
+	"github.com/huaweicloud/huaweicloud-sdk-go/testhelper/client"
 )
 
-func tokenPost(t *testing.T, options gophercloud.AuthOptions, requestJSON string) tokens.CreateResult {
+func tokenPost(t *testing.T, options token.TokenOptions, requestJSON string) tokens.CreateResult {
 	th.SetupHTTP()
 	defer th.TeardownHTTP()
 	HandleTokenPost(t, requestJSON)
@@ -17,7 +20,7 @@ func tokenPost(t *testing.T, options gophercloud.AuthOptions, requestJSON string
 	return tokens.Create(client.ServiceClient(), options)
 }
 
-func tokenPostErr(t *testing.T, options gophercloud.AuthOptions, expectedErr error) {
+func tokenPostErr(t *testing.T, options token.TokenOptions, expectedErr error) {
 	th.SetupHTTP()
 	defer th.TeardownHTTP()
 	HandleTokenPost(t, "")
@@ -27,7 +30,7 @@ func tokenPostErr(t *testing.T, options gophercloud.AuthOptions, expectedErr err
 }
 
 func TestCreateWithPassword(t *testing.T) {
-	options := gophercloud.AuthOptions{
+	options := token.TokenOptions{
 		Username: "me",
 		Password: "swordfish",
 	}
@@ -45,7 +48,7 @@ func TestCreateWithPassword(t *testing.T) {
 }
 
 func TestCreateTokenWithTenantID(t *testing.T) {
-	options := gophercloud.AuthOptions{
+	options := token.TokenOptions{
 		Username: "me",
 		Password: "opensesame",
 		TenantID: "fc394f2ab2df4114bde39905f800dc57",
@@ -65,7 +68,7 @@ func TestCreateTokenWithTenantID(t *testing.T) {
 }
 
 func TestCreateTokenWithTenantName(t *testing.T) {
-	options := gophercloud.AuthOptions{
+	options := token.TokenOptions{
 		Username:   "me",
 		Password:   "opensesame",
 		TenantName: "demo",
@@ -85,7 +88,7 @@ func TestCreateTokenWithTenantName(t *testing.T) {
 }
 
 func TestRequireUsername(t *testing.T) {
-	options := gophercloud.AuthOptions{
+	options := token.TokenOptions{
 		Password: "thing",
 	}
 

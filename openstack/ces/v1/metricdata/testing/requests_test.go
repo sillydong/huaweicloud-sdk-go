@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"testing"
 
-	th "github.com/gophercloud/gophercloud/testhelper"
-	"github.com/gophercloud/gophercloud/openstack/ces/v1/metricdata"
-	fake "github.com/gophercloud/gophercloud/testhelper/client"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/ces/v1/metricdata"
+	th "github.com/huaweicloud/huaweicloud-sdk-go/testhelper"
+	fake "github.com/huaweicloud/huaweicloud-sdk-go/testhelper/client"
 )
 
 func TestBatchQuery(t *testing.T) {
@@ -58,12 +58,12 @@ func TestBatchQuery(t *testing.T) {
 	n, err := metricdata.BatchQuery(fake.ServiceClient(), options).ExtractMetricDatas()
 	th.AssertNoErr(t, err)
 
-	th.AssertEquals(t,n[0].Namespace , "MINE.APP")
-	th.AssertEquals(t,n[0].MetricName , "cpu_util")
-	th.AssertEquals(t,n[0].Unit , "request/s")
-	th.AssertDeepEquals(t,n[0].Dimensions,[]map[string]interface{}{
+	th.AssertEquals(t, n[0].Namespace, "MINE.APP")
+	th.AssertEquals(t, n[0].MetricName, "cpu_util")
+	th.AssertEquals(t, n[0].Unit, "request/s")
+	th.AssertDeepEquals(t, n[0].Dimensions, []map[string]interface{}{
 		{
-			"name": "instance_id",
+			"name":  "instance_id",
 			"value": "33328f02-3814-422e-b688-bfdba93d4050",
 		},
 	})

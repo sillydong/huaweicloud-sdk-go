@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/pagination"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/pagination"
 )
 
 // Snapshot contains all the information associated with a Cinder Snapshot.
@@ -82,11 +82,12 @@ func (r SnapshotPage) IsEmpty() (bool, error) {
 	resp, err := ExtractSnapshots(r)
 	return len(resp.SnapshotsLinks) == 0, err
 }
-type SnapshotList struct {
-	Snapshots []Snapshot `json:"snapshots"`
-	SnapshotsLinks []map[string]string `json:"snapshots_links"`
 
+type SnapshotList struct {
+	Snapshots      []Snapshot          `json:"snapshots"`
+	SnapshotsLinks []map[string]string `json:"snapshots_links"`
 }
+
 // ExtractSnapshots extracts and returns Snapshots. It is used while iterating over a snapshots.List call.
 func ExtractSnapshots(r pagination.Page) (SnapshotList, error) {
 	var s SnapshotList

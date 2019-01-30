@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack"
-	"github.com/gophercloud/gophercloud/auth/aksk"
-	"github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/startstop"
+
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/auth/aksk"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/compute/v2/extensions/startstop"
 )
 
 func main() {
@@ -41,7 +42,7 @@ func main() {
 		if se, ok := err_start.(*gophercloud.UnifiedError); ok {
 			fmt.Println("ErrCode:", se.ErrorCode())
 			fmt.Println("Message:", se.Message())
-		} else{
+		} else {
 			fmt.Println("Error:", err_start)
 		}
 		return
@@ -50,5 +51,3 @@ func main() {
 	fmt.Println("Start to start server!")
 
 }
-
-

@@ -1,13 +1,13 @@
 package main
 
-
 import (
 	"fmt"
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/lbaas_v2/monitors"
-	"github.com/gophercloud/gophercloud/auth/aksk"
-	"github.com/gophercloud/gophercloud/pagination"
+
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/auth/aksk"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/networking/v2/extensions/lbaas_v2/monitors"
+	"github.com/huaweicloud/huaweicloud-sdk-go/pagination"
 )
 
 func main() {
@@ -23,7 +23,6 @@ func main() {
 		Region:           "cn-north-1",
 		DomainID:         "{domainID}",
 	}
-
 
 	provider, err_auth := openstack.AuthenticatedClient(opts)
 	if err_auth != nil {
@@ -41,7 +40,7 @@ func main() {
 		return
 	}
 
-	id:=HealthMonitorCreate(sc)
+	id := HealthMonitorCreate(sc)
 	HealthMonitorList(sc)
 	HealthMonitorUpdate(sc, id)
 	HealthMonitorGet(sc, id)
@@ -53,24 +52,24 @@ func main() {
 
 func HealthMonitorCreate(sc *gophercloud.ServiceClient) (id string) {
 
-	trueValue:=true
+	trueValue := true
 	//('HTTP', 'TCP', 'UDP_CONNECT')
-	opts:=monitors.CreateOpts{
-		PoolID:"13a887d0-cce3-4d2a-8961-7ad855d054c9",
-		Type:"HTTP",
-		Delay:10,
-		Timeout:10,
-		MaxRetries:3,
-		Name:"mmmmm",
-		AdminStateUp:&trueValue,
-		MonitorPort: 520,
-		URLPath: "/test",
-		HTTPMethod: "GET",
+	opts := monitors.CreateOpts{
+		PoolID:        "13a887d0-cce3-4d2a-8961-7ad855d054c9",
+		Type:          "HTTP",
+		Delay:         10,
+		Timeout:       10,
+		MaxRetries:    3,
+		Name:          "mmmmm",
+		AdminStateUp:  &trueValue,
+		MonitorPort:   520,
+		URLPath:       "/test",
+		HTTPMethod:    "GET",
 		ExpectedCodes: "200",
-		DomainName:"www.test.com",
+		DomainName:    "www.test.com",
 	}
 
-	resp,err:=monitors.Create(sc,opts).Extract()
+	resp, err := monitors.Create(sc, opts).Extract()
 
 	if err != nil {
 		fmt.Println(err)
@@ -83,14 +82,13 @@ func HealthMonitorCreate(sc *gophercloud.ServiceClient) (id string) {
 
 	fmt.Println("monitors Create success!")
 	fmt.Println(resp)
-	id=(*resp).ID
+	id = (*resp).ID
 	return id
 }
 
-
 func HealthMonitorList(sc *gophercloud.ServiceClient) (allPages pagination.Page) {
-	allPages, err := monitors.List(sc,monitors.ListOpts{}).AllPages()
-		if err != nil {
+	allPages, err := monitors.List(sc, monitors.ListOpts{}).AllPages()
+	if err != nil {
 		fmt.Println(err)
 		if ue, ok := err.(*gophercloud.UnifiedError); ok {
 			fmt.Println("ErrCode:", ue.ErrorCode())
@@ -101,58 +99,54 @@ func HealthMonitorList(sc *gophercloud.ServiceClient) (allPages pagination.Page)
 
 	fmt.Println("Test monitor List success!")
 	fmt.Println(allPages)
-	return  allPages
+	return allPages
 
 }
 
+func HealthMonitorGet(sc *gophercloud.ServiceClient, id string) {
 
+	resp, err := monitors.Get(sc, id).Extract()
 
-func HealthMonitorGet(sc *gophercloud.ServiceClient, id string)  {
-
-	resp,err:= monitors.Get(sc,id).Extract()
-
-
-	if err!=nil{
+	if err != nil {
 		fmt.Println(err)
-		if ue,ok:=err.(*gophercloud.UnifiedError); ok{
-			fmt.Println("ErrCode",ue.ErrCode)
-			fmt.Println("ErrMessage",ue.ErrMessage)
+		if ue, ok := err.(*gophercloud.UnifiedError); ok {
+			fmt.Println("ErrCode", ue.ErrCode)
+			fmt.Println("ErrMessage", ue.ErrMessage)
 		}
 	}
-	fmt.Println("monitor get success!\n",resp)
+	fmt.Println("monitor get success!\n", resp)
 
 }
 
-func HealthMonitorUpdate(sc *gophercloud.ServiceClient, id string)  {
-	trueValue:=true
-	updatOpts:=monitors.UpdateOpts{
-		Delay:10,
-		Timeout:10,
-		MaxRetries:3,
-		Name:"mmmmm",
-		AdminStateUp:&trueValue,
-		MonitorPort: 520,
-		URLPath: "/test",
-		HTTPMethod: "GET",
+func HealthMonitorUpdate(sc *gophercloud.ServiceClient, id string) {
+	trueValue := true
+	updatOpts := monitors.UpdateOpts{
+		Delay:         10,
+		Timeout:       10,
+		MaxRetries:    3,
+		Name:          "mmmmm",
+		AdminStateUp:  &trueValue,
+		MonitorPort:   520,
+		URLPath:       "/test",
+		HTTPMethod:    "GET",
 		ExpectedCodes: "200",
 	}
 
-	resp,err:=monitors.Update(sc,id,updatOpts).Extract()
+	resp, err := monitors.Update(sc, id, updatOpts).Extract()
 
-
-	if err!=nil{
+	if err != nil {
 		fmt.Println(err)
-		if ue,ok:=err.(*gophercloud.UnifiedError); ok{
-			fmt.Println("ErrCode",ue.ErrCode)
-			fmt.Println("ErrMessage",ue.ErrMessage)
+		if ue, ok := err.(*gophercloud.UnifiedError); ok {
+			fmt.Println("ErrCode", ue.ErrCode)
+			fmt.Println("ErrMessage", ue.ErrMessage)
 		}
 	}
 	fmt.Println("monitor update success!")
 	fmt.Println(*resp)
 }
 
-func HealthMonitorDelete(sc *gophercloud.ServiceClient, id string)  {
-	err:=monitors.Delete(sc,id).ExtractErr()
+func HealthMonitorDelete(sc *gophercloud.ServiceClient, id string) {
+	err := monitors.Delete(sc, id).ExtractErr()
 
 	if err != nil {
 		fmt.Println(err)
@@ -165,6 +159,3 @@ func HealthMonitorDelete(sc *gophercloud.ServiceClient, id string)  {
 
 	fmt.Println("delete monitor success!")
 }
-
-
-

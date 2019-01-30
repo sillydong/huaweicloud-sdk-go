@@ -5,9 +5,9 @@ package noauth
 import (
 	"testing"
 
-	"github.com/gophercloud/gophercloud/acceptance/clients"
-	"github.com/gophercloud/gophercloud/acceptance/tools"
-	"github.com/gophercloud/gophercloud/openstack/blockstorage/v2/snapshots"
+	"github.com/huaweicloud/huaweicloud-sdk-go/acceptance/clients"
+	"github.com/huaweicloud/huaweicloud-sdk-go/acceptance/tools"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/blockstorage/v2/snapshots"
 )
 
 func TestSnapshotsList(t *testing.T) {
@@ -26,7 +26,7 @@ func TestSnapshotsList(t *testing.T) {
 		t.Fatalf("Unable to extract snapshots: %v", err)
 	}
 
-	for _, snapshot := range allSnapshots {
+	for _, snapshot := range allSnapshots.Snapshots {
 		tools.PrintResource(t, snapshot)
 	}
 }

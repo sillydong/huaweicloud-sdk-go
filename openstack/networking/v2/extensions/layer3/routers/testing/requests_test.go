@@ -5,10 +5,10 @@ import (
 	"net/http"
 	"testing"
 
-	fake "github.com/gophercloud/gophercloud/openstack/networking/v2/common"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/layer3/routers"
-	"github.com/gophercloud/gophercloud/pagination"
-	th "github.com/gophercloud/gophercloud/testhelper"
+	fake "github.com/huaweicloud/huaweicloud-sdk-go/openstack/networking/v2/common"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/networking/v2/extensions/layer3/routers"
+	"github.com/huaweicloud/huaweicloud-sdk-go/pagination"
+	th "github.com/huaweicloud/huaweicloud-sdk-go/testhelper"
 )
 
 func TestList(t *testing.T) {
@@ -109,7 +109,7 @@ func TestList(t *testing.T) {
 				Name:         "gateway",
 				ID:           "308a035c-005d-4452-a9fe-6f8f2f0c28d8",
 				TenantID:     "a3e881e0a6534880c5473d95b9442099",
-				Ha: true,
+				Ha:           true,
 			},
 		}
 
@@ -185,7 +185,7 @@ func TestCreate(t *testing.T) {
 		AdminStateUp:          &asu,
 		GatewayInfo:           &gwi,
 		AvailabilityZoneHints: []string{"zone1", "zone2"},
-		Ha:		       &ha,
+		Ha:                    &ha,
 	}
 	r, err := routers.Create(fake.ServiceClient(), options).Extract()
 	th.AssertNoErr(t, err)
@@ -255,7 +255,7 @@ func TestGet(t *testing.T) {
 	th.AssertEquals(t, n.ID, "a07eea83-7710-4860-931b-5fe220fae533")
 	th.AssertDeepEquals(t, n.Routes, []routers.Route{{DestinationCIDR: "40.0.1.0/24", NextHop: "10.1.0.10"}})
 	th.AssertDeepEquals(t, n.AvailabilityZoneHints, []string{"zone1", "zone2"})
-	th.AssertEquals(t, n.Ha, true)
+	th.AssertEquals(t, n.Ha, false)
 }
 
 func TestUpdate(t *testing.T) {

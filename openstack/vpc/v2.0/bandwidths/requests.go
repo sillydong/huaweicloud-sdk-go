@@ -1,7 +1,7 @@
 package bandwidths
 
 import (
-	"github.com/gophercloud/gophercloud"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
 )
 
 type UpdateOpts struct {
@@ -10,7 +10,7 @@ type UpdateOpts struct {
 }
 type Bandwidth struct {
 	Name string `json:"name,omitempty"`
-	Size int   `json:"size,omitempty"`
+	Size int    `json:"size,omitempty"`
 }
 type ExtendParam struct {
 	IsAutoPay string `json:"is_auto_pay,omitempty"`
@@ -31,7 +31,7 @@ func Update(c *gophercloud.ServiceClient, bandwidthID string, opts UpdateOpts) (
 
 	_, r.Err = c.Put(UpdateURL(c, bandwidthID), body, &r.Body, &gophercloud.RequestOpts{OkCodes: []int{200}})
 
-	if opts.Bandwidth.Size == size ||opts.Bandwidth.Size == 0{
+	if opts.Bandwidth.Size == size || opts.Bandwidth.Size == 0 {
 		// extract bandwidth
 		return r.Extract()
 	}

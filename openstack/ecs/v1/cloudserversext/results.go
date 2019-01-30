@@ -1,12 +1,11 @@
 package cloudserversext
 
 import (
-	"github.com/gophercloud/gophercloud/openstack/ecs/v1/cloudservers"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/ecs/v1/cloudservers"
 )
 
 //在server结构上加上了相关bss（Charging）信息及相关volume（VolumeAttached）信息
 type CloudServerExt struct {
-
 	CloudServer *cloudservers.CloudServer
 
 	//volume attached new
@@ -15,7 +14,6 @@ type CloudServerExt struct {
 	//云服务器计费信息 new
 	Charging Charging
 }
-
 
 type Charging struct {
 	//0代表按需计费、1代表包周期计费

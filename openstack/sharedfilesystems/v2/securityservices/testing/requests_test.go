@@ -4,10 +4,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack/sharedfilesystems/v2/securityservices"
-	th "github.com/gophercloud/gophercloud/testhelper"
-	"github.com/gophercloud/gophercloud/testhelper/client"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/sharedfilesystems/v2/securityservices"
+	th "github.com/huaweicloud/huaweicloud-sdk-go/testhelper"
+	"github.com/huaweicloud/huaweicloud-sdk-go/testhelper/client"
 )
 
 // Verifies that a security service can be created correctly
@@ -39,6 +39,9 @@ func TestCreate(t *testing.T) {
 
 // Verifies that a security service cannot be created without a type
 func TestCreateFails(t *testing.T) {
+	th.SetupHTTP()
+	defer th.TeardownHTTP()
+
 	options := &securityservices.CreateOpts{
 		Name:        "SecServ1",
 		Description: "Creating my first Security Service",
@@ -48,7 +51,7 @@ func TestCreateFails(t *testing.T) {
 	}
 
 	_, err := securityservices.Create(client.ServiceClient(), options).Extract()
-	if _, ok := err.(gophercloud.ErrMissingInput); !ok {
+	if _, ok := err.(*gophercloud.UnifiedError); !ok {
 		t.Fatal("ErrMissingInput was expected to occur")
 	}
 }

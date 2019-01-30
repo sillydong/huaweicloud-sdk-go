@@ -1,8 +1,8 @@
 package listeners
 
 import (
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/pagination"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/pagination"
 )
 
 // Type Protocol represents a listener protocol.
@@ -37,7 +37,7 @@ type ListOpts struct {
 	ProtocolPort            int    `q:"protocol_port"`
 	Limit                   int    `q:"limit"`
 	Marker                  string `q:"marker"`
-	PageReverse             *bool   `q:"page_reverse"`
+	PageReverse             *bool  `q:"page_reverse"`
 	DefaultTlsContainerRef  string `q:"default_tls_container_ref"`
 	ClientCaTlsContainerRef string `q:"client_ca_tls_container_ref"`
 	MemberAddress           string `q:"member_address"`

@@ -7,13 +7,15 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack"
+	"github.com/huaweicloud/huaweicloud-sdk-go/auth"
+
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
 )
 
 func TestAuthenticatedClient(t *testing.T) {
 	// Obtain credentials from the environment.
-	ao, err := openstack.AuthOptionsFromEnv()
+	ao, err := auth.TokenOptionsFromEnv()
 	if err != nil {
 		t.Fatalf("Unable to acquire credentials: %v", err)
 	}
@@ -41,7 +43,7 @@ func TestAuthenticatedClient(t *testing.T) {
 }
 
 func TestReauth(t *testing.T) {
-	ao, err := openstack.AuthOptionsFromEnv()
+	ao, err := auth.TokenOptionsFromEnv()
 	if err != nil {
 		t.Fatalf("Unable to obtain environment auth options: %v", err)
 	}
@@ -50,7 +52,7 @@ func TestReauth(t *testing.T) {
 	ao.AllowReauth = true
 
 	conf := gophercloud.NewConfig()
-	provider, err := openstack.NewClient(ao.IdentityEndpoint, ao.TenantID, conf)
+	provider, err := openstack.NewClient(ao.IdentityEndpoint, ao.DomainID, ao.TenantID, conf)
 	if err != nil {
 		t.Fatalf("Unable to create provider: %v", err)
 	}

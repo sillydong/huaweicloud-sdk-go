@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/functiontest/common"
-	"github.com/gophercloud/gophercloud/openstack"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/lbaas_v2/whitelist"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/functiontest/common"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/networking/v2/extensions/lbaas_v2/whitelist"
 )
 
 var whitelistid string
@@ -48,7 +48,7 @@ func main() {
 
 func TestWhilteListList(sc *gophercloud.ServiceClient) {
 	enable := false
-	allPages, err := whitelist.List(sc, whitelist.ListOpts{EnableWhitelist:&enable}).AllPages()
+	allPages, err := whitelist.List(sc, whitelist.ListOpts{EnableWhitelist: &enable}).AllPages()
 	if err != nil {
 		fmt.Println(err)
 		if ue, ok := err.(*gophercloud.UnifiedError); ok {

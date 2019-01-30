@@ -3,10 +3,10 @@ package openstack
 import (
 	"fmt"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/auth/aksk"
-	tokens2 "github.com/gophercloud/gophercloud/openstack/identity/v2/tokens"
-	tokens3 "github.com/gophercloud/gophercloud/openstack/identity/v3/tokens"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/auth/aksk"
+	tokens2 "github.com/huaweicloud/huaweicloud-sdk-go/openstack/identity/v2/tokens"
+	tokens3 "github.com/huaweicloud/huaweicloud-sdk-go/openstack/identity/v3/tokens"
 
 	"errors"
 	"strings"
@@ -17,16 +17,16 @@ var endpointSchemaList = map[string]string{
 	"COMPUTE":  "https://ecs.%(region)s.%(domain)s/v2/%(projectID)s/",
 	"ECSV1.1":  "https://ecs.%(region)s.%(domain)s/v1.1/%(projectID)s/",
 	"ECSV2":    "https://ecs.%(region)s.%(domain)s/v2/%(projectID)s/",
-	"ECS":  "https://ecs.%(region)s.%(domain)s/v1/%(projectID)s/",
+	"ECS":      "https://ecs.%(region)s.%(domain)s/v1/%(projectID)s/",
 	"IMAGE":    "https://ims.%(region)s.%(domain)s/",
 	"NETWORK":  "https://vpc.%(region)s.%(domain)s/",
 	"VOLUMEV2": "https://evs.%(region)s.%(domain)s/v2/%(projectID)s/",
 	//"ANTIDDOS":      "https://antiddos.%(region)s.%(domain)s/",
 	//"BSS":           "https://bss.%(region)s.%(domain)s/",
-	"BSS":   "https://bss.cn-north-1.%(domain)s/",
-	"VPC":   "https://vpc.%(region)s.%(domain)s/v1/%(projectID)s/",
-	"CESV1": "https://ces.%(region)s.%(domain)s/V1.0/%(projectID)s/",
-	"VPCV2.0":   "https://vpc.%(region)s.%(domain)s/v2.0/%(projectID)s/",
+	"BSS":     "https://bss.cn-north-1.%(domain)s/",
+	"VPC":     "https://vpc.%(region)s.%(domain)s/v1/%(projectID)s/",
+	"CESV1":   "https://ces.%(region)s.%(domain)s/V1.0/%(projectID)s/",
+	"VPCV2.0": "https://vpc.%(region)s.%(domain)s/v2.0/%(projectID)s/",
 }
 
 /*

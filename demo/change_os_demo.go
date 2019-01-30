@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack"
-	"github.com/gophercloud/gophercloud/auth/aksk"
-	cloudserversV2 "github.com/gophercloud/gophercloud/openstack/ecs/v2/cloudservers"
+
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/auth/aksk"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	cloudserversV2 "github.com/huaweicloud/huaweicloud-sdk-go/openstack/ecs/v2/cloudservers"
 )
 
 func main() {
@@ -19,7 +20,6 @@ func main() {
 		Region:           "cn-north-1",
 		DomainID:         "{domainID}",
 	}
-
 
 	provider, err_auth := openstack.AuthenticatedClient(opts)
 	if err_auth != nil {
@@ -35,8 +35,8 @@ func main() {
 	}
 
 	changeOpts := cloudserversV2.ChangeOpts{
-		ImageID:       "2a50f694-b8e7-4a7a-8a51-0ff7f83d1345",
-		KeyName:       "KeyPair-9ec0",
+		ImageID: "2a50f694-b8e7-4a7a-8a51-0ff7f83d1345",
+		KeyName: "KeyPair-9ec0",
 	}
 
 	job, err_change := cloudserversV2.ChangeOS(client, "7ca89a44-0a72-444c-9032-907b68178575", changeOpts).ExtractJob()
@@ -53,5 +53,3 @@ func main() {
 	fmt.Println("Succeed to change OS !")
 	fmt.Println("jobID:", job.ID)
 }
-
-

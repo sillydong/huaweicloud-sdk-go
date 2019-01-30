@@ -1,15 +1,14 @@
 package testing
 
 import (
-	"testing"
-	"github.com/gophercloud/gophercloud/openstack/vpc/v2.0/bandwidths"
-		th "github.com/gophercloud/gophercloud/testhelper"
-	"net/http"
-	"github.com/gophercloud/gophercloud/testhelper/client"
 	"fmt"
+	"net/http"
+	"testing"
+
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/vpc/v2.0/bandwidths"
+	th "github.com/huaweicloud/huaweicloud-sdk-go/testhelper"
+	"github.com/huaweicloud/huaweicloud-sdk-go/testhelper/client"
 )
-
-
 
 var respOrder = `
 {
@@ -76,7 +75,3 @@ func HandleWithNameSuccessfully(t *testing.T) {
 	})
 
 }
-
-
-
-

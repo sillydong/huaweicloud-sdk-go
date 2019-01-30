@@ -1,13 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"encoding/json"
+	"fmt"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/functiontest/common"
-	"github.com/gophercloud/gophercloud/openstack"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/ports"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/functiontest/common"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/networking/v2/ports"
 )
 
 var portid string
@@ -90,8 +90,8 @@ func TestPortGet(sc *gophercloud.ServiceClient) {
 
 func TestPortCreate(sc *gophercloud.ServiceClient) {
 	opts := ports.CreateOpts{
-		Name:"testport",
-		NetworkID:"879adbf2-d620-4978-982e-73cd3aabcfc0",
+		Name:      "testport",
+		NetworkID: "879adbf2-d620-4978-982e-73cd3aabcfc0",
 	}
 
 	port, err := ports.Create(sc, opts).Extract()
@@ -105,17 +105,17 @@ func TestPortCreate(sc *gophercloud.ServiceClient) {
 	}
 
 	fmt.Println("Test create port success!")
-	portid=port.ID
+	portid = port.ID
 	p, _ := json.MarshalIndent(port, "", " ")
 	fmt.Println(string(p))
 }
 
 func TestPortUpdate(sc *gophercloud.ServiceClient) {
 	opts := ports.UpdateOpts{
-		Name:"testport2",
+		Name: "testport2",
 	}
 
-	port,err := ports.Update(sc, portid,opts).Extract()
+	port, err := ports.Update(sc, portid, opts).Extract()
 	if err != nil {
 		fmt.Println(err)
 		if ue, ok := err.(*gophercloud.UnifiedError); ok {

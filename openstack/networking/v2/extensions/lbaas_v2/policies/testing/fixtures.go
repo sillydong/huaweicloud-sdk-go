@@ -1,12 +1,13 @@
 package testing
 
 import (
-	"testing"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/lbaas_v2/policies"
-	th "github.com/gophercloud/gophercloud/testhelper"
-	"net/http"
-	"github.com/gophercloud/gophercloud/testhelper/client"
 	"fmt"
+	"net/http"
+	"testing"
+
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/networking/v2/extensions/lbaas_v2/policies"
+	th "github.com/huaweicloud/huaweicloud-sdk-go/testhelper"
+	"github.com/huaweicloud/huaweicloud-sdk-go/testhelper/client"
 )
 
 var CreateResp = `
@@ -220,8 +221,8 @@ var (
 		Description:        "",
 		RedirectPoolID:     "431a03eb-81bb-408e-ae37-7ce19023692b",
 		Rules: []policies.RuleId{
-			{ID: "67d8a8fa-b0dd-4bd4-a85b-671db19b2ef3",},
-			{ID: "f02b3bca-69d2-4335-a3fa-a8054e996213",},
+			{ID: "67d8a8fa-b0dd-4bd4-a85b-671db19b2ef3"},
+			{ID: "f02b3bca-69d2-4335-a3fa-a8054e996213"},
 		},
 	}
 	PoliciesTwo = policies.Policies{
@@ -237,7 +238,7 @@ var (
 		Description:        "",
 		RedirectPoolID:     "59eebd7b-c68f-4f8a-aa7f-e062e84c0690",
 		Rules: []policies.RuleId{
-			{ID: "f4499f48-de3d-4efe-926d-926aa4d6aaf5",},
+			{ID: "f4499f48-de3d-4efe-926d-926aa4d6aaf5"},
 		},
 	}
 	RuleOne = policies.PolicyRule{
@@ -337,7 +338,7 @@ func HandleRulesGetSuccessfully(t *testing.T) {
 			th.TestMethod(t, r, "GET")
 			th.TestHeader(t, r, "X-Auth-Token", client.TokenID)
 			w.Header().Add("Content-Type", "application/json")
-			fmt.Fprintf(w,GetRuleResp)
+			fmt.Fprintf(w, GetRuleResp)
 		})
 }
 

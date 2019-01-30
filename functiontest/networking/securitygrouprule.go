@@ -1,13 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"encoding/json"
+	"fmt"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/functiontest/common"
-	"github.com/gophercloud/gophercloud/openstack"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/security/rules"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/functiontest/common"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/networking/v2/extensions/security/rules"
 )
 
 var secgroupruleid string
@@ -43,7 +43,6 @@ func main() {
 
 	fmt.Println("main end...")
 }
-
 
 func TestSecGroupRuleList(sc *gophercloud.ServiceClient) {
 	allpages, err := rules.List(sc, rules.ListOpts{}).AllPages()
@@ -89,9 +88,9 @@ func TestSecGroupRuleGet(sc *gophercloud.ServiceClient) {
 
 func TestSecGroupRuleCreate(sc *gophercloud.ServiceClient) {
 	opts := rules.CreateOpts{
-		Direction:"ingress",
-		EtherType:"IPv4",
-		SecGroupID:"ee995a60-ea20-42cb-b2e6-470c38cffb95",
+		Direction:  "ingress",
+		EtherType:  "IPv4",
+		SecGroupID: "ee995a60-ea20-42cb-b2e6-470c38cffb95",
 	}
 	secgrouprule, err := rules.Create(sc, opts).Extract()
 	if err != nil {

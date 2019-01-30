@@ -3,10 +3,10 @@ package testing
 import (
 	"testing"
 
-	fake "github.com/gophercloud/gophercloud/openstack/networking/v2/common"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/lbaas_v2/monitors"
-	"github.com/gophercloud/gophercloud/pagination"
-	th "github.com/gophercloud/gophercloud/testhelper"
+	fake "github.com/huaweicloud/huaweicloud-sdk-go/openstack/networking/v2/common"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/networking/v2/extensions/lbaas_v2/monitors"
+	"github.com/huaweicloud/huaweicloud-sdk-go/pagination"
+	th "github.com/huaweicloud/huaweicloud-sdk-go/testhelper"
 )
 
 func TestListHealthmonitors(t *testing.T) {
@@ -74,6 +74,9 @@ func TestCreateHealthmonitor(t *testing.T) {
 }
 
 func TestRequiredCreateOpts(t *testing.T) {
+	th.SetupHTTP()
+	defer th.TeardownHTTP()
+
 	res := monitors.Create(fake.ServiceClient(), monitors.CreateOpts{})
 	if res.Err == nil {
 		t.Fatalf("Expected error, got none")
@@ -129,7 +132,9 @@ func TestUpdateHealthmonitor(t *testing.T) {
 }
 
 func TestDelayMustBeGreaterOrEqualThanTimeout(t *testing.T) {
-	HandleHealthmonitorCreationSuccessfully(t)
+	th.SetupHTTP()
+	defer th.TeardownHTTP()
+
 	_, err := monitors.Create(fake.ServiceClient(), monitors.CreateOpts{
 		Type:          "HTTP",
 		PoolID:        "d459f7d8-c6ee-439d-8713-d3fc08aeed8d",

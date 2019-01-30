@@ -1,8 +1,8 @@
 package loadbalancers
 
 import (
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/pagination"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/pagination"
 )
 
 // LoadBalancer is the primary load balancing configuration object that
@@ -44,7 +44,7 @@ type LoadBalancer struct {
 	// The name of the provider.
 	Provider string `json:"provider"`
 	// tags for the Loadbalancer.
-	Tags [] string `json:"tags"`
+	Tags []string `json:"tags"`
 	// Listeners are the listeners related to this Loadbalancer.
 	//Listeners []listeners.Listener `json:"listeners"`
 	Listeners []Listeners `json:"listeners"`

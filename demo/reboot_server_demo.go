@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack"
-	"github.com/gophercloud/gophercloud/auth/aksk"
-	"github.com/gophercloud/gophercloud/openstack/compute/v2/servers"
+
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/auth/aksk"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/compute/v2/servers"
 )
 
 func main() {
@@ -39,13 +40,13 @@ func main() {
 		Type: servers.SoftReboot,
 	}
 
-	err_reboot := servers.Reboot(client, server_id ,rebootOpts).ExtractErr()
+	err_reboot := servers.Reboot(client, server_id, rebootOpts).ExtractErr()
 
 	if err_reboot != nil {
 		if se, ok := err_reboot.(*gophercloud.UnifiedError); ok {
 			fmt.Println("ErrCode:", se.ErrorCode())
 			fmt.Println("Message:", se.Message())
-		} else{
+		} else {
 			fmt.Println("Error:", err_reboot)
 		}
 		return
@@ -54,5 +55,3 @@ func main() {
 	fmt.Println("Start to reboot server!")
 
 }
-
-

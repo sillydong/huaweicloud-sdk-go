@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack"
-	"github.com/gophercloud/gophercloud/auth/aksk"
-	"github.com/gophercloud/gophercloud/openstack/ecs/v1_1/cloudservers"
 
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/auth/aksk"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/ecs/v1_1/cloudservers"
 )
 
 func main() {
@@ -20,7 +20,6 @@ func main() {
 		Region:           "cn-north-1",
 		DomainID:         "{domainID}",
 	}
-
 
 	provider, err_auth := openstack.AuthenticatedClient(opts)
 	if err_auth != nil {
@@ -57,29 +56,29 @@ func main() {
 	}
 
 	md := &cloudservers.MetaData{
-		OpSvcUserId:    "e5b8b8758ce94763a6e2f93b3b3ffcba",
+		OpSvcUserId: "e5b8b8758ce94763a6e2f93b3b3ffcba",
 	}
 
 	sep := &cloudservers.ServerExtendParam{
-		ChargingMode:       "prePaid",
-		PeriodType:         "month",
-		PeriodNum:          1,
-		IsAutoPay:          "false",
+		ChargingMode: "prePaid",
+		PeriodType:   "month",
+		PeriodNum:    1,
+		IsAutoPay:    "false",
 	}
 
 	serverCreateOpts := cloudservers.CreateOpts{
-		Name:               "test_prepaid_server",
-		FlavorRef:          "s2.small.1",
-		ImageRef:           "1189efbf-d48b-46ad-a823-94b942e2a000",
-		VpcId:              "f8c4770d-aeb8-4935-9b2f-d1e9d9aba3f7",
-		Nics:               nics,
-		RootVolume:         rv,
-		DataVolumes:        dvs,
-		AvailabilityZone:   "cn-north-1a",
-		ExtendParam:        sep,
-		KeyName:            "KeyPair-test",
-		MetaData:           md,
-		IsAutoRename:       gophercloud.Disabled,
+		Name:             "test_prepaid_server",
+		FlavorRef:        "s2.small.1",
+		ImageRef:         "1189efbf-d48b-46ad-a823-94b942e2a000",
+		VpcId:            "f8c4770d-aeb8-4935-9b2f-d1e9d9aba3f7",
+		Nics:             nics,
+		RootVolume:       rv,
+		DataVolumes:      dvs,
+		AvailabilityZone: "cn-north-1a",
+		ExtendParam:      sep,
+		KeyName:          "KeyPair-test",
+		MetaData:         md,
+		IsAutoRename:     gophercloud.Disabled,
 	}
 
 	_, orderId, err_create := cloudservers.Create(client, serverCreateOpts)
@@ -96,5 +95,3 @@ func main() {
 	fmt.Println("create cloudservers success!")
 	fmt.Println("orderId:", orderId)
 }
-
-

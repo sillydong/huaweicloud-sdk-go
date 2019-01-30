@@ -1,12 +1,12 @@
 package main
 
-
 import (
 	"fmt"
-	"github.com/gophercloud/gophercloud/auth/aksk"
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack"	
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/lbaas_v2/listeners"
+
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/auth/aksk"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/networking/v2/extensions/lbaas_v2/listeners"
 )
 
 func main() {
@@ -39,26 +39,25 @@ func main() {
 		return
 	}
 
-	lsId:=ListenerCreate(sc)
-	ListenerGet(sc,lsId)
+	lsId := ListenerCreate(sc)
+	ListenerGet(sc, lsId)
 	ListenerList(sc)
-	ListenerUpdate(sc,lsId)
-	ListenerDelete(sc,lsId)
+	ListenerUpdate(sc, lsId)
+	ListenerDelete(sc, lsId)
 
 	fmt.Println("main end...")
 }
 
 func ListenerCreate(sc *gophercloud.ServiceClient) (lsID string) {
-	opts:=listeners.CreateOpts{
-		Name:"new listener",
-		Description:"AAAAAAA",
-		Protocol:listeners.ProtocolTCP,
-		ProtocolPort:20,
-		LoadbalancerID:"812b636f-6287-420a-af23-307f2e490615",
-
+	opts := listeners.CreateOpts{
+		Name:           "new listener",
+		Description:    "AAAAAAA",
+		Protocol:       listeners.ProtocolTCP,
+		ProtocolPort:   20,
+		LoadbalancerID: "812b636f-6287-420a-af23-307f2e490615",
 	}
 
-	resp,err:=listeners.Create(sc,opts).Extract()
+	resp, err := listeners.Create(sc, opts).Extract()
 
 	if err != nil {
 		fmt.Println(err)
@@ -71,15 +70,14 @@ func ListenerCreate(sc *gophercloud.ServiceClient) (lsID string) {
 
 	fmt.Println("listener Create success!")
 	fmt.Println(resp)
-	lsId:=(*resp).ID
+	lsId := (*resp).ID
 	return lsId
 
 }
 
-
-func ListenerList(sc *gophercloud.ServiceClient)  {
-	allPages, err := listeners.List(sc,listeners.ListOpts{}).AllPages()
-		if err != nil {
+func ListenerList(sc *gophercloud.ServiceClient) {
+	allPages, err := listeners.List(sc, listeners.ListOpts{}).AllPages()
+	if err != nil {
 		fmt.Println(err)
 		if ue, ok := err.(*gophercloud.UnifiedError); ok {
 			fmt.Println("ErrCode:", ue.ErrorCode())
@@ -93,51 +91,46 @@ func ListenerList(sc *gophercloud.ServiceClient)  {
 
 }
 
+func ListenerGet(sc *gophercloud.ServiceClient, id string) {
 
+	resp, err := listeners.Get(sc, id).Extract()
 
-func ListenerGet(sc *gophercloud.ServiceClient, id string)  {
-
-	resp,err:= listeners.Get(sc,id).Extract()
-
-
-	if err!=nil{
+	if err != nil {
 		fmt.Println(err)
-		if ue,ok:=err.(*gophercloud.UnifiedError); ok{
-			fmt.Println("ErrCode",ue.ErrCode)
-			fmt.Println("ErrMessage",ue.ErrMessage)
+		if ue, ok := err.(*gophercloud.UnifiedError); ok {
+			fmt.Println("ErrCode", ue.ErrCode)
+			fmt.Println("ErrMessage", ue.ErrMessage)
 		}
 	}
 	fmt.Println("listener get success!")
 	fmt.Println(resp)
 
-
 }
-func ListenerUpdate(sc *gophercloud.ServiceClient, id string)  {
-	updatOpts:=listeners.UpdateOpts{
-		Name:"KAKAK A listener",
-		Description:"ls update test",
-		DefaultPoolID:"2b5a4280-bf51-459e-99ea-31ee24424579",
-		DefaultTlsContainerRef:"23b58a961a4d4c95be585e98046e657a",
-		ClientCaTlsContainerRef:"23b58a961a4d4c95be585e98046e657a",
+func ListenerUpdate(sc *gophercloud.ServiceClient, id string) {
+	updatOpts := listeners.UpdateOpts{
+		Name:                    "KAKAK A listener",
+		Description:             "ls update test",
+		DefaultPoolID:           "2b5a4280-bf51-459e-99ea-31ee24424579",
+		DefaultTlsContainerRef:  "23b58a961a4d4c95be585e98046e657a",
+		ClientCaTlsContainerRef: "23b58a961a4d4c95be585e98046e657a",
 	}
 
-	resp,err:=listeners.Update(sc,id,updatOpts).Extract()
+	resp, err := listeners.Update(sc, id, updatOpts).Extract()
 
-
-	if err!=nil{
+	if err != nil {
 		fmt.Println(err)
-		if ue,ok:=err.(*gophercloud.UnifiedError); ok{
-			fmt.Println("ErrCode",ue.ErrCode)
-			fmt.Println("ErrMessage",ue.ErrMessage)
+		if ue, ok := err.(*gophercloud.UnifiedError); ok {
+			fmt.Println("ErrCode", ue.ErrCode)
+			fmt.Println("ErrMessage", ue.ErrMessage)
 		}
 	}
 	fmt.Println("listener update success!")
 	fmt.Println(resp)
 }
 
-func ListenerDelete(sc *gophercloud.ServiceClient, id string)  {
+func ListenerDelete(sc *gophercloud.ServiceClient, id string) {
 
-	err:=listeners.Delete(sc,id).ExtractErr()
+	err := listeners.Delete(sc, id).ExtractErr()
 
 	if err != nil {
 		fmt.Println(err)
@@ -150,6 +143,3 @@ func ListenerDelete(sc *gophercloud.ServiceClient, id string)  {
 
 	fmt.Println("delete listener success!")
 }
-
-
-

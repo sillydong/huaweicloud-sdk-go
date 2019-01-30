@@ -5,9 +5,11 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack"
-	th "github.com/gophercloud/gophercloud/testhelper"
+	"github.com/huaweicloud/huaweicloud-sdk-go/auth/token"
+
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	th "github.com/huaweicloud/huaweicloud-sdk-go/testhelper"
 )
 
 const ID = "0123456789"
@@ -48,11 +50,11 @@ func TestAuthenticatedClientV3(t *testing.T) {
 		fmt.Fprintf(w, `{ "token": { "expires_at": "2013-02-02T18:30:59.000000Z" } }`)
 	})
 
-	options := gophercloud.AuthOptions{
+	options := token.TokenOptions{
 		Username:         "me",
 		Password:         "secret",
-		DomainName:       "default",
-		TenantName:       "project",
+		DomainID:         "123456",
+		ProjectID:        "123456",
 		IdentityEndpoint: th.Endpoint(),
 	}
 	client, err := openstack.AuthenticatedClient(options)
@@ -153,9 +155,11 @@ func TestAuthenticatedClientV2(t *testing.T) {
 		`)
 	})
 
-	options := gophercloud.AuthOptions{
+	options := token.TokenOptions{
 		Username:         "me",
 		Password:         "secret",
+		DomainID:         "123456",
+		ProjectID:        "123456",
 		IdentityEndpoint: th.Endpoint(),
 	}
 	client, err := openstack.AuthenticatedClient(options)
@@ -277,10 +281,11 @@ func TestIdentityAdminV3Client(t *testing.T) {
 	`)
 	})
 
-	options := gophercloud.AuthOptions{
+	options := token.TokenOptions{
 		Username:         "me",
 		Password:         "secret",
 		DomainID:         "12345",
+		ProjectID:        "12345",
 		IdentityEndpoint: th.Endpoint(),
 	}
 	pc, err := openstack.AuthenticatedClient(options)
@@ -293,7 +298,7 @@ func TestIdentityAdminV3Client(t *testing.T) {
 }
 
 func testAuthenticatedClientFails(t *testing.T, endpoint string) {
-	options := gophercloud.AuthOptions{
+	options := token.TokenOptions{
 		Username:         "me",
 		Password:         "secret",
 		DomainName:       "default",

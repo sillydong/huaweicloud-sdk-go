@@ -6,10 +6,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack/compute/v2/servers"
-	th "github.com/gophercloud/gophercloud/testhelper"
-	"github.com/gophercloud/gophercloud/testhelper/client"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/compute/v2/servers"
+	th "github.com/huaweicloud/huaweicloud-sdk-go/testhelper"
+	"github.com/huaweicloud/huaweicloud-sdk-go/testhelper/client"
 )
 
 // ServerListBody contains the canned body of a servers.List response.
@@ -399,12 +399,10 @@ var (
 		HypervisorHostname: "devstack",
 		VMstate:            "active",
 		LaunchedAt:         "2014-09-25T13:10:10.000000",
-		VolumeAttached: []map[string]interface{}{
-
-		},
-		Status:  "ACTIVE",
-		Updated: herpTimeUpdated,
-		HostID:  "29d3c8c896a45aa4c34e52247875d7fefc3d94bbcc9f622b5d204362",
+		VolumeAttached:     []map[string]interface{}{},
+		Status:             "ACTIVE",
+		Updated:            herpTimeUpdated,
+		HostID:             "29d3c8c896a45aa4c34e52247875d7fefc3d94bbcc9f622b5d204362",
 		Addresses: map[string]interface{}{
 			"private": []interface{}{
 				map[string]interface{}{
@@ -467,9 +465,7 @@ var (
 		HypervisorHostname: "devstack",
 		VMstate:            "active",
 		LaunchedAt:         "2014-09-25T13:04:49.000000",
-		VolumeAttached: []map[string]interface{}{
-
-		},
+		VolumeAttached:     []map[string]interface{}{},
 
 		Status:  "ACTIVE",
 		Updated: derpTimeUpdated,
@@ -536,12 +532,10 @@ var (
 		HypervisorHostname: "devstack",
 		VMstate:            "active",
 		LaunchedAt:         "2014-09-25T13:04:49.000000",
-		VolumeAttached: []map[string]interface{}{
-
-		},
-		Status:  "ACTIVE",
-		Updated: merpTimeUpdated,
-		HostID:  "29d3c8c896a45aa4c34e52247875d7fefc3d94bbcc9f622b5d204362",
+		VolumeAttached:     []map[string]interface{}{},
+		Status:             "ACTIVE",
+		Updated:            merpTimeUpdated,
+		HostID:             "29d3c8c896a45aa4c34e52247875d7fefc3d94bbcc9f622b5d204362",
 		Addresses: map[string]interface{}{
 			"private": []interface{}{
 				map[string]interface{}{

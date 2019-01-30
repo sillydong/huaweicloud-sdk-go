@@ -1,8 +1,8 @@
 package loadbalancers
 
 import (
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/pagination"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/pagination"
 )
 
 // ListOptsBuilder allows extensions to add additional parameters to the
@@ -142,8 +142,8 @@ type UpdateOpts struct {
 	// Human-readable description for the Loadbalancer.
 	Description string `json:"description,omitempty"`
 
-	 //The administrative state of the Loadbalancer. A valid value is true (UP)
-	 //or false (DOWN).
+	//The administrative state of the Loadbalancer. A valid value is true (UP)
+	//or false (DOWN).
 	AdminStateUp *bool `json:"admin_state_up,omitempty"`
 }
 

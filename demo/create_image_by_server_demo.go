@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack"
-	"github.com/gophercloud/gophercloud/auth/aksk"
-	"github.com/gophercloud/gophercloud/openstack/ims/v2/cloudimages"
+
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/auth/aksk"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/ims/v2/cloudimages"
 )
 
 func main() {
@@ -34,8 +35,8 @@ func main() {
 	}
 	//
 	createOpts := &cloudimages.CreateByServerOpts{
-		Name:            "test_image_by_server",
-		InstanceId:      "83822ddc-a6e1-41e0-9073-c2a0c7309fa9",
+		Name:       "test_image_by_server",
+		InstanceId: "83822ddc-a6e1-41e0-9073-c2a0c7309fa9",
 	}
 
 	job, err_create := cloudimages.CreateImageByServer(client, createOpts).ExtractJob()

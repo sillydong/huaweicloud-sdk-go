@@ -1,17 +1,17 @@
 package main
 
 import (
-	"fmt"
-	"os"
-	"io/ioutil"
 	"bytes"
 	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"os"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack"
-	"github.com/gophercloud/gophercloud/functiontest/common"
-	"github.com/gophercloud/gophercloud/openstack/imageservice/v2/images"
-	"github.com/gophercloud/gophercloud/openstack/imageservice/v2/imagedata"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/functiontest/common"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/imageservice/v2/imagedata"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/imageservice/v2/images"
 )
 
 var imageid string
@@ -104,7 +104,7 @@ func TestUpdate(sc *gophercloud.ServiceClient) {
 
 func TestCreate(sc *gophercloud.ServiceClient) {
 	opts := images.CreateOpts{
-		Name:"testcreateimage",
+		Name: "testcreateimage",
 	}
 
 	image, err := images.Create(sc, opts).Extract()
@@ -135,7 +135,7 @@ func TestDelete(sc *gophercloud.ServiceClient) {
 }
 
 func TestUpload(sc *gophercloud.ServiceClient) {
-	err := imagedata.Upload(sc, imageid,bytes.NewReader([]byte{5, 3, 7, 24})).ExtractErr()
+	err := imagedata.Upload(sc, imageid, bytes.NewReader([]byte{5, 3, 7, 24})).ExtractErr()
 	if err != nil {
 		if ue, ok := err.(*gophercloud.UnifiedError); ok {
 			fmt.Println("ErrCode:", ue.ErrorCode())
@@ -148,7 +148,7 @@ func TestUpload(sc *gophercloud.ServiceClient) {
 }
 
 func TestDownload(sc *gophercloud.ServiceClient) {
-	irder,err := imagedata.Download(sc, imageid).Extract()
+	irder, err := imagedata.Download(sc, imageid).Extract()
 	if err != nil {
 		if ue, ok := err.(*gophercloud.UnifiedError); ok {
 			fmt.Println("ErrCode:", ue.ErrorCode())
@@ -158,7 +158,7 @@ func TestDownload(sc *gophercloud.ServiceClient) {
 	}
 
 	bs, err := ioutil.ReadAll(irder)
-	err =ioutil.WriteFile("./testimages.qcow2",bs,0777)
+	err = ioutil.WriteFile("./testimages.qcow2", bs, 0777)
 	if err != nil {
 		if ue, ok := err.(*gophercloud.UnifiedError); ok {
 			fmt.Println("ErrCode:", ue.ErrorCode())
@@ -170,4 +170,3 @@ func TestDownload(sc *gophercloud.ServiceClient) {
 	fmt.Println("Test download image success!")
 	os.Remove("./testimages.qcow2")
 }
-

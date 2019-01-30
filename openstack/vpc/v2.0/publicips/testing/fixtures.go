@@ -1,12 +1,13 @@
 package testing
 
 import (
-	"testing"
-	"github.com/gophercloud/gophercloud/openstack/vpc/v2.0/publicips"
-	th "github.com/gophercloud/gophercloud/testhelper"
-	"net/http"
-	"github.com/gophercloud/gophercloud/testhelper/client"
 	"fmt"
+	"net/http"
+	"testing"
+
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/vpc/v2.0/publicips"
+	th "github.com/huaweicloud/huaweicloud-sdk-go/testhelper"
+	"github.com/huaweicloud/huaweicloud-sdk-go/testhelper/client"
 )
 
 func HandleOndemandSuccessfully(t *testing.T) {
@@ -62,7 +63,7 @@ var CreateResultForBSS = publicips.PrePaid{
 var OndmandOpts = publicips.CreateOpts{
 	PublicIP: publicips.PublicIP{
 		Type:      "5_bgp",
-		IPVersion: ipver,},
+		IPVersion: ipver},
 	Bandwidth: publicips.Bandwidth{
 		Name:       "test1",
 		Size:       size,

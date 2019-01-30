@@ -1,6 +1,6 @@
 package tokens
 
-import "github.com/gophercloud/gophercloud"
+import "github.com/huaweicloud/huaweicloud-sdk-go"
 
 // PasswordCredentialsV2 represents the required options to authenticate
 // with a username and password.
@@ -41,7 +41,7 @@ type AuthOptionsBuilder interface {
 }
 
 // AuthOptions are the valid options for Openstack Identity v2 authentication.
-// For field descriptions, see gophercloud.AuthOptions.
+// For field descriptions, see token.TokenOptions.
 type AuthOptions struct {
 	IdentityEndpoint string `json:"-"`
 	Username         string `json:"username,omitempty"`

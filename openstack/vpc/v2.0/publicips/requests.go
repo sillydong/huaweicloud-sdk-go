@@ -1,7 +1,7 @@
 package publicips
 
 import (
-	"github.com/gophercloud/gophercloud"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
 )
 
 type CreateOpts struct {
@@ -12,12 +12,12 @@ type CreateOpts struct {
 
 type PublicIP struct {
 	Type      string `json:"type" required:"true"`
-	IPVersion int   `json:"ip_version,omitempty"`
+	IPVersion int    `json:"ip_version,omitempty"`
 }
 
 type Bandwidth struct {
 	Name       string `json:"name,omitempty"`
-	Size       int   `json:"size,omitempty"`
+	Size       int    `json:"size,omitempty"`
 	ID         string `json:"id,omitempty"`
 	ShareType  string `json:"share_type" required:"true"`
 	ChargeMode string `json:"charge_mode,omitempty"`
@@ -26,7 +26,7 @@ type Bandwidth struct {
 type ExtendParam struct {
 	ChargeMode  string `json:"charge_mode,omitempty"`
 	PeriodType  string `json:"period_type,omitempty"`
-	PeriodNum   int   `json:"period_num,omitempty"`
+	PeriodNum   int    `json:"period_num,omitempty"`
 	IsAutoRenew string `json:"is_auto_renew,omitempty"`
 	IsAutoPay   string `json:"is_auto_pay,omitempty"`
 }

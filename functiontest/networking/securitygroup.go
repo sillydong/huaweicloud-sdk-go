@@ -1,13 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"encoding/json"
+	"fmt"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/functiontest/common"
-	"github.com/gophercloud/gophercloud/openstack"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/security/groups"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/functiontest/common"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/networking/v2/extensions/security/groups"
 )
 
 var secgroupid string
@@ -89,11 +89,11 @@ func TestSecGroupGet(sc *gophercloud.ServiceClient) {
 
 func TestSecGroupUpdate(sc *gophercloud.ServiceClient) {
 	opts := groups.UpdateOpts{
-		Name:"testsecgroup2",
-		Description:"Functiontest of SecGroup Update",
+		Name:        "testsecgroup2",
+		Description: "Functiontest of SecGroup Update",
 	}
 
-	secgroup, err := groups.Update(sc, secgroupid,opts).Extract()
+	secgroup, err := groups.Update(sc, secgroupid, opts).Extract()
 	if err != nil {
 		fmt.Println(err)
 		if ue, ok := err.(*gophercloud.UnifiedError); ok {
@@ -110,8 +110,8 @@ func TestSecGroupUpdate(sc *gophercloud.ServiceClient) {
 
 func TestSecGroupCreate(sc *gophercloud.ServiceClient) {
 	opts := groups.CreateOpts{
-		Name:"testsecgroup",
-		Description:"Functiontest of SecGroup",
+		Name:        "testsecgroup",
+		Description: "Functiontest of SecGroup",
 	}
 	secgroup, err := groups.Create(sc, opts).Extract()
 	if err != nil {

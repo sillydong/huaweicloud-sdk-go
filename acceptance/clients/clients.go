@@ -8,9 +8,12 @@ import (
 	"os"
 	"strings"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack"
-	"github.com/gophercloud/gophercloud/openstack/blockstorage/noauth"
+	"github.com/huaweicloud/huaweicloud-sdk-go/auth"
+	"github.com/huaweicloud/huaweicloud-sdk-go/auth/token"
+
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/blockstorage/noauth"
 )
 
 // AcceptanceTestChoices contains image and flavor selections for use by the acceptance tests.
@@ -122,7 +125,7 @@ func AcceptanceTestChoicesFromEnv() (*AcceptanceTestChoices, error) {
 // to the OpenStack Block Storage v1 API. An error will be returned
 // if authentication or client creation was not possible.
 func NewBlockStorageV1Client() (*gophercloud.ServiceClient, error) {
-	ao, err := openstack.AuthOptionsFromEnv()
+	ao, err := auth.TokenOptionsFromEnv()
 	if err != nil {
 		return nil, err
 	}
@@ -141,7 +144,7 @@ func NewBlockStorageV1Client() (*gophercloud.ServiceClient, error) {
 // to the OpenStack Block Storage v2 API. An error will be returned
 // if authentication or client creation was not possible.
 func NewBlockStorageV2Client() (*gophercloud.ServiceClient, error) {
-	ao, err := openstack.AuthOptionsFromEnv()
+	ao, err := auth.TokenOptionsFromEnv()
 	if err != nil {
 		return nil, err
 	}
@@ -160,7 +163,7 @@ func NewBlockStorageV2Client() (*gophercloud.ServiceClient, error) {
 // to the OpenStack Block Storage v3 API. An error will be returned
 // if authentication or client creation was not possible.
 func NewBlockStorageV3Client() (*gophercloud.ServiceClient, error) {
-	ao, err := openstack.AuthOptionsFromEnv()
+	ao, err := auth.TokenOptionsFromEnv()
 	if err != nil {
 		return nil, err
 	}
@@ -179,7 +182,7 @@ func NewBlockStorageV3Client() (*gophercloud.ServiceClient, error) {
 // making calls to the OpenStack Block Storage v2 API. An error will be
 // returned if client creation was not possible.
 func NewBlockStorageV2NoAuthClient() (*gophercloud.ServiceClient, error) {
-	client, err := noauth.NewClient(gophercloud.AuthOptions{
+	client, err := noauth.NewClient(token.TokenOptions{
 		Username:   os.Getenv("OS_USERNAME"),
 		TenantName: os.Getenv("OS_TENANT_NAME"),
 	})
@@ -196,7 +199,7 @@ func NewBlockStorageV2NoAuthClient() (*gophercloud.ServiceClient, error) {
 // making calls to the OpenStack Block Storage v2 API. An error will be
 // returned if client creation was not possible.
 func NewBlockStorageV3NoAuthClient() (*gophercloud.ServiceClient, error) {
-	client, err := noauth.NewClient(gophercloud.AuthOptions{
+	client, err := noauth.NewClient(token.TokenOptions{
 		Username:   os.Getenv("OS_USERNAME"),
 		TenantName: os.Getenv("OS_TENANT_NAME"),
 	})
@@ -213,7 +216,7 @@ func NewBlockStorageV3NoAuthClient() (*gophercloud.ServiceClient, error) {
 // to the OpenStack Compute v2 API. An error will be returned
 // if authentication or client creation was not possible.
 func NewComputeV2Client() (*gophercloud.ServiceClient, error) {
-	ao, err := openstack.AuthOptionsFromEnv()
+	ao, err := auth.TokenOptionsFromEnv()
 	if err != nil {
 		return nil, err
 	}
@@ -232,7 +235,7 @@ func NewComputeV2Client() (*gophercloud.ServiceClient, error) {
 // to the OpenStack Database v1 API. An error will be returned
 // if authentication or client creation was not possible.
 func NewDBV1Client() (*gophercloud.ServiceClient, error) {
-	ao, err := openstack.AuthOptionsFromEnv()
+	ao, err := auth.TokenOptionsFromEnv()
 	if err != nil {
 		return nil, err
 	}
@@ -251,7 +254,7 @@ func NewDBV1Client() (*gophercloud.ServiceClient, error) {
 // to the OpenStack Compute v2 API. An error will be returned
 // if authentication or client creation was not possible.
 func NewDNSV2Client() (*gophercloud.ServiceClient, error) {
-	ao, err := openstack.AuthOptionsFromEnv()
+	ao, err := auth.TokenOptionsFromEnv()
 	if err != nil {
 		return nil, err
 	}
@@ -270,7 +273,7 @@ func NewDNSV2Client() (*gophercloud.ServiceClient, error) {
 // to the OpenStack Identity v2 API. An error will be returned
 // if authentication or client creation was not possible.
 func NewIdentityV2Client() (*gophercloud.ServiceClient, error) {
-	ao, err := openstack.AuthOptionsFromEnv()
+	ao, err := auth.TokenOptionsFromEnv()
 	if err != nil {
 		return nil, err
 	}
@@ -289,7 +292,7 @@ func NewIdentityV2Client() (*gophercloud.ServiceClient, error) {
 // to the Admin Endpoint of the OpenStack Identity v2 API. An error
 // will be returned if authentication or client creation was not possible.
 func NewIdentityV2AdminClient() (*gophercloud.ServiceClient, error) {
-	ao, err := openstack.AuthOptionsFromEnv()
+	ao, err := auth.TokenOptionsFromEnv()
 	if err != nil {
 		return nil, err
 	}
@@ -309,13 +312,13 @@ func NewIdentityV2AdminClient() (*gophercloud.ServiceClient, error) {
 // for the OpenStack Identity v2 API. An error  will be returned if
 // authentication or client creation was not possible.
 func NewIdentityV2UnauthenticatedClient() (*gophercloud.ServiceClient, error) {
-	ao, err := openstack.AuthOptionsFromEnv()
+	ao, err := auth.TokenOptionsFromEnv()
 	if err != nil {
 		return nil, err
 	}
 
 	conf := gophercloud.NewConfig()
-	client, err := openstack.NewClient(ao.IdentityEndpoint, ao.TenantID, conf)
+	client, err := openstack.NewClient(ao.IdentityEndpoint, ao.DomainID, ao.TenantID, conf)
 	if err != nil {
 		return nil, err
 	}
@@ -327,7 +330,7 @@ func NewIdentityV2UnauthenticatedClient() (*gophercloud.ServiceClient, error) {
 // to the OpenStack Identity v3 API. An error will be returned
 // if authentication or client creation was not possible.
 func NewIdentityV3Client() (*gophercloud.ServiceClient, error) {
-	ao, err := openstack.AuthOptionsFromEnv()
+	ao, err := auth.TokenOptionsFromEnv()
 	if err != nil {
 		return nil, err
 	}
@@ -346,13 +349,13 @@ func NewIdentityV3Client() (*gophercloud.ServiceClient, error) {
 // for the OpenStack Identity v3 API. An error  will be returned if
 // authentication or client creation was not possible.
 func NewIdentityV3UnauthenticatedClient() (*gophercloud.ServiceClient, error) {
-	ao, err := openstack.AuthOptionsFromEnv()
+	ao, err := auth.TokenOptionsFromEnv()
 	if err != nil {
 		return nil, err
 	}
 
 	conf := gophercloud.NewConfig()
-	client, err := openstack.NewClient(ao.IdentityEndpoint, ao.TenantID, conf)
+	client, err := openstack.NewClient(ao.IdentityEndpoint, ao.DomainID, ao.TenantID, conf)
 	if err != nil {
 		return nil, err
 	}
@@ -364,7 +367,7 @@ func NewIdentityV3UnauthenticatedClient() (*gophercloud.ServiceClient, error) {
 // OpenStack Image v2 API. An error will be returned if authentication or
 // client creation was not possible.
 func NewImageServiceV2Client() (*gophercloud.ServiceClient, error) {
-	ao, err := openstack.AuthOptionsFromEnv()
+	ao, err := auth.TokenOptionsFromEnv()
 	if err != nil {
 		return nil, err
 	}
@@ -383,7 +386,7 @@ func NewImageServiceV2Client() (*gophercloud.ServiceClient, error) {
 // OpenStack Networking v2 API. An error will be returned if authentication
 // or client creation was not possible.
 func NewNetworkV2Client() (*gophercloud.ServiceClient, error) {
-	ao, err := openstack.AuthOptionsFromEnv()
+	ao, err := auth.TokenOptionsFromEnv()
 	if err != nil {
 		return nil, err
 	}
@@ -402,7 +405,7 @@ func NewNetworkV2Client() (*gophercloud.ServiceClient, error) {
 // OpenStack Object Storage v1 API. An error will be returned if authentication
 // or client creation was not possible.
 func NewObjectStorageV1Client() (*gophercloud.ServiceClient, error) {
-	ao, err := openstack.AuthOptionsFromEnv()
+	ao, err := auth.TokenOptionsFromEnv()
 	if err != nil {
 		return nil, err
 	}
@@ -421,7 +424,7 @@ func NewObjectStorageV1Client() (*gophercloud.ServiceClient, error) {
 // to the OpenStack Shared File System v2 API. An error will be returned
 // if authentication or client creation was not possible.
 func NewSharedFileSystemV2Client() (*gophercloud.ServiceClient, error) {
-	ao, err := openstack.AuthOptionsFromEnv()
+	ao, err := auth.TokenOptionsFromEnv()
 	if err != nil {
 		return nil, err
 	}

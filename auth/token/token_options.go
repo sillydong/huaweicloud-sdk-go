@@ -3,7 +3,7 @@ package token
 import (
 	"fmt"
 
-	"github.com/gophercloud/gophercloud"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
 )
 
 /*
@@ -18,7 +18,7 @@ provider.
 
 An example of manually providing authentication information:
 
-  opts := gophercloud.AuthOptions{
+  opts := token.TokenOptions{
     IdentityEndpoint: "https://openstack.example.com:5000/v2.0",
     Username: "{username}",
     Password: "{password}",
@@ -30,7 +30,7 @@ An example of manually providing authentication information:
 An example of using AuthOptionsFromEnv(), where the environment variables can
 be read from a file, such as a standard openrc file:
 
-  opts, err := openstack.AuthOptionsFromEnv()
+  opts, err := auth.TokenOptionsFromEnv()
   provider, err := openstack.AuthenticatedClient(opts)
 */
 type TokenOptions struct {

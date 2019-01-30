@@ -4,11 +4,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gophercloud/gophercloud/openstack/blockstorage/extensions/volumetenants"
-	"github.com/gophercloud/gophercloud/openstack/blockstorage/v2/volumes"
-	"github.com/gophercloud/gophercloud/pagination"
-	th "github.com/gophercloud/gophercloud/testhelper"
-	"github.com/gophercloud/gophercloud/testhelper/client"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/blockstorage/extensions/volumetenants"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/blockstorage/v2/volumes"
+	"github.com/huaweicloud/huaweicloud-sdk-go/pagination"
+	th "github.com/huaweicloud/huaweicloud-sdk-go/testhelper"
+	"github.com/huaweicloud/huaweicloud-sdk-go/testhelper/client"
 )
 
 func TestListWithExtensions(t *testing.T) {
@@ -208,7 +208,7 @@ func TestCreate(t *testing.T) {
 
 	MockCreateResponse(t)
 
-	options := &volumes.CreateOpts{Size: 75, Name: "vol-001",AvailabilityZone:"nova",}
+	options := &volumes.CreateOpts{Size: 75, Name: "vol-001", AvailabilityZone: "nova"}
 	n, err := volumes.Create(client.ServiceClient(), options).Extract()
 	th.AssertNoErr(t, err)
 	th.AssertEquals(t, n.Size, 75)

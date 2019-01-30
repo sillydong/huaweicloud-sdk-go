@@ -1,8 +1,8 @@
 package whitelist
 
 import (
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/pagination"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/pagination"
 )
 
 type WhiteList struct {
@@ -14,15 +14,15 @@ type WhiteLists struct {
 
 type Whitelist struct {
 	//Specifies the whitelist ID.
-	ID              string `json:"id"`
+	ID string `json:"id"`
 	//Specifies the tenant ID.
-	TenantId        string `json:"tenant_id"`
+	TenantId string `json:"tenant_id"`
 	//Specifies the listener ID.
-	ListenerId      string `json:"listener_id"`
+	ListenerId string `json:"listener_id"`
 	//Specifies whether to enable the access control.
-	EnableWhitelist bool   `json:"enable_whitelist"`
+	EnableWhitelist bool `json:"enable_whitelist"`
 	//Lists the IP addresses in the whitelist.
-	Whitelist       string `json:"whitelist"`
+	Whitelist string `json:"whitelist"`
 }
 
 // WhiteListPage is the page returned by a pager when traversing over a
@@ -54,7 +54,7 @@ func (page WhiteListPage) NextPageURL() (string, error) {
 // a generic collection is mapped into a relevant slice.
 func ExtractWhiteLists(r pagination.Page) (WhiteLists, error) {
 	var s WhiteLists
-	s.Whitelists = make([]Whitelist,0)
+	s.Whitelists = make([]Whitelist, 0)
 	err := (r.(WhiteListPage)).ExtractInto(&s)
 	return s, err
 }

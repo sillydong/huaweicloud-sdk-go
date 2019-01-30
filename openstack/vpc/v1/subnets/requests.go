@@ -1,8 +1,8 @@
 package subnets
 
 import (
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/pagination"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/pagination"
 )
 
 // ListOptsBuilder allows extensions to add additional parameters to the
@@ -175,6 +175,6 @@ func Update(client *gophercloud.ServiceClient, vpcId string, subnetId string, op
 		return
 	}
 
-	_, r.Err = client.Put(UpdateURL(client, vpcId, subnetId), b, &r.Body, &gophercloud.RequestOpts{OkCodes:[]int{200}})
+	_, r.Err = client.Put(UpdateURL(client, vpcId, subnetId), b, &r.Body, &gophercloud.RequestOpts{OkCodes: []int{200}})
 	return
 }

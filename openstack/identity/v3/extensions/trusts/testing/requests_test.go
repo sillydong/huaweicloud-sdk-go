@@ -4,10 +4,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gophercloud/gophercloud/openstack/identity/v3/extensions/trusts"
-	"github.com/gophercloud/gophercloud/openstack/identity/v3/tokens"
-	th "github.com/gophercloud/gophercloud/testhelper"
-	"github.com/gophercloud/gophercloud/testhelper/client"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/identity/v3/extensions/trusts"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/identity/v3/tokens"
+	th "github.com/huaweicloud/huaweicloud-sdk-go/testhelper"
+	"github.com/huaweicloud/huaweicloud-sdk-go/testhelper/client"
 )
 
 func TestCreateUserIDPasswordTrustID(t *testing.T) {
@@ -16,7 +16,7 @@ func TestCreateUserIDPasswordTrustID(t *testing.T) {
 
 	ao := trusts.AuthOptsExt{
 		TrustID: "de0945a",
-		AuthOptionsBuilder: &tokens.AuthOptions{
+		AuthOptionsBuilder: &tokens.TokenOptions{
 			UserID:   "me",
 			Password: "squirrel!",
 		},

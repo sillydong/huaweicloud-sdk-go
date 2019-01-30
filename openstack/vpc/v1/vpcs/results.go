@@ -1,8 +1,8 @@
 package vpcs
 
 import (
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/pagination"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/pagination"
 )
 
 type VPC struct {
@@ -73,15 +73,15 @@ type VpcPage struct {
 }
 
 func ExtractVpcs(r pagination.Page) ([]VPC, error) {
-	var s struct{
+	var s struct {
 		Vpcs []VPC `json:"vpcs"`
 	}
-	err:=r.(VpcPage).ExtractInto(&s)
+	err := r.(VpcPage).ExtractInto(&s)
 	return s.Vpcs, err
 }
 
 func (r VpcPage) NextPageURL() (string, error) {
-	publicIps,err:= ExtractVpcs(r)
+	publicIps, err := ExtractVpcs(r)
 	if err != nil {
 		return "", err
 	}
@@ -90,8 +90,8 @@ func (r VpcPage) NextPageURL() (string, error) {
 
 // IsEmpty checks whether a NetworkPage struct is empty.
 func (r VpcPage) IsEmpty() (bool, error) {
-	s,err:= ExtractVpcs(r)
-	return len(s)==0, err
+	s, err := ExtractVpcs(r)
+	return len(s) == 0, err
 }
 
 type UpdateResult struct {

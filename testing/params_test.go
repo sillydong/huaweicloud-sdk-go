@@ -1,13 +1,14 @@
 package testing
 
 import (
+	"fmt"
 	"net/url"
 	"reflect"
 	"testing"
 	"time"
 
-	"github.com/gophercloud/gophercloud"
-	th "github.com/gophercloud/gophercloud/testhelper"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	th "github.com/huaweicloud/huaweicloud-sdk-go/testhelper"
 )
 
 func TestMaybeString(t *testing.T) {
@@ -215,7 +216,7 @@ func TestBuildRequestBody(t *testing.T) {
 				TenantID:   "987654321",
 				TenantName: "me",
 			},
-			gophercloud.ErrMissingInput{},
+			gophercloud.NewSystemCommonError(gophercloud.CE_MissingInputCode, fmt.Sprintf(gophercloud.CE_MissingInputMessage, "TokenCredentials")),
 		},
 		{
 			AuthOptions{
@@ -227,7 +228,7 @@ func TestBuildRequestBody(t *testing.T) {
 					Password: "swordfish",
 				},
 			},
-			gophercloud.ErrMissingInput{},
+			gophercloud.NewSystemCommonError(gophercloud.CE_MissingInputCode, fmt.Sprintf(gophercloud.CE_MissingInputMessage, "TenentID/TenentName")),
 		},
 		{
 			AuthOptions{
@@ -235,7 +236,7 @@ func TestBuildRequestBody(t *testing.T) {
 					Password: "swordfish",
 				},
 			},
-			gophercloud.ErrMissingInput{},
+			gophercloud.NewSystemCommonError(gophercloud.CE_MissingInputCode, fmt.Sprintf(gophercloud.CE_MissingInputMessage, "Username")),
 		},
 		{
 			AuthOptions{
@@ -247,7 +248,7 @@ func TestBuildRequestBody(t *testing.T) {
 					Filler: 2,
 				},
 			},
-			gophercloud.ErrMissingInput{},
+			gophercloud.NewSystemCommonError(gophercloud.CE_MissingInputCode, fmt.Sprintf(gophercloud.CE_MissingInputMessage, "TokenCredentials")),
 		},
 	}
 

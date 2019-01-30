@@ -56,7 +56,7 @@ const (
 	ELB2006IpPortAlreadyPresent = "Member with address .*. and protocol_port .*. already present in pool .*."
 	ELB2007MemberNotFound       = "member .*. could not be found"
 
-	ELB6101QuotaExceeded  = "Quota exceeded for resources: \\['listener'\\]"
+	ELB6101QuotaExceeded = "Quota exceeded for resources: \\['listener'\\]"
 	ELB2541QuotaExceeded = "Quota exceeded for resources: \\['pool'\\]"
 	ELBb015QuotaExceeded = "Quota exceeded for resources: \\['l7policy'\\]"
 	ELB1071QuotaExceeded = "Quota exceeded for resources: \\['loadbalancer'\\]"
@@ -157,7 +157,7 @@ type OneLevelError struct {
 	Request_id string
 	ErrCode    string `json:"error_code"`
 	ErrMsg     string `json:"error_msg"`
-	Code	   string `json:"code"`
+	Code       string `json:"code"`
 }
 
 func ParseSeverError(httpStatus int, responseContent string) error {

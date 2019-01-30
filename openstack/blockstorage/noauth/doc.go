@@ -4,7 +4,7 @@ environments configured with the noauth authentication middleware.
 
 Example of Creating a noauth Service Client
 
-	provider, err := noauth.NewClient(gophercloud.AuthOptions{
+	provider, err := noauth.NewClient(token.TokenOptions{
 		Username:   os.Getenv("OS_USERNAME"),
 		TenantName: os.Getenv("OS_TENANT_NAME"),
 	})

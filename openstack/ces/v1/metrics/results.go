@@ -3,18 +3,18 @@ package metrics
 import (
 	"bytes"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/pagination"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/pagination"
 )
 
 type Metrics struct {
-	Metrics []Metric `json:"metrics"`
+	Metrics  []Metric `json:"metrics"`
 	MetaData MetaData `json:"meta_data"`
 }
 type MetaData struct {
-	Count int `json:"count"`
+	Count  int    `json:"count"`
 	Marker string `json:"marker"`
-	Total int `json:"total"`
+	Total  int    `json:"total"`
 }
 
 type Metric struct {
@@ -31,8 +31,8 @@ type Metric struct {
 	Dimensions []Dimension `json:"dimensions"`
 }
 
-type  Dimension struct {
-	Name string `json:"name"`
+type Dimension struct {
+	Name  string `json:"name"`
 	Value string `json:"value"`
 }
 
@@ -40,20 +40,20 @@ type ListResult struct {
 	gophercloud.Result
 }
 
- //Extract is a function that accepts a result and extracts metrics.
+//Extract is a function that accepts a result and extracts metrics.
 func ExtractMetrics(r pagination.Page) (Metrics, error) {
 	var s Metrics
-	err:=r.(MetricsPage).ExtractInto(&s)
+	err := r.(MetricsPage).ExtractInto(&s)
 	return s, err
 }
 
 //Extract is a function that all accepts a result and extracts metrics.
 func ExtractAllPagesMetrics(r pagination.Page) (Metrics, error) {
 	var s Metrics
-	s.Metrics = make([]Metric,0)
-	err:=r.(MetricsPage).ExtractInto(&s)
+	s.Metrics = make([]Metric, 0)
+	err := r.(MetricsPage).ExtractInto(&s)
 	if len(s.Metrics) == 0 {
-		return s,nil
+		return s, nil
 	}
 	s.MetaData.Count = len(s.Metrics)
 	s.MetaData.Total = len(s.Metrics)
@@ -61,7 +61,7 @@ func ExtractAllPagesMetrics(r pagination.Page) (Metrics, error) {
 	buf.WriteString(s.Metrics[len(s.Metrics)-1].Namespace)
 	buf.WriteString(".")
 	buf.WriteString(s.Metrics[len(s.Metrics)-1].MetricName)
-	for _,dimension := range s.Metrics[len(s.Metrics)-1].Dimensions{
+	for _, dimension := range s.Metrics[len(s.Metrics)-1].Dimensions {
 		buf.WriteString(".")
 		buf.WriteString(dimension.Name)
 		buf.WriteString(":")
@@ -81,7 +81,7 @@ type MetricsPage struct {
 // the end of a page and the pager seeks to traverse over a new one. In order
 // to do this, it needs to construct the next page's URL.
 func (r MetricsPage) NextPageURL() (string, error) {
-	metrics,err:= ExtractMetrics(r)
+	metrics, err := ExtractMetrics(r)
 	if err != nil {
 		return "", err
 	}
@@ -90,13 +90,13 @@ func (r MetricsPage) NextPageURL() (string, error) {
 		return "", nil
 	}
 
-	metricslen := len(metrics.Metrics)-1
+	metricslen := len(metrics.Metrics) - 1
 
 	var buf bytes.Buffer
 	buf.WriteString(metrics.Metrics[metricslen].Namespace)
 	buf.WriteString(".")
 	buf.WriteString(metrics.Metrics[metricslen].MetricName)
-	for _,dimension := range metrics.Metrics[metricslen].Dimensions{
+	for _, dimension := range metrics.Metrics[metricslen].Dimensions {
 		buf.WriteString(".")
 		buf.WriteString(dimension.Name)
 		buf.WriteString(":")
@@ -107,8 +107,8 @@ func (r MetricsPage) NextPageURL() (string, error) {
 
 // IsEmpty checks whether a NetworkPage struct is empty.
 func (r MetricsPage) IsEmpty() (bool, error) {
-	s,err:= ExtractMetrics(r)
-	return len(s.Metrics)==0, err
+	s, err := ExtractMetrics(r)
+	return len(s.Metrics) == 0, err
 }
 
 /*
@@ -121,10 +121,10 @@ It attempts to extract the "start" URL from slice of Link structs, or
 func (r MetricsPage) WrapNextPageURL(start string) (string, error) {
 	limit := r.URL.Query().Get("limit")
 	if limit == "" {
-		return "",nil
+		return "", nil
 	}
 	uq := r.URL.Query()
-	uq.Set("start",start)
-	r.URL.RawQuery=uq.Encode()
-	return r.URL.String(),nil
+	uq.Set("start", start)
+	r.URL.RawQuery = uq.Encode()
+	return r.URL.String(), nil
 }

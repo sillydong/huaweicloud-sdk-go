@@ -1,12 +1,12 @@
 package main
 
-
 import (
 	"fmt"
-	"github.com/gophercloud/gophercloud/auth/aksk"
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/lbaas_v2/policies"
+
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/auth/aksk"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/networking/v2/extensions/lbaas_v2/policies"
 )
 
 func main() {
@@ -39,7 +39,7 @@ func main() {
 		return
 	}
 
-	id:=PolicyCreate(sc)
+	id := PolicyCreate(sc)
 	PolicyList(sc)
 	PolicyGet(sc, id)
 	PolicyUpdate(sc, id)
@@ -48,22 +48,20 @@ func main() {
 	fmt.Println("main end...")
 }
 
-
-
 func PolicyCreate(sc *gophercloud.ServiceClient) (id string) {
 
-	opts:=policies.CreateOpts{
-		RedirectPoolID:"13a887d0-cce3-4d2a-8961-7ad855d054c9",
-		ListenerID:"bf392d78-3783-4d8d-9ec1-621e606e6074",
-		Action:"REDIRECT_TO_POOL",
-		Name:"asd",
-		TenantID:"601240b9c5c94059b63d484c92cfe308",
-		Description:"create test",
-		AdminStateUp:true,
-		Position:50,
+	opts := policies.CreateOpts{
+		RedirectPoolID: "13a887d0-cce3-4d2a-8961-7ad855d054c9",
+		ListenerID:     "bf392d78-3783-4d8d-9ec1-621e606e6074",
+		Action:         "REDIRECT_TO_POOL",
+		Name:           "asd",
+		TenantID:       "601240b9c5c94059b63d484c92cfe308",
+		Description:    "create test",
+		AdminStateUp:   true,
+		Position:       50,
 	}
 
-	resp,err:=policies.Create(sc,opts).Extract()
+	resp, err := policies.Create(sc, opts).Extract()
 
 	if err != nil {
 		fmt.Println(err)
@@ -75,14 +73,13 @@ func PolicyCreate(sc *gophercloud.ServiceClient) (id string) {
 	}
 
 	fmt.Println("policy Create success!")
-	id=(*resp).ID
+	id = (*resp).ID
 	return id
 }
 
-
-func PolicyList(sc *gophercloud.ServiceClient)  {
-	allPages, err := policies.List(sc,policies.ListOpts{}).AllPages()
-		if err != nil {
+func PolicyList(sc *gophercloud.ServiceClient) {
+	allPages, err := policies.List(sc, policies.ListOpts{}).AllPages()
+	if err != nil {
 		fmt.Println(err)
 		if ue, ok := err.(*gophercloud.UnifiedError); ok {
 			fmt.Println("ErrCode:", ue.ErrorCode())
@@ -96,18 +93,15 @@ func PolicyList(sc *gophercloud.ServiceClient)  {
 
 }
 
+func PolicyGet(sc *gophercloud.ServiceClient, id string) {
 
+	resp, err := policies.Get(sc, id).Extract()
 
-func PolicyGet(sc *gophercloud.ServiceClient, id string)  {
-
-	resp,err:= policies.Get(sc,id).Extract()
-
-
-	if err!=nil{
+	if err != nil {
 		fmt.Println(err)
-		if ue,ok:=err.(*gophercloud.UnifiedError); ok{
-			fmt.Println("ErrCode",ue.ErrCode)
-			fmt.Println("ErrMessage",ue.ErrMessage)
+		if ue, ok := err.(*gophercloud.UnifiedError); ok {
+			fmt.Println("ErrCode", ue.ErrCode)
+			fmt.Println("ErrMessage", ue.ErrMessage)
 		}
 	}
 	fmt.Println("policy get success!")
@@ -115,32 +109,30 @@ func PolicyGet(sc *gophercloud.ServiceClient, id string)  {
 	fmt.Println(resp)
 }
 
-func PolicyUpdate(sc *gophercloud.ServiceClient, id string)  {
+func PolicyUpdate(sc *gophercloud.ServiceClient, id string) {
 
-	updatOpts:=policies.UpdateOpts{
-		Name:"up test",
-		Description:"asdddddddddddddd",
-		RedirectPoolID:"2b5a4280-bf51-459e-99ea-31ee24424579",
+	updatOpts := policies.UpdateOpts{
+		Name:           "up test",
+		Description:    "asdddddddddddddd",
+		RedirectPoolID: "2b5a4280-bf51-459e-99ea-31ee24424579",
 	}
 
-	resp,err:=policies.Update(sc,id,updatOpts).Extract()
+	resp, err := policies.Update(sc, id, updatOpts).Extract()
 
-
-	if err!=nil{
+	if err != nil {
 		fmt.Println(err)
-		if ue,ok:=err.(*gophercloud.UnifiedError); ok{
-			fmt.Println("ErrCode",ue.ErrCode)
-			fmt.Println("ErrMessage",ue.ErrMessage)
+		if ue, ok := err.(*gophercloud.UnifiedError); ok {
+			fmt.Println("ErrCode", ue.ErrCode)
+			fmt.Println("ErrMessage", ue.ErrMessage)
 		}
 	}
 	fmt.Println("policy update success!")
 	fmt.Println(resp)
 
-
 }
 
-func PolicyDelete(sc *gophercloud.ServiceClient, id string)  {
-	err:=policies.Delete(sc,id).ExtractErr()
+func PolicyDelete(sc *gophercloud.ServiceClient, id string) {
+	err := policies.Delete(sc, id).ExtractErr()
 
 	if err != nil {
 		fmt.Println(err)
@@ -153,6 +145,3 @@ func PolicyDelete(sc *gophercloud.ServiceClient, id string)  {
 
 	fmt.Println("delete policy success!")
 }
-
-
-

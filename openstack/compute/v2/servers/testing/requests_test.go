@@ -6,13 +6,13 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/availabilityzones"
-	"github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/diskconfig"
-	"github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/extendedstatus"
-	"github.com/gophercloud/gophercloud/openstack/compute/v2/servers"
-	"github.com/gophercloud/gophercloud/pagination"
-	th "github.com/gophercloud/gophercloud/testhelper"
-	"github.com/gophercloud/gophercloud/testhelper/client"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/compute/v2/extensions/availabilityzones"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/compute/v2/extensions/diskconfig"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/compute/v2/extensions/extendedstatus"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/compute/v2/servers"
+	"github.com/huaweicloud/huaweicloud-sdk-go/pagination"
+	th "github.com/huaweicloud/huaweicloud-sdk-go/testhelper"
+	"github.com/huaweicloud/huaweicloud-sdk-go/testhelper/client"
 )
 
 func TestListServers(t *testing.T) {
@@ -94,9 +94,7 @@ func TestCreateServer(t *testing.T) {
 		Name:      "derp",
 		ImageRef:  "f90f6034-2570-4974-8351-6b49732ef2eb",
 		FlavorRef: "1",
-		Networks: []servers.Network{
-
-		},
+		Networks:  []servers.Network{},
 	}).Extract()
 	th.AssertNoErr(t, err)
 
@@ -113,9 +111,7 @@ func TestCreateServerWithCustomField(t *testing.T) {
 			Name:      "derp",
 			ImageRef:  "f90f6034-2570-4974-8351-6b49732ef2eb",
 			FlavorRef: "1",
-			Networks: []servers.Network{
-
-			},
+			Networks:  []servers.Network{},
 		},
 		Foo: "bar",
 	}).Extract()
@@ -136,8 +132,7 @@ func TestCreateServerWithMetadata(t *testing.T) {
 		Metadata: map[string]string{
 			"abc": "def",
 		},
-		Networks: []servers.Network{
-		},
+		Networks: []servers.Network{},
 	}).Extract()
 	th.AssertNoErr(t, err)
 
@@ -154,8 +149,7 @@ func TestCreateServerWithUserdataString(t *testing.T) {
 		ImageRef:  "f90f6034-2570-4974-8351-6b49732ef2eb",
 		FlavorRef: "1",
 		UserData:  []byte("userdata string"),
-		Networks: []servers.Network{
-		},
+		Networks:  []servers.Network{},
 	}).Extract()
 	th.AssertNoErr(t, err)
 
@@ -174,8 +168,7 @@ func TestCreateServerWithUserdataEncoded(t *testing.T) {
 		ImageRef:  "f90f6034-2570-4974-8351-6b49732ef2eb",
 		FlavorRef: "1",
 		UserData:  []byte(encoded),
-		Networks: []servers.Network{
-		},
+		Networks:  []servers.Network{},
 	}).Extract()
 	th.AssertNoErr(t, err)
 
@@ -192,9 +185,7 @@ func TestCreateServerWithImageNameAndFlavorName(t *testing.T) {
 		ImageName:     "cirros-0.3.2-x86_64-disk",
 		FlavorName:    "m1.tiny",
 		ServiceClient: client.ServiceClient(),
-		Networks: []servers.Network{
-
-		},
+		Networks:      []servers.Network{},
 	}).Extract()
 	th.AssertNoErr(t, err)
 

@@ -1,8 +1,8 @@
 package pools
 
 import (
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/pagination"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/pagination"
 )
 
 // ListOptsBuilder allows extensions to add additional parameters to the
@@ -29,7 +29,7 @@ type ListOpts struct {
 	Description    string `q:"description"`
 	Limit          int    `q:"limit"`
 	Marker         string `q:"marker"`
-	PageReverse    *bool   `q:"page_reverse"`
+	PageReverse    *bool  `q:"page_reverse"`
 	MemberAddress  string `q:"member_address"`
 	MemberDeviceID string `q:"member_device_id"`
 }
@@ -216,7 +216,7 @@ type ListMembersOptsBuilder interface {
 // and is either `asc' or `desc'. Marker and Limit are used for pagination.
 type ListMembersOpts struct {
 	Name         string `q:"name"`
-	Weight       *int    `q:"weight"`
+	Weight       *int   `q:"weight"`
 	AdminStateUp *bool  `q:"admin_state_up"`
 	Address      string `q:"address"`
 	ProtocolPort int    `q:"protocol_port"`
@@ -224,8 +224,7 @@ type ListMembersOpts struct {
 	ID           string `q:"id"`
 	Limit        int    `q:"limit"`
 	Marker       string `q:"marker"`
-	PageReverse  *bool   `q:"page_reverse"`
-
+	PageReverse  *bool  `q:"page_reverse"`
 }
 
 // ToMemberListQuery formats a ListOpts into a query string.

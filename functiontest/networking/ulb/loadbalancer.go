@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
-	"github.com/gophercloud/gophercloud/functiontest/common"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/lbaas_v2/loadbalancers"
+	"github.com/huaweicloud/huaweicloud-sdk-go/functiontest/common"
+
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/networking/v2/extensions/lbaas_v2/loadbalancers"
 
 	"encoding/json"
 )
@@ -58,21 +59,21 @@ func TestLBCreate(sc *gophercloud.ServiceClient) {
 		AdminStateUp: &trueVlaue,
 		Provider:     "vlb",
 	}
-for true{
+	for true {
 		resp, err := loadbalancers.Create(sc, opts).Extract()
 
-	if err != nil {
-		fmt.Println(err)
-		if ue, ok := err.(*gophercloud.UnifiedError); ok {
-			fmt.Println("ErrCode:", ue.ErrorCode())
-			fmt.Println("Message:", ue.Message())
+		if err != nil {
+			fmt.Println(err)
+			if ue, ok := err.(*gophercloud.UnifiedError); ok {
+				fmt.Println("ErrCode:", ue.ErrorCode())
+				fmt.Println("Message:", ue.Message())
+			}
+			return
 		}
-		return
+		fmt.Println("lb Create success!")
+		p, _ := json.MarshalIndent(*resp, "", " ")
+		fmt.Println(string(p))
 	}
-	fmt.Println("lb Create success!")
-	p, _ := json.MarshalIndent(*resp, "", " ")
-	fmt.Println(string(p))
-}
 	//resp, err := loadbalancers.Create(sc, opts).Extract()
 	//
 	//if err != nil {

@@ -3,9 +3,9 @@ package testing
 import (
 	"testing"
 
-	"github.com/gophercloud/gophercloud/openstack/vpc/v1/publicips"
-	th "github.com/gophercloud/gophercloud/testhelper"
-	"github.com/gophercloud/gophercloud/testhelper/client"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/vpc/v1/publicips"
+	th "github.com/huaweicloud/huaweicloud-sdk-go/testhelper"
+	"github.com/huaweicloud/huaweicloud-sdk-go/testhelper/client"
 )
 
 func TestCreate(t *testing.T) {
@@ -33,7 +33,7 @@ func TestUpdate(t *testing.T) {
 	HandleUpdateSuccessfully(t)
 
 	actual, err := publicips.Update(client.ServiceClient(), "84a71976-a8c2-42e0-8826-7fc27b876e42", publicips.UpdateOpts{
-		IPVersion:4,
+		IPVersion: 4,
 	}).Extract()
 	th.AssertNoErr(t, err)
 	th.CheckDeepEquals(t, &UpdateResponse, actual)
@@ -58,7 +58,7 @@ func TestList(t *testing.T) {
 		Limit: 2,
 	}).AllPages()
 	th.AssertNoErr(t, err)
-	publicipList,err := publicips.ExtractPublicIPs(allpages)
+	publicipList, err := publicips.ExtractPublicIPs(allpages)
 	th.CheckDeepEquals(t, ListResponse, publicipList)
 }
 

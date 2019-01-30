@@ -6,8 +6,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack/compute/v2/servers"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/compute/v2/servers"
 )
 
 // SchedulerHints represents a set of scheduling hints that are passed to the
@@ -47,7 +47,6 @@ type SchedulerHints struct {
 	// AdditionalProperies are arbitrary key/values that are not validated by nova.
 	AdditionalProperties map[string]interface{}
 
-
 	//dedicated host or shared host
 	Tenancy string `json:"tenancy,omitempty"`
 
@@ -56,7 +55,6 @@ type SchedulerHints struct {
 
 	// host network
 	Cidr string `json:"cidr,omitempty"`
-
 }
 
 // CreateOptsBuilder builds the scheduler hints into a serializable format.

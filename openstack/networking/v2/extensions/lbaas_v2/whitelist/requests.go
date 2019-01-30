@@ -1,8 +1,8 @@
 package whitelist
 
 import (
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/pagination"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/pagination"
 )
 
 // ListOptsBuilder allows extensions to add additional parameters to the
@@ -17,28 +17,28 @@ type ListOptsBuilder interface {
 //Marker and Limit are used for pagination.
 type ListOpts struct {
 	// Specifies the ID of the last whitelist on the previous page.
-	Marker          string `q:"marker"`
+	Marker string `q:"marker"`
 
 	// Specifies the number of records on each page.
-	Limit           int    `q:"limit"`
+	Limit int `q:"limit"`
 
 	// Specifies the pagination direction.
-	PageReverse     bool   `q:"page_reverse"`
+	PageReverse bool `q:"page_reverse"`
 
 	// Specifies the whitelist ID.
-	ID              string `q:"id"`
+	ID string `q:"id"`
 
 	// Specifies the project ID.
-	TenantId        string `q:"tenant_id"`
+	TenantId string `q:"tenant_id"`
 
 	//Specifies the listener ID.
-	ListenerId      string `q:"listener_id"`
+	ListenerId string `q:"listener_id"`
 
 	// Specifies whether to enable access control.
-	EnableWhitelist *bool   `q:"enable_whitelist"`
+	EnableWhitelist *bool `q:"enable_whitelist"`
 
 	// Lists the IP addresses in the whitelist.
-	Whitelist       string `q:"whitelist"`
+	Whitelist string `q:"whitelist"`
 }
 
 // ToWhihieListsListMap formats a ListOpts into a query string.
@@ -82,16 +82,16 @@ type CreateOptsBuilder interface {
 // CreateOpts represents options for creating a whitelist.
 type CreateOpts struct {
 	//Specifies the tenant ID.
-	TenantId        string `json:"tenant_id,omitempty"`
+	TenantId string `json:"tenant_id,omitempty"`
 
 	//Specifies the listener ID.
-	ListenerId      string `json:"listener_id"  required:"true"`
+	ListenerId string `json:"listener_id"  required:"true"`
 
 	//Specifies whether to enable the access control.
-	EnableWhitelist *bool   `json:"enable_whitelist,omitempty"`
+	EnableWhitelist *bool `json:"enable_whitelist,omitempty"`
 
 	//Lists the IP addresses in the whitelist.
-	Whitelist       string `json:"whitelist,omitempty"`
+	Whitelist string `json:"whitelist,omitempty"`
 }
 
 // ToWhiteListCreateMap builds a request body from CreateOpts.
@@ -125,10 +125,10 @@ type UpdateOptsBuilder interface {
 // UpdateOpts represents options for updating a WhiteList.
 type UpdateOpts struct {
 	// Specifies whether to enable access control.
-	EnableWhitelist *bool   `json:"enable_whitelist,omitempty"`
+	EnableWhitelist *bool `json:"enable_whitelist,omitempty"`
 
 	// Lists the IP addresses in the whitelist.
-	Whitelist       *string `json:"whitelist,omitempty"`
+	Whitelist *string `json:"whitelist,omitempty"`
 }
 
 // ToWhiteListUpdateMap builds a request body from UpdateOpts.

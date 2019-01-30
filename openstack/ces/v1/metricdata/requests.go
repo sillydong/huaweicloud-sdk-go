@@ -1,7 +1,7 @@
 package metricdata
 
 import (
-	"github.com/gophercloud/gophercloud"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
 )
 
 // BatchQueryOptsBuilder allows extensions to add additional parameters to the
@@ -54,6 +54,6 @@ func BatchQuery(client *gophercloud.ServiceClient, opts BatchQueryOptsBuilder) (
 		return
 	}
 	_, r.Err = client.Post(batchQueryMetricDataURL(client), b, &r.Body, &gophercloud.RequestOpts{
-		OkCodes: []int{200},})
+		OkCodes: []int{200}})
 	return
 }

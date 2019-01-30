@@ -35,12 +35,12 @@ You can also use AK/SK authentication to construct provider:
 	}
 	provider, err := openstack.AuthenticatedClient(akSkOptions)
 
-You may also use the openstack.AuthOptionsFromEnv() helper function. This
+You may also use the auth.TokenOptionsFromEnv() helper function. This
 function reads in standard environment variables frequently found in an
 OpenStack `openrc` file. Again note that Gophercloud currently uses "tenant"
 instead of "project".
 
-	opts, err := openstack.AuthOptionsFromEnv()
+	opts, err := auth.TokenOptionsFromEnv()
 	provider, err := openstack.AuthenticatedClient(opts)
 
 Service Clients

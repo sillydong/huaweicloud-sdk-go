@@ -3,15 +3,16 @@ package testing
 import (
 	"testing"
 
-	"github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/bootfromvolume"
-	"github.com/gophercloud/gophercloud/openstack/compute/v2/servers"
-	th "github.com/gophercloud/gophercloud/testhelper"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/compute/v2/extensions/bootfromvolume"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/compute/v2/servers"
+	th "github.com/huaweicloud/huaweicloud-sdk-go/testhelper"
 )
 
 func TestBootFromNewVolume(t *testing.T) {
 	base := servers.CreateOpts{
 		Name:      "createdserver",
 		FlavorRef: "performance1-1",
+		Networks:  []servers.Network{},
 	}
 
 	ext := bootfromvolume.CreateOptsExt{
@@ -32,7 +33,7 @@ func TestBootFromNewVolume(t *testing.T) {
       "server": {
         "name":"createdserver",
         "flavorRef":"performance1-1",
-        "imageRef":"",
+        "networks": [],
         "block_device_mapping_v2":[
           {
             "uuid":"123456",
@@ -55,6 +56,7 @@ func TestBootFromExistingVolume(t *testing.T) {
 	base := servers.CreateOpts{
 		Name:      "createdserver",
 		FlavorRef: "performance1-1",
+		Networks:  []servers.Network{},
 	}
 
 	ext := bootfromvolume.CreateOptsExt{
@@ -74,7 +76,7 @@ func TestBootFromExistingVolume(t *testing.T) {
       "server": {
         "name":"createdserver",
         "flavorRef":"performance1-1",
-        "imageRef":"",
+        "networks": [],
         "block_device_mapping_v2":[
           {
             "uuid":"123456",
@@ -97,6 +99,7 @@ func TestBootFromImage(t *testing.T) {
 		Name:      "createdserver",
 		ImageRef:  "asdfasdfasdf",
 		FlavorRef: "performance1-1",
+		Networks:  []servers.Network{},
 	}
 
 	ext := bootfromvolume.CreateOptsExt{
@@ -118,6 +121,7 @@ func TestBootFromImage(t *testing.T) {
         "name": "createdserver",
         "imageRef": "asdfasdfasdf",
         "flavorRef": "performance1-1",
+        "networks": [],
         "block_device_mapping_v2":[
           {
             "boot_index": 0,
@@ -140,6 +144,7 @@ func TestCreateMultiEphemeralOpts(t *testing.T) {
 		Name:      "createdserver",
 		ImageRef:  "asdfasdfasdf",
 		FlavorRef: "performance1-1",
+		Networks:  []servers.Network{},
 	}
 
 	ext := bootfromvolume.CreateOptsExt{
@@ -177,6 +182,7 @@ func TestCreateMultiEphemeralOpts(t *testing.T) {
         "name": "createdserver",
         "imageRef": "asdfasdfasdf",
         "flavorRef": "performance1-1",
+        "networks": [],
         "block_device_mapping_v2":[
           {
             "boot_index": 0,
@@ -215,6 +221,7 @@ func TestAttachNewVolume(t *testing.T) {
 		Name:      "createdserver",
 		ImageRef:  "asdfasdfasdf",
 		FlavorRef: "performance1-1",
+		Networks:  []servers.Network{},
 	}
 
 	ext := bootfromvolume.CreateOptsExt{
@@ -243,6 +250,7 @@ func TestAttachNewVolume(t *testing.T) {
         "name": "createdserver",
         "imageRef": "asdfasdfasdf",
         "flavorRef": "performance1-1",
+        "networks": [],
         "block_device_mapping_v2":[
           {
             "boot_index": 0,
@@ -272,6 +280,7 @@ func TestAttachExistingVolume(t *testing.T) {
 		Name:      "createdserver",
 		ImageRef:  "asdfasdfasdf",
 		FlavorRef: "performance1-1",
+		Networks:  []servers.Network{},
 	}
 
 	ext := bootfromvolume.CreateOptsExt{
@@ -301,6 +310,7 @@ func TestAttachExistingVolume(t *testing.T) {
         "name": "createdserver",
         "imageRef": "asdfasdfasdf",
         "flavorRef": "performance1-1",
+        "networks": [],
         "block_device_mapping_v2":[
           {
             "boot_index": 0,

@@ -3,10 +3,10 @@ package bootwithscheduler
 import (
 	"fmt"
 
-	"github.com/gophercloud/gophercloud"
-	volume "github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/bootfromvolume"
-	hints "github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/schedulerhints"
-	"github.com/gophercloud/gophercloud/openstack/compute/v2/servers"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	volume "github.com/huaweicloud/huaweicloud-sdk-go/openstack/compute/v2/extensions/bootfromvolume"
+	hints "github.com/huaweicloud/huaweicloud-sdk-go/openstack/compute/v2/extensions/schedulerhints"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/compute/v2/servers"
 )
 
 // CreateOptsExt is a structure that extends the server `CreateOpts` structure
@@ -40,20 +40,20 @@ func (opts CreateOptsExt) ToServerCreateMap() (map[string]interface{}, error) {
 		blockDevice[i] = b
 	}
 	serverMap["block_device_mapping_v2"] = blockDevice
-/*
-	schedulerHints 只需要“check_resources”一个参数
-	if &(opts.SchedulerHints) != nil {
-		schedulerHints := make(map[string]interface{})
-		if opts.SchedulerHints.CheckResources != "" {
-			schedulerHints["check_resources"] = opts.SchedulerHints.CheckResources
+	/*
+		schedulerHints 只需要“check_resources”一个参数
+		if &(opts.SchedulerHints) != nil {
+			schedulerHints := make(map[string]interface{})
+			if opts.SchedulerHints.CheckResources != "" {
+				schedulerHints["check_resources"] = opts.SchedulerHints.CheckResources
+			}
+			base["os:scheduler_hints"] = schedulerHints
 		}
-		base["os:scheduler_hints"] = schedulerHints
-	}
-*/
+	*/
 
-//注释：支持opts.SchedulerHints 可传入多个参数
-	schedulerData,err:=opts.SchedulerHints.ToServerSchedulerHintsCreateMap()
-	if err!=nil{
+	//注释：支持opts.SchedulerHints 可传入多个参数
+	schedulerData, err := opts.SchedulerHints.ToServerSchedulerHintsCreateMap()
+	if err != nil {
 		return nil, err
 	}
 

@@ -1,8 +1,8 @@
 package subnets
 
 import (
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/pagination"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/pagination"
 )
 
 // Subnet represents a subnet. See package documentation for a top-level
@@ -70,7 +70,7 @@ type SubnetPage struct {
 // the end of a page and the pager seeks to traverse over a new one. In order
 // to do this, it needs to construct the next page's URL.
 func (r SubnetPage) NextPageURL() (string, error) {
-	s,err := ExtractSubnets(r)
+	s, err := ExtractSubnets(r)
 	if err != nil {
 		return "", err
 	}

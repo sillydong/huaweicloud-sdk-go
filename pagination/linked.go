@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/gophercloud/gophercloud"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
 )
 
 // LinkedPageBase may be embedded to implement a page that provides navigational "Next" and "Previous" links within its result.
@@ -114,6 +114,7 @@ func (current LinkedPageBase) IsEmpty() (bool, error) {
 func (current LinkedPageBase) GetBody() interface{} {
 	return current.Body
 }
+
 // WrapNextPageURL function use makerID to warp next page url,it returns the full url for request.
 func (current LinkedPageBase) WrapNextPageURL(markerID string) (string, error) {
 	limit := current.URL.Query().Get("limit")

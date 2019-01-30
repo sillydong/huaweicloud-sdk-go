@@ -2,8 +2,9 @@ package account
 
 import (
 	"fmt"
-	"github.com/gophercloud/gophercloud"
 	"math"
+
+	"github.com/huaweicloud/huaweicloud-sdk-go"
 )
 
 type ResourceDailyOptsBuilder interface {
@@ -46,7 +47,6 @@ func (opts ResourceDailyOpts) ToResourcesDailyMap() (map[string]interface{}, err
 	return gophercloud.BuildRequestBody(opts, "")
 }
 
-
 func getResourceDaily(client *gophercloud.ServiceClient, opts ResourceDailyOptsBuilder) (r commonResult) {
 	domainID := client.ProviderClient.DomainID
 	url := getURL(client, domainID)
@@ -65,13 +65,13 @@ func getResourceDaily(client *gophercloud.ServiceClient, opts ResourceDailyOptsB
 func ListResourceDaily(client *gophercloud.ServiceClient, opts ResourceDailyOpts) (*ResourceDaily, error) {
 	var allRes ResourceDaily
 
-	var  reqTmp ResourceDailyOpts
-	reqTmp =  opts
+	var reqTmp ResourceDailyOpts
+	reqTmp = opts
 
 	reqTmp.PageSize = 1
 	reqTmp.PageNo = 1
 
-	rspTmp,err := getResourceDaily(client, reqTmp).Extract()
+	rspTmp, err := getResourceDaily(client, reqTmp).Extract()
 
 	if err != nil {
 		fmt.Println("err:", err)
@@ -96,7 +96,7 @@ func ListResourceDaily(client *gophercloud.ServiceClient, opts ResourceDailyOpts
 
 	for i := 1; i <= queryTimes; i++ {
 		reqTmp.PageNo = i
-		res, err := getResourceDaily(client,reqTmp).Extract()
+		res, err := getResourceDaily(client, reqTmp).Extract()
 		if err != nil {
 			fmt.Println("err:", err)
 			if ue, ok := err.(*gophercloud.UnifiedError); ok {

@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/gophercloud/gophercloud/functiontest/common"
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack"
-	"github.com/gophercloud/gophercloud/openstack/vpc/v1/vpcs"
+
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/functiontest/common"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/vpc/v1/vpcs"
 )
 
 func main() {
@@ -123,7 +124,7 @@ func TestListVPC(sc *gophercloud.ServiceClient) {
 		return
 	}
 
-	vpcList,err := vpcs.ExtractVpcs(allpages)
+	vpcList, err := vpcs.ExtractVpcs(allpages)
 	for _, resp := range vpcList {
 
 		fmt.Println("vpc name is:", resp.Name)

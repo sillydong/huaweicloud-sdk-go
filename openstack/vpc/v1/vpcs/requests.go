@@ -1,8 +1,8 @@
 package vpcs
 
 import (
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/pagination"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/pagination"
 )
 
 type CreateOpts struct {
@@ -41,7 +41,7 @@ func Create(client *gophercloud.ServiceClient, opts CreateOptsBuilder) (r Create
 		return
 	}
 
-	_, r.Err = client.Post(CreateURL(client), b, &r.Body, &gophercloud.RequestOpts{OkCodes:[]int{200}})
+	_, r.Err = client.Post(CreateURL(client), b, &r.Body, &gophercloud.RequestOpts{OkCodes: []int{200}})
 	return
 }
 
@@ -128,6 +128,6 @@ func Update(client *gophercloud.ServiceClient, vpcId string, opts UpdateOptsBuil
 		return
 	}
 
-	_, r.Err = client.Put(UpdateURL(client, vpcId), b, &r.Body, &gophercloud.RequestOpts{OkCodes:[]int{200}})
+	_, r.Err = client.Put(UpdateURL(client, vpcId), b, &r.Body, &gophercloud.RequestOpts{OkCodes: []int{200}})
 	return
 }

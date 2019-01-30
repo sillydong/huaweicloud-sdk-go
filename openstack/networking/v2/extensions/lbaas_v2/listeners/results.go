@@ -1,8 +1,8 @@
 package listeners
 
 import (
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/pagination"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/pagination"
 )
 
 type LoadBalancerID struct {
@@ -63,7 +63,6 @@ type Listener struct {
 
 	// UpdatedAt is the time at which listeners has been created.
 	UpdatedAt string `json:"updated_at"`
-
 }
 
 // ListenerPage is the page returned by a pager when traversing over a

@@ -1,6 +1,6 @@
 package startstop
 
-import "github.com/gophercloud/gophercloud"
+import "github.com/huaweicloud/huaweicloud-sdk-go"
 
 func actionURL(client *gophercloud.ServiceClient, id string) string {
 	return client.ServiceURL("servers", id, "action")
@@ -11,7 +11,6 @@ func Start(client *gophercloud.ServiceClient, id string) (r StartResult) {
 	_, r.Err = client.Post(actionURL(client, id), map[string]interface{}{"os-start": nil}, nil, nil)
 	return
 }
-
 
 // Stop is the operation responsible for stopping a Compute server.
 func Stop(client *gophercloud.ServiceClient, id string) (r StopResult) {

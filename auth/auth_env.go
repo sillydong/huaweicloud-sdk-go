@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/auth/token"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/auth/token"
 )
 
 var nilOptions = token.TokenOptions{}
@@ -28,7 +28,7 @@ still be referred as "tenant" in Gophercloud.
 To use this function, first set the OS_* environment variables (for example,
 by sourcing an `openrc` file), then:
 
-	opts, err := openstack.AuthOptionsFromEnv()
+	opts, err := auth.TokenOptionsFromEnv()
 	provider, err := openstack.AuthenticatedClient(opts)
 */
 func TokenOptionsFromEnv() (token.TokenOptions, error) {

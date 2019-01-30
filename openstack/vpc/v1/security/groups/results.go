@@ -1,7 +1,7 @@
 package groups
 
 import (
-	"github.com/gophercloud/gophercloud/pagination"
+	"github.com/huaweicloud/huaweicloud-sdk-go/pagination"
 )
 
 // SecGroup represents a container for security group rules.
@@ -21,10 +21,10 @@ type SecurityGroupRule struct {
 	Description     string `json:"description"`
 	SecurityGroupID string `json:"security_group_id"`
 	RemoteGroupID   string `json:"remote_group_id,omitempty"`
-	RemoteIPPrefix string `json:"remote_ip_prefix,omitempty"`
-	Protocol       string `json:"protocol,omitempty"`
-	PortRangeMin   int    `json:"port_range_min,omitempty"`
-	PortRangeMax   int    `json:"port_range_max,omitempty"`
+	RemoteIPPrefix  string `json:"remote_ip_prefix,omitempty"`
+	Protocol        string `json:"protocol,omitempty"`
+	PortRangeMin    int    `json:"port_range_min,omitempty"`
+	PortRangeMax    int    `json:"port_range_max,omitempty"`
 }
 
 // SecGroupPage is the page returned by a pager when traversing over a
@@ -50,9 +50,8 @@ func ExtractGroups(r pagination.Page) ([]SecGroup, error) {
 	return s.SecGroups, err
 }
 
-
 func (r SecGroupPage) NextPageURL() (string, error) {
-	s,err := ExtractGroups(r)
+	s, err := ExtractGroups(r)
 	if err != nil {
 		return "", err
 	}

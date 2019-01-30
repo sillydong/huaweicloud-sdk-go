@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack"
-	"github.com/gophercloud/gophercloud/auth/aksk"
-	"github.com/gophercloud/gophercloud/openstack/compute/v2/servers"
+
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/auth/aksk"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/compute/v2/servers"
 )
 
 func main() {
@@ -35,13 +36,13 @@ func main() {
 		return
 	}
 
-	err_delete := servers.Delete(client, server_id ).ExtractErr()
+	err_delete := servers.Delete(client, server_id).ExtractErr()
 
 	if err_delete != nil {
 		if se, ok := err_delete.(*gophercloud.UnifiedError); ok {
 			fmt.Println("ErrCode:", se.ErrorCode())
 			fmt.Println("Message:", se.Message())
-		} else{
+		} else {
 			fmt.Println("Error:", err_delete)
 		}
 		return
@@ -50,5 +51,3 @@ func main() {
 	fmt.Println("Start to delete server!")
 
 }
-
-

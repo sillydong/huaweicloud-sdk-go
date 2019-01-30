@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack"
-	"github.com/gophercloud/gophercloud/openstack/ces/v1/metricdata"
-	"github.com/gophercloud/gophercloud/auth/aksk"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/auth/aksk"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/ces/v1/metricdata"
 )
 
 func main() {
@@ -74,12 +74,12 @@ func BatchQueryMetricDatas(sc *gophercloud.ServiceClient) {
 
 	fmt.Println("Test batch query metric data success！")
 
-	for _,data:=range metricdatas{
+	for _, data := range metricdatas {
 
-		fmt.Println("metric data Datapoints",data.Datapoints)
-		fmt.Println("metric data Dimensions",data.Dimensions)
-		fmt.Println("metric data MetricName",data.MetricName)
-		fmt.Println("metric data Namespace",data.Namespace)
+		fmt.Println("metric data Datapoints", data.Datapoints)
+		fmt.Println("metric data Dimensions", data.Dimensions)
+		fmt.Println("metric data MetricName", data.MetricName)
+		fmt.Println("metric data Namespace", data.Namespace)
 	}
 
 	p, _ := json.MarshalIndent(metricdatas, "", " ")

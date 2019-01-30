@@ -3,8 +3,9 @@ package cloudservers
 import (
 	"strings"
 
-	"github.com/gophercloud/gophercloud"
 	"fmt"
+
+	"github.com/huaweicloud/huaweicloud-sdk-go"
 )
 
 func ResetPassword(client *gophercloud.ServiceClient, serverID, newPassword string) (r ActionResult) {

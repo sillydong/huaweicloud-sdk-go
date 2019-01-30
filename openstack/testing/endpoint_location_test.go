@@ -4,11 +4,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack"
-	tokens2 "github.com/gophercloud/gophercloud/openstack/identity/v2/tokens"
-	tokens3 "github.com/gophercloud/gophercloud/openstack/identity/v3/tokens"
-	th "github.com/gophercloud/gophercloud/testhelper"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	tokens2 "github.com/huaweicloud/huaweicloud-sdk-go/openstack/identity/v2/tokens"
+	tokens3 "github.com/huaweicloud/huaweicloud-sdk-go/openstack/identity/v3/tokens"
+	th "github.com/huaweicloud/huaweicloud-sdk-go/testhelper"
 )
 
 // Service catalog fixtures take too much vertical space!
@@ -85,7 +85,7 @@ func TestV2EndpointNone(t *testing.T) {
 		Type:         "nope",
 		Availability: gophercloud.AvailabilityPublic,
 	})
-	expected := &gophercloud.ErrEndpointNotFound{}
+	expected := gophercloud.NewSystemCommonError(gophercloud.CE_NoEndPointInCatalogCode, gophercloud.CE_NoEndPointInCatalogMessage)
 	th.CheckEquals(t, expected.Error(), actual.Error())
 }
 
@@ -95,7 +95,7 @@ func TestV2EndpointMultiple(t *testing.T) {
 		Region:       "same",
 		Availability: gophercloud.AvailabilityPublic,
 	})
-	if !strings.HasPrefix(err.Error(), "Discovered 2 matching endpoints:") {
+	if !strings.Contains(err.Error(), "Discovered 2 matching endpoints:") {
 		t.Errorf("Received unexpected error: %v", err)
 	}
 }
@@ -107,7 +107,9 @@ func TestV2EndpointBadAvailability(t *testing.T) {
 		Region:       "same",
 		Availability: "wat",
 	})
-	th.CheckEquals(t, "Unexpected availability in endpoint query: wat", err.Error())
+	if !strings.Contains(err.Error(), "Invalid input provided for argument [Availability:wat]") {
+		t.Errorf("Received unexpected error: %v", err)
+	}
 }
 
 var catalog3 = tokens3.ServiceCatalog{
@@ -205,7 +207,7 @@ func TestV3EndpointNone(t *testing.T) {
 		Type:         "nope",
 		Availability: gophercloud.AvailabilityPublic,
 	})
-	expected := &gophercloud.ErrEndpointNotFound{}
+	expected := gophercloud.NewSystemCommonError(gophercloud.CE_NoEndPointInCatalogCode, gophercloud.CE_NoEndPointInCatalogMessage)
 	th.CheckEquals(t, expected.Error(), actual.Error())
 }
 
@@ -215,7 +217,7 @@ func TestV3EndpointMultiple(t *testing.T) {
 		Region:       "same",
 		Availability: gophercloud.AvailabilityPublic,
 	})
-	if !strings.HasPrefix(err.Error(), "Discovered 2 matching endpoints:") {
+	if !strings.Contains(err.Error(), "Discovered 2 matching endpoints:") {
 		t.Errorf("Received unexpected error: %v", err)
 	}
 }
@@ -227,5 +229,7 @@ func TestV3EndpointBadAvailability(t *testing.T) {
 		Region:       "same",
 		Availability: "wat",
 	})
-	th.CheckEquals(t, "Unexpected availability in endpoint query: wat", err.Error())
+	if !strings.Contains(err.Error(), "Invalid input provided for argument [Availability:wat]") {
+		t.Errorf("Received unexpected error: %v", err)
+	}
 }

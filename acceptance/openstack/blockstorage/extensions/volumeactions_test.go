@@ -5,12 +5,12 @@ package extensions
 import (
 	"testing"
 
-	"github.com/gophercloud/gophercloud/acceptance/clients"
-	"github.com/gophercloud/gophercloud/acceptance/tools"
-	"github.com/gophercloud/gophercloud/openstack/blockstorage/v2/volumes"
+	"github.com/huaweicloud/huaweicloud-sdk-go/acceptance/clients"
+	"github.com/huaweicloud/huaweicloud-sdk-go/acceptance/tools"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/blockstorage/v2/volumes"
 
-	blockstorage "github.com/gophercloud/gophercloud/acceptance/openstack/blockstorage/v2"
-	compute "github.com/gophercloud/gophercloud/acceptance/openstack/compute/v2"
+	blockstorage "github.com/huaweicloud/huaweicloud-sdk-go/acceptance/openstack/blockstorage/v2"
+	compute "github.com/huaweicloud/huaweicloud-sdk-go/acceptance/openstack/compute/v2"
 )
 
 func TestVolumeActionsUploadImageDestroy(t *testing.T) {
@@ -72,7 +72,7 @@ func TestVolumeActionsAttachCreateDestroy(t *testing.T) {
 
 	newVolume, err := volumes.Get(blockClient, volume.ID).Extract()
 	if err != nil {
-		t.Fatal("Unable to get updated volume information: %v", err)
+		t.Fatalf("Unable to get updated volume information: %v", err)
 	}
 
 	DeleteVolumeAttach(t, blockClient, newVolume)
@@ -118,7 +118,7 @@ func TestVolumeActionsExtendSize(t *testing.T) {
 
 	newVolume, err := volumes.Get(blockClient, volume.ID).Extract()
 	if err != nil {
-		t.Fatal("Unable to get updated volume information: %v", err)
+		t.Fatalf("Unable to get updated volume information: %v", err)
 	}
 
 	tools.PrintResource(t, newVolume)

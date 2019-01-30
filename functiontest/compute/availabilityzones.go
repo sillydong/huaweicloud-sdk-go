@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/gophercloud/gophercloud/functiontest/common"
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack"
-	az "github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/availabilityzones"
+
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/functiontest/common"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	az "github.com/huaweicloud/huaweicloud-sdk-go/openstack/compute/v2/extensions/availabilityzones"
 )
 
 func main() {
@@ -60,7 +61,6 @@ func GetAZList(sc *gophercloud.ServiceClient) {
 	}
 }
 
-
 func GetAZListDetails(sc *gophercloud.ServiceClient) {
 
 	allPages, err := az.ListDetail(sc).AllPages()
@@ -79,8 +79,8 @@ func GetAZListDetails(sc *gophercloud.ServiceClient) {
 	}
 	fmt.Println("Get az info success")
 	for _, data := range azinfo {
-		for hostName,service:=range data.Hosts{
-			fmt.Printf("az host name is %s, service is %s \n",hostName,service)
+		for hostName, service := range data.Hosts {
+			fmt.Printf("az host name is %s, service is %s \n", hostName, service)
 		}
 
 		fmt.Println("az hosts list is ", data.Hosts)

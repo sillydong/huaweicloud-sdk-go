@@ -5,11 +5,10 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/gophercloud/gophercloud/openstack/vpc/v1/subnets"
-	"github.com/gophercloud/gophercloud/testhelper/client"
-	th "github.com/gophercloud/gophercloud/testhelper"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/vpc/v1/subnets"
+	th "github.com/huaweicloud/huaweicloud-sdk-go/testhelper"
+	"github.com/huaweicloud/huaweicloud-sdk-go/testhelper/client"
 )
-
 
 var ListOutput = `
 {
@@ -45,41 +44,38 @@ var ListOutput = `
 }
 `
 
-
 var ListResponse = []subnets.Subnet{
-		{
-			ID:               "9a78d8b5-4f00-4de9-b0d8-1228afb27726",
-			Name:             "subnet-3d95",
-			Cidr:             "192.168.0.0/24",
-			DNSList:          []string{"100.125.1.250", "114.114.114.114"},
-			Status:           "ACTIVE",
-			VpcID:            "ea3b0efe-0d6a-4288-8b16-753504a994b9",
-			GatewayIP:        "192.168.0.1",
-			DhcpEnable:       enable,
-			PrimaryDNS:       "100.125.1.250",
-			SecondaryDNS:     "114.114.114.114",
-			AvailabilityZone: "cn-north-1a",
-			NeutronNetworkID: "9a78d8b5-4f00-4de9-b0d8-1228afb27726",
-			NeutronSubnetID:  "4d1d4f45-6375-4821-822e-44c92d12a58c",
-		},
-		{
-			ID:               "c9aba52d-ec14-40cb-930f-c8153e93c2db",
-			Name:             "subnet",
-			Cidr:             "192.168.20.0/24",
-			DNSList:          []string{"114.114.114.114", "114.114.115.115"},
-			Status:           "ACTIVE",
-			VpcID:            "ea3b0efe-0d6a-4288-8b16-753504a994b9",
-			GatewayIP:        "192.168.20.1",
-			DhcpEnable:       enable,
-			PrimaryDNS:       "114.114.114.114",
-			SecondaryDNS:     "114.114.115.115",
-			AvailabilityZone: "cn-north-1a",
-			NeutronNetworkID: "c9aba52d-ec14-40cb-930f-c8153e93c2db",
-			NeutronSubnetID:  "c557e272-dea4-40ee-931b-36c33fb192b2",
-		},
-	}
-
-
+	{
+		ID:               "9a78d8b5-4f00-4de9-b0d8-1228afb27726",
+		Name:             "subnet-3d95",
+		Cidr:             "192.168.0.0/24",
+		DNSList:          []string{"100.125.1.250", "114.114.114.114"},
+		Status:           "ACTIVE",
+		VpcID:            "ea3b0efe-0d6a-4288-8b16-753504a994b9",
+		GatewayIP:        "192.168.0.1",
+		DhcpEnable:       enable,
+		PrimaryDNS:       "100.125.1.250",
+		SecondaryDNS:     "114.114.114.114",
+		AvailabilityZone: "cn-north-1a",
+		NeutronNetworkID: "9a78d8b5-4f00-4de9-b0d8-1228afb27726",
+		NeutronSubnetID:  "4d1d4f45-6375-4821-822e-44c92d12a58c",
+	},
+	{
+		ID:               "c9aba52d-ec14-40cb-930f-c8153e93c2db",
+		Name:             "subnet",
+		Cidr:             "192.168.20.0/24",
+		DNSList:          []string{"114.114.114.114", "114.114.115.115"},
+		Status:           "ACTIVE",
+		VpcID:            "ea3b0efe-0d6a-4288-8b16-753504a994b9",
+		GatewayIP:        "192.168.20.1",
+		DhcpEnable:       enable,
+		PrimaryDNS:       "114.114.114.114",
+		SecondaryDNS:     "114.114.115.115",
+		AvailabilityZone: "cn-north-1a",
+		NeutronNetworkID: "c9aba52d-ec14-40cb-930f-c8153e93c2db",
+		NeutronSubnetID:  "c557e272-dea4-40ee-931b-36c33fb192b2",
+	},
+}
 
 func HandleListSuccessfully(t *testing.T) {
 	th.Mux.HandleFunc("/subnets", func(w http.ResponseWriter, r *http.Request) {
@@ -107,6 +103,7 @@ func HandleDeleteSuccessfully(t *testing.T) {
 		fmt.Fprintf(w, "")
 	})
 }
+
 var CreateOutput = `
 {
   "subnet": {
@@ -127,7 +124,7 @@ var CreateOutput = `
 }
 `
 
-var enable=true
+var enable = true
 
 var CreateResponse = subnets.Subnet{
 	ID:               "c9aba52d-ec14-40cb-930f-c8153e93c2db",

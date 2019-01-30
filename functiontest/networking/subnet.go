@@ -1,13 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"encoding/json"
+	"fmt"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/functiontest/common"
-	"github.com/gophercloud/gophercloud/openstack"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/subnets"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/functiontest/common"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/networking/v2/subnets"
 )
 
 var subnetid string
@@ -44,7 +44,6 @@ func main() {
 
 	fmt.Println("main end...")
 }
-
 
 func TestSubnetList(sc *gophercloud.ServiceClient) {
 	allpages, err := subnets.List(sc, subnets.ListOpts{}).AllPages()
@@ -90,9 +89,9 @@ func TestSubnetGet(sc *gophercloud.ServiceClient) {
 
 func TestSubnetCreate(sc *gophercloud.ServiceClient) {
 	opts := subnets.CreateOpts{
-		Name:"testsubnet",
-		NetworkID:"021d431d-d430-41fc-a6df-9ce50b9e8169",
-		CIDR:"192.168.1.0/24",
+		Name:      "testsubnet",
+		NetworkID: "021d431d-d430-41fc-a6df-9ce50b9e8169",
+		CIDR:      "192.168.1.0/24",
 	}
 
 	subnet, err := subnets.Create(sc, opts).Extract()
@@ -106,17 +105,17 @@ func TestSubnetCreate(sc *gophercloud.ServiceClient) {
 	}
 
 	fmt.Println("Test create subnet success!")
-	subnetid=subnet.ID
+	subnetid = subnet.ID
 	p, _ := json.MarshalIndent(subnet, "", " ")
 	fmt.Println(string(p))
 }
 
 func TestSubnetUpdate(sc *gophercloud.ServiceClient) {
 	opts := subnets.UpdateOpts{
-		Name:"testsubnet2",
+		Name: "testsubnet2",
 	}
 
-	subnet,err := subnets.Update(sc, subnetid,opts).Extract()
+	subnet, err := subnets.Update(sc, subnetid, opts).Extract()
 	if err != nil {
 		fmt.Println(err)
 		if ue, ok := err.(*gophercloud.UnifiedError); ok {

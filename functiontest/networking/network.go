@@ -1,13 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"encoding/json"
+	"fmt"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/functiontest/common"
-	"github.com/gophercloud/gophercloud/openstack"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/networks"
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/functiontest/common"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/networking/v2/networks"
 )
 
 var networkid string
@@ -91,7 +91,7 @@ func TestNetworkGet(sc *gophercloud.ServiceClient) {
 
 func TestNetworkCreate(sc *gophercloud.ServiceClient) {
 	opts := networks.CreateOpts{
-		Name:"testnetwork",
+		Name: "testnetwork",
 	}
 
 	network, err := networks.Create(sc, opts).Extract()
@@ -105,17 +105,17 @@ func TestNetworkCreate(sc *gophercloud.ServiceClient) {
 	}
 
 	fmt.Println("Test create network success!")
-	networkid=network.ID
+	networkid = network.ID
 	p, _ := json.MarshalIndent(network, "", " ")
 	fmt.Println(string(p))
 }
 
 func TestNetworkUpdate(sc *gophercloud.ServiceClient) {
 	opts := networks.UpdateOpts{
-		Name:"testnetwork2",
+		Name: "testnetwork2",
 	}
 
-	network,err := networks.Update(sc, networkid,opts).Extract()
+	network, err := networks.Update(sc, networkid, opts).Extract()
 	if err != nil {
 		fmt.Println(err)
 		if ue, ok := err.(*gophercloud.UnifiedError); ok {

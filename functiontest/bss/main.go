@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"math"
-	
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/functiontest/common"
-	"github.com/gophercloud/gophercloud/openstack"
-	"github.com/gophercloud/gophercloud/openstack/bss/v1/account"
-	"github.com/gophercloud/gophercloud/openstack/bss/v1/resource"
+
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/functiontest/common"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/bss/v1/account"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack/bss/v1/resource"
 )
 
 func main() {
@@ -33,7 +33,7 @@ func main() {
 
 	TestListDetail(sc)
 
-    TestResourceDailyALL(sc)
+	TestResourceDailyALL(sc)
 
 	fmt.Println("main end...")
 }
@@ -113,19 +113,19 @@ func TestListDetail(sc *gophercloud.ServiceClient) {
 	fmt.Println("allRes.Data:", len(allRes.Data))
 }
 
-func TestResourceDailyALL(sc *gophercloud.ServiceClient){
+func TestResourceDailyALL(sc *gophercloud.ServiceClient) {
 
 	reqTmp := account.ResourceDailyOpts{
-		StartTime: "2018-06-01",
-		EndTime: "2018-06-30",
-		PayMethod: "0",
-		CloudServiceType: "hws.service.type.ebs",
-		RegionCode:"cn-xianhz-1",
-		ResourceId:"",
+		StartTime:           "2018-06-01",
+		EndTime:             "2018-06-30",
+		PayMethod:           "0",
+		CloudServiceType:    "hws.service.type.ebs",
+		RegionCode:          "cn-xianhz-1",
+		ResourceId:          "",
 		EnterpriseProjectId: "",
 	}
 
-	rspTmp,err := account.ListResourceDaily(sc, reqTmp)
+	rspTmp, err := account.ListResourceDaily(sc, reqTmp)
 	if err != nil {
 		fmt.Println("err:", err)
 		if ue, ok := err.(*gophercloud.UnifiedError); ok {
@@ -135,6 +135,6 @@ func TestResourceDailyALL(sc *gophercloud.ServiceClient){
 		return
 	}
 
-	b,_:=json.MarshalIndent(rspTmp,""," ")
+	b, _ := json.MarshalIndent(rspTmp, "", " ")
 	fmt.Println(string(b))
 }

@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack"
-	"github.com/gophercloud/gophercloud/auth/aksk"
-	cloudserversV2 "github.com/gophercloud/gophercloud/openstack/ecs/v2/cloudservers"
+
+	"github.com/huaweicloud/huaweicloud-sdk-go"
+	"github.com/huaweicloud/huaweicloud-sdk-go/auth/aksk"
+	"github.com/huaweicloud/huaweicloud-sdk-go/openstack"
+	cloudserversV2 "github.com/huaweicloud/huaweicloud-sdk-go/openstack/ecs/v2/cloudservers"
 )
 
 func main() {
@@ -48,5 +49,3 @@ func main() {
 
 	fmt.Println("Succeed to reset password for server!")
 }
-
-
