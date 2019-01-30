@@ -86,24 +86,6 @@ type Image struct {
 
 	// VirtualSize is the virtual size of the image
 	VirtualSize int64 `json:"virtual_size"`
-
-	// Specifies the image URL.
-	Self string `json:"self"`
-
-	// Specifies whether the image has been deleted.
-	// The value can be true&nbsp;or&nbsp;false.
-	Deleted bool `json:"deleted"`
-
-	// Specifies the environment where the image is used.
-	// The value can be FusionCompute,Ironic, or DataImage.
-	// For an ECS image, the value is FusionCompute.
-	// For a data disk image, the value is DataImage.
-	// For a BMS image, the value is&nbsp;Ironic.
-	VirtualEnvType ImageVirtualEnvType `json:"virtual_env_type"`
-
-	// Specifies the time when the image was deleted.
-	// The value is in UTC format.
-	DeletedAt string `json:"deleted_at"`
 }
 
 func (r *Image) UnmarshalJSON(b []byte) error {
@@ -120,7 +102,7 @@ func (r *Image) UnmarshalJSON(b []byte) error {
 
 	switch t := s.SizeBytes.(type) {
 	case nil:
-		return nil
+		r.SizeBytes = 0
 	case float32:
 		r.SizeBytes = int64(t)
 	case float64:
@@ -178,6 +160,16 @@ type DeleteResult struct {
 	gophercloud.ErrResult
 }
 
+// PutTagResult represents the result of a put tag operation.
+type PutTagResult struct {
+	gophercloud.ErrResult
+}
+
+// DeleteTagResult represents the result of a delete tag operation.
+type DeleteTagResult struct {
+	gophercloud.ErrResult
+}
+
 // ImagePage represents the results of a List request.
 type ImagePage struct {
 	pagination.LinkedPageBase
@@ -215,4 +207,67 @@ func ExtractImages(r pagination.Page) ([]Image, error) {
 	}
 	err := (r.(ImagePage)).ExtractInto(&s)
 	return s.Images, err
+}
+
+// ImageSchemas presents the result of getting image schemas request
+type ImageSchemas struct {
+	// AdditionalProperties presents the additional properties
+	AdditionalProperties map[string]string `json:"additionalProperties"`
+	// Name is the name of schemas
+	Name string `json:"name"`
+	// Links is the links of schemas
+	Links []map[string]string `json:"links"`
+	// Properties is the explaination of schemas properties
+	Properties *json.RawMessage `json:"properties"`
+}
+
+// ImageSchemasResult represents the result of Image schemas request
+type ImageSchemasResult struct {
+	commonResult
+}
+
+// Extract interprets the result as an ImageSchemas
+func (r ImageSchemasResult) Extract() (*ImageSchemas, error) {
+	var s *ImageSchemas
+	err := r.ExtractInto(&s)
+	return s, err
+}
+
+// ImagesSchemas presents the result of getting images schemas request
+type ImagesSchemas struct {
+	// Name is the name of schemas
+	Name string `json:"name"`
+	// Links is the links of schemas
+	Links []map[string]string `json:"links"`
+	// Properties is the explaination of schemas properties
+	Properties *json.RawMessage `json:"properties"`
+}
+
+// ImagesSchemasResult represents the result of Images schemas request
+type ImagesSchemasResult struct {
+	commonResult
+}
+
+// Extract interprets the result as an ImagesSchemas
+func (r ImagesSchemasResult) Extract() (*ImagesSchemas, error) {
+	var s *ImagesSchemas
+	err := r.ExtractInto(&s)
+	return s, err
+}
+
+// CloudImageCreatingJob represents the job of image creating task
+type CloudImageCreatingJob struct {
+	JobID string `json:"job_id"`
+}
+
+// CloudImageCreatingResult represents the result of image creating
+type CloudImageCreatingResult struct {
+	commonResult
+}
+
+// Extract interprets the result as a CloudImageCreatingJob
+func (r CloudImageCreatingResult) Extract() (*CloudImageCreatingJob, error) {
+	var s *CloudImageCreatingJob
+	err := r.ExtractInto(&s)
+	return s, err
 }

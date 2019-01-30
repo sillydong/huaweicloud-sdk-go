@@ -1,6 +1,11 @@
 package images
 
 import (
+	"encoding/json"
+	"fmt"
+	"net/url"
+	"time"
+
 	"github.com/huaweicloud/huaweicloud-sdk-go"
 	"github.com/huaweicloud/huaweicloud-sdk-go/pagination"
 )
@@ -18,6 +23,11 @@ type ListOptsBuilder interface {
 //
 // http://developer.openstack.org/api-ref-image-v2.html
 type ListOpts struct {
+	// ID is the ID of the image.
+	// Multiple IDs can be specified by constructing a string
+	// such as "in:uuid1,uuid2,uuid3".
+	ID string `q:"id"`
+
 	// Integer value for the limit of values to return.
 	Limit int `q:"limit"`
 
@@ -25,6 +35,8 @@ type ListOpts struct {
 	Marker string `q:"marker"`
 
 	// Name filters on the name of the image.
+	// Multiple names can be specified by constructing a string
+	// such as "in:name1,name2,name3".
 	Name string `q:"name"`
 
 	// Visibility filters on the visibility of the image.
@@ -37,6 +49,8 @@ type ListOpts struct {
 	Owner string `q:"owner"`
 
 	// Status filters on the status of the image.
+	// Multiple statuses can be specified by constructing a string
+	// such as "in:saving,queued".
 	Status ImageStatus `q:"status"`
 
 	// SizeMin filters on the size_min image property.
@@ -57,70 +71,111 @@ type ListOpts struct {
 	// SortDir will sort the list results either ascending or decending.
 	SortDir string `q:"sort_dir"`
 
-	// Tags is a list of image tags. Tags are arbitrarily defined strings
-	// attached to an image.
-	Tag string `q:"tag"`
+	// Tags filters on specific image tags.
+	Tags []string `q:"tag"`
 
-	// Specifies whether the image is available.
-	IsRegistered string `q:"__isregistered"`
+	// CreatedAtQuery filters images based on their creation date.
+	CreatedAtQuery *ImageDateQuery
 
-	//Image type
-	ImageType string `q:"__imagetype"`
+	// UpdatedAtQuery filters images based on their updated date.
+	UpdatedAtQuery *ImageDateQuery
 
-	//Image ID
-	ID string `q:"id"`
-
-	// ContainerFormat is the format of the container.
-	// Valid values are ami, ari, aki, bare, and ovf.
+	// ContainerFormat filters images based on the container_format.
+	// Multiple container formats can be specified by constructing a
+	// string such as "in:bare,ami".
 	ContainerFormat string `q:"container_format"`
 
-	// DiskFormat is the format of the disk.
-	// If set, valid values are ami, ari, aki, vhd, vmdk, raw, qcow2, vdi,
-	// and iso.
+	// DiskFormat filters images based on the disk_format.
+	// Multiple disk formats can be specified by constructing a string
+	// such as "in:qcow2,iso".
 	DiskFormat string `q:"disk_format"`
 
-	//Specifies the minimum memory size (MB) required for running the image.
+	// Specifies the minimum memory size (MD) required for running the image.
 	MinRam int `q:"min_ram"`
 
-	//pecifies the minimum disk space (GB) required for running the image.
+	// Specifies the minimum disk space (GB) required for running the image.
 	MinDisk int `q:"min_disk"`
 
-	//Specifies the number of bits in the operating system: 32&nbsp;or&nbsp;64.
+	// Specifies the number of bits in the operating system: 32 or 64
 	OsBit string `q:"__os_bit"`
 
-	//Specifies the image platform type.
+	// Specifies the image platform type.
 	Platform string `q:"__platform"`
 
-	//Indicates the image OS type. The value can be Linux,&nbsp;Windows, or&nbsp;Other.
+	// Specifies the operating system type: Linux, Windows or Other
 	OsType string `q:"__os_type"`
 
-	//Specifies whether the image supports KVM.
-	//If yes, the value is true. Otherwise, this attribute is not required.
-	SupportKvm string `q:"__support_kvm"`
+	// Specifies the user tag filter
+	Tag string `q:"tag"`
 
-	//Specifies whether the image supports Xen.
-	//If yes, the value is true. Otherwise, this attribute is not required.
-	SupportXen string `q:"__support_xen"`
+	// Specifies whether or not the image should support KVM, true or omitted
+	SupportKVM bool `q:"__support_kvm"`
 
-	//Specifies whether the image supports disk-intensive ECSs.
+	// Specifies whether or not the image should support Xen, true or omitted
+	SupportXen bool `q:"__support_xen"`
+
+	// Specifies whether or not the image should support crowded storing
 	SupportDiskIntensive string `q:"__support_diskintensive"`
 
-	//Specifies whether the image supports high-performance ECSs
+	// Specifies whether or not the image should support high performance
 	SupportHighPerformance string `q:"__support_highperformance"`
 
-	//Specifies whether the image supports GPU-optimized ECSs on the Xen platform
-	SupportXenGpuType string `q:"__support_xen_gpu_type"`
+	// Specifies the supporting Xen gpu type
+	SupportXenGPUType string `q:"__support_xen_gpu_type"`
+
+	// Specifies the virtual environment type: FusionCompute, Ironic or DataImage
+	VirtualEnvType string `q:"virtual_env_type"`
+
+	// Specifies the enterprise project ID which the image should belong to
+	EnterpriseProjectID string `q:"enterprise_project_id"`
 }
 
 // ToImageListQuery formats a ListOpts into a query string.
 func (opts ListOpts) ToImageListQuery() (string, error) {
 	q, err := gophercloud.BuildQueryString(opts)
+	params := q.Query()
+
+	if opts.CreatedAtQuery != nil {
+		createdAt := opts.CreatedAtQuery.Date.Format(time.RFC3339)
+		if v := opts.CreatedAtQuery.Filter; v != "" {
+			createdAt = fmt.Sprintf("%s:%s", v, createdAt)
+		}
+
+		params.Add("created_at", createdAt)
+	}
+
+	if opts.UpdatedAtQuery != nil {
+		updatedAt := opts.UpdatedAtQuery.Date.Format(time.RFC3339)
+		if v := opts.UpdatedAtQuery.Filter; v != "" {
+			updatedAt = fmt.Sprintf("%s:%s", v, updatedAt)
+		}
+
+		params.Add("updated_at", updatedAt)
+	}
+
+	q = &url.URL{RawQuery: params.Encode()}
+
 	return q.String(), err
 }
 
 // List implements image list request.
 func List(c *gophercloud.ServiceClient, opts ListOptsBuilder) pagination.Pager {
 	url := listURL(c)
+	if opts != nil {
+		query, err := opts.ToImageListQuery()
+		if err != nil {
+			return pagination.Pager{Err: err}
+		}
+		url += query
+	}
+	return pagination.NewPager(c, url, func(r pagination.PageResult) pagination.Page {
+		return ImagePage{pagination.LinkedPageBase{PageResult: r}}
+	})
+}
+
+// ListCloudImages implements image list request
+func ListCloudImages(c *gophercloud.ServiceClient, opts ListOptsBuilder) pagination.Pager {
+	url := listCloudImagesURL(c)
 	if opts != nil {
 		query, err := opts.ToImageListQuery()
 		if err != nil {
@@ -142,7 +197,7 @@ type CreateOptsBuilder interface {
 // CreateOpts represents options used to create an image.
 type CreateOpts struct {
 	// Name is the name of the new image.
-	Name string `json:"name"`
+	Name string `json:"name" required:"true"`
 
 	// Id is the the image ID.
 	ID string `json:"id,omitempty"`
@@ -225,8 +280,26 @@ func Update(client *gophercloud.ServiceClient, id string, opts UpdateOptsBuilder
 		return r
 	}
 	_, r.Err = client.Patch(updateURL(client, id), b, &r.Body, &gophercloud.RequestOpts{
-		OkCodes:     []int{200},
-		MoreHeaders: map[string]string{"Content-Type": "application/openstack-images-v2.1-json-patch"},
+		OkCodes: []int{200},
+		MoreHeaders: map[string]string{
+			"Content-Type": "application/openstack-images-v2.1-json-patch",
+		},
+	})
+	return
+}
+
+// updateCloudImage implements image updated request
+func UpdateCloudImage(client *gophercloud.ServiceClient, id string, opts UpdateOptsBuilder) (r UpdateResult) {
+	b, err := opts.ToImageUpdateMap()
+	if err != nil {
+		r.Err = err
+		return r
+	}
+	_, r.Err = client.Patch(updateCloudImageURL(client, id), b, &r.Body, &gophercloud.RequestOpts{
+		OkCodes: []int{200},
+		MoreHeaders: map[string]string{
+			"Content-Type": "application/openstack-images-v2.1-json-patch",
+		},
 	})
 	return
 }
@@ -314,4 +387,110 @@ func (r ReplaceImageTags) ToImagePatchMap() map[string]interface{} {
 		"path":  "/tags",
 		"value": r.NewTags,
 	}
+}
+
+// PutTag put a tag to image
+func PutTag(client *gophercloud.ServiceClient, id, tag string) (r PutTagResult) {
+	_, r.Err = client.Put(putTagURL(client, id, tag), nil, nil, &gophercloud.RequestOpts{
+		OkCodes: []int{204},
+	})
+	return
+}
+
+func DeleteTag(client *gophercloud.ServiceClient, id, tag string) (r DeleteTagResult) {
+	_, r.Err = client.Delete(deleteTagURL(client, id, tag), &gophercloud.RequestOpts{
+		OkCodes: []int{204},
+	})
+	return
+}
+
+// GetImageSchemas get the image schemas
+func GetImageSchemas(client *gophercloud.ServiceClient) (r ImageSchemasResult) {
+	_, r.Err = client.Get(getImageSchemas(client), &r.Body, nil)
+	return
+}
+
+// GetImagesSchemas get the image schemas
+func GetImagesSchemas(client *gophercloud.ServiceClient) (r ImagesSchemasResult) {
+	_, r.Err = client.Get(getImagesSchemas(client), &r.Body, nil)
+	return
+}
+
+// ImageCreatingOptsBuilder allows extensions to add parameters to the Create
+// request.
+type ImageCreatingOptsBuilder interface {
+	ToImageCreatingMap() (map[string]interface{}, error)
+}
+
+// ImageCreatingOptsFromCloud represents options used to create an image.
+type ImageCreatingOptsFromCloud struct {
+	// Name is the name of the new image
+	Name string `json:"name" required:"true"`
+	// Description is the description of the image
+	Description string `json:"description,omitempty"`
+	// InstanceID is the instance id of cloud server
+	InstanceID string `json:"instance_id" required:"true"`
+	// DataImages is the data images in the cloud server which needs to be
+	// transform
+	DataImages []json.RawMessage `json:"data_images,omitempty"`
+	// Tags is the tag list of the image
+	Tags []string `json:"tags,omitempty"`
+	// ImageTags is the new image tag list
+	ImageTags []map[string]string `json:"image_tags,omitempty"`
+	// EnterpriseProjectID is the project id of this image belongs to
+	EnterpriseProjectID string `json:"enterprise_project_id,omitempty"`
+	// MaxRam is the maximum ram
+	MaxRam int `json:"max_ram,omitempty"`
+	// MinRam is the minmum ram
+	MinRam int `json:"min_ram,omitempty"`
+}
+
+// ToImageCreatingMap assembles a request body based on the contents
+func (opts ImageCreatingOptsFromCloud) ToImageCreatingMap() (map[string]interface{}, error) {
+	return gophercloud.BuildRequestBody(opts, "")
+}
+
+type ImageCreatingOptsFromOBS struct {
+	// Name is the name of the new image
+	Name string `json:"name" required:"true"`
+	// Description is the description of the image
+	Description string `json:"description,omitempty"`
+	// OSVersion is the operating system version
+	OSVersion string `json:"os_version,omitempty"`
+	// ImageURL is the OBS image file location
+	ImageURL string `json:"image_url" required:"true"`
+	// MinDisk is the amount of disk space in GB
+	MinDisk int `json:"min_disk" required:"true"`
+	// IsConfig specify whether or not automatically config
+	IsConfig bool `json:"is_config,omitempty"`
+	// CMKID is the primary key
+	CMKID string `json:"cmd_id,omitempty"`
+	// Type is the image type ECS,BMS,FusionCompute,Ironic
+	Type string `json:"type,omitempty"`
+	// Tags is the tag list of the image
+	Tags []string `json:"tags,omitempty"`
+	// ImageTags is the new image tag list
+	ImageTags []map[string]string `json:"image_tags,omitempty"`
+	// EnterpriseProjectID is the project id of this image belongs to
+	EnterpriseProjectID string `json:"enterprise_project_id,omitempty"`
+	// MaxRam is the maximum ram
+	MaxRam int `json:"max_ram,omitempty"`
+	// MinRam is the minmum ram
+	MinRam int `json:"min_ram,omitempty"`
+}
+
+// ToImageCreatingMap assembles a request body based on the contents
+func (opts ImageCreatingOptsFromOBS) ToImageCreatingMap() (map[string]interface{}, error) {
+	return gophercloud.BuildRequestBody(opts, "")
+}
+
+// CreateCloudImage create the cloud image
+func CreateCloudImage(client *gophercloud.ServiceClient, opts ImageCreatingOptsBuilder) (r CloudImageCreatingResult) {
+	b, err := opts.ToImageCreatingMap()
+	if err != nil {
+		r.Err = err
+		return r
+	}
+	_, r.Err = client.Post(actionCloudImageURL(client), b, &r.Body, nil)
+	return
 }
