@@ -608,6 +608,7 @@ func HandleImageSchemasGet(t *testing.T) {
 	th.Mux.HandleFunc("/schemas/image", func(w http.ResponseWriter, r *http.Request) {
 		th.TestMethod(t, r, "GET")
 		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("{}"))
 	})
 }
 
@@ -616,5 +617,6 @@ func HandleImagesSchemasGet(t *testing.T) {
 	th.Mux.HandleFunc("/schemas/images", func(w http.ResponseWriter, r *http.Request) {
 		th.TestMethod(t, r, "GET")
 		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("{}"))
 	})
 }
