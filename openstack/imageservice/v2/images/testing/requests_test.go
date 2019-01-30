@@ -45,41 +45,6 @@ func TestListImage(t *testing.T) {
 	th.AssertEquals(t, 3, count)
 }
 
-func TestListCloudImage(t *testing.T) {
-	th.SetupHTTP()
-	defer th.TeardownHTTP()
-
-	HandleCloudImageListSuccessfully(t)
-
-	t.Logf("Test setup %+v\n", th.Server)
-
-	t.Logf("Id\tName\tOwner\tChecksum\tSizeBytes")
-
-	pager := images.ListCloudImages(fakeclient.ServiceClient(), images.ListOpts{Limit: 1})
-	t.Logf("Pager state %v", pager)
-	count, pages := 0, 0
-	err := pager.EachPage(func(page pagination.Page) (bool, error) {
-		pages++
-		t.Logf("Page %v", page)
-		images, err := images.ExtractImages(page)
-		if err != nil {
-			return false, err
-		}
-
-		for _, i := range images {
-			t.Logf("%s\t%s\t%s\t%s\t%v\t\n", i.ID, i.Name, i.Owner, i.Checksum, i.SizeBytes)
-			count++
-		}
-
-		return true, nil
-	})
-	th.AssertNoErr(t, err)
-
-	t.Logf("--------\n%d images listed on %d pages.\n", count, pages)
-	th.AssertEquals(t, 3, pages)
-	th.AssertEquals(t, 3, count)
-}
-
 func TestAllPagesImage(t *testing.T) {
 	th.SetupHTTP()
 	defer th.TeardownHTTP()
@@ -289,61 +254,6 @@ func TestUpdateImage(t *testing.T) {
 	HandleImageUpdateSuccessfully(t)
 
 	actualImage, err := images.Update(fakeclient.ServiceClient(), "da3b75d9-3f4a-40e7-8a2c-bfab23927dea", images.UpdateOpts{
-		images.ReplaceImageName{NewName: "Fedora 17"},
-		images.ReplaceImageTags{NewTags: []string{"fedora", "beefy"}},
-	}).Extract()
-
-	th.AssertNoErr(t, err)
-
-	sizebytes := int64(2254249)
-	checksum := "2cec138d7dae2aa59038ef8c9aec2390"
-	file := actualImage.File
-	createdDate := actualImage.CreatedAt
-	lastUpdate := actualImage.UpdatedAt
-	schema := "/v2/schemas/image"
-
-	expectedImage := images.Image{
-		ID:         "da3b75d9-3f4a-40e7-8a2c-bfab23927dea",
-		Name:       "Fedora 17",
-		Status:     images.ImageStatusActive,
-		Visibility: images.ImageVisibilityPublic,
-
-		SizeBytes: sizebytes,
-		Checksum:  checksum,
-
-		Tags: []string{
-			"fedora",
-			"beefy",
-		},
-
-		Owner:            "",
-		MinRAMMegabytes:  0,
-		MinDiskGigabytes: 0,
-
-		DiskFormat:      "",
-		ContainerFormat: "",
-		File:            file,
-		CreatedAt:       createdDate,
-		UpdatedAt:       lastUpdate,
-		Schema:          schema,
-		VirtualSize:     0,
-		Properties: map[string]interface{}{
-			"hw_disk_bus":       "scsi",
-			"hw_disk_bus_model": "virtio-scsi",
-			"hw_scsi_model":     "virtio-scsi",
-		},
-	}
-
-	th.AssertDeepEquals(t, &expectedImage, actualImage)
-}
-
-func TestUpdateCloudImage(t *testing.T) {
-	th.SetupHTTP()
-	defer th.TeardownHTTP()
-
-	HandleCloudImageUpdateSuccessfully(t)
-
-	actualImage, err := images.UpdateCloudImage(fakeclient.ServiceClient(), "da3b75d9-3f4a-40e7-8a2c-bfab23927dea", images.UpdateOpts{
 		images.ReplaceImageName{NewName: "Fedora 17"},
 		images.ReplaceImageTags{NewTags: []string{"fedora", "beefy"}},
 	}).Extract()

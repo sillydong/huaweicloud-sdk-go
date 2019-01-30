@@ -254,20 +254,3 @@ func (r ImagesSchemasResult) Extract() (*ImagesSchemas, error) {
 	err := r.ExtractInto(&s)
 	return s, err
 }
-
-// CloudImageCreatingJob represents the job of image creating task
-type CloudImageCreatingJob struct {
-	JobID string `json:"job_id"`
-}
-
-// CloudImageCreatingResult represents the result of image creating
-type CloudImageCreatingResult struct {
-	commonResult
-}
-
-// Extract interprets the result as a CloudImageCreatingJob
-func (r CloudImageCreatingResult) Extract() (*CloudImageCreatingJob, error) {
-	var s *CloudImageCreatingJob
-	err := r.ExtractInto(&s)
-	return s, err
-}

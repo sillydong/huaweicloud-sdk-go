@@ -173,21 +173,6 @@ func List(c *gophercloud.ServiceClient, opts ListOptsBuilder) pagination.Pager {
 	})
 }
 
-// ListCloudImages implements image list request
-func ListCloudImages(c *gophercloud.ServiceClient, opts ListOptsBuilder) pagination.Pager {
-	url := listCloudImagesURL(c)
-	if opts != nil {
-		query, err := opts.ToImageListQuery()
-		if err != nil {
-			return pagination.Pager{Err: err}
-		}
-		url += query
-	}
-	return pagination.NewPager(c, url, func(r pagination.PageResult) pagination.Page {
-		return ImagePage{pagination.LinkedPageBase{PageResult: r}}
-	})
-}
-
 // CreateOptsBuilder allows extensions to add parameters to the Create request.
 type CreateOptsBuilder interface {
 	// Returns value that can be passed to json.Marshal
@@ -280,22 +265,6 @@ func Update(client *gophercloud.ServiceClient, id string, opts UpdateOptsBuilder
 		return r
 	}
 	_, r.Err = client.Patch(updateURL(client, id), b, &r.Body, &gophercloud.RequestOpts{
-		OkCodes: []int{200},
-		MoreHeaders: map[string]string{
-			"Content-Type": "application/openstack-images-v2.1-json-patch",
-		},
-	})
-	return
-}
-
-// updateCloudImage implements image updated request
-func UpdateCloudImage(client *gophercloud.ServiceClient, id string, opts UpdateOptsBuilder) (r UpdateResult) {
-	b, err := opts.ToImageUpdateMap()
-	if err != nil {
-		r.Err = err
-		return r
-	}
-	_, r.Err = client.Patch(updateCloudImageURL(client, id), b, &r.Body, &gophercloud.RequestOpts{
 		OkCodes: []int{200},
 		MoreHeaders: map[string]string{
 			"Content-Type": "application/openstack-images-v2.1-json-patch",
@@ -482,15 +451,4 @@ type ImageCreatingOptsFromOBS struct {
 // ToImageCreatingMap assembles a request body based on the contents
 func (opts ImageCreatingOptsFromOBS) ToImageCreatingMap() (map[string]interface{}, error) {
 	return gophercloud.BuildRequestBody(opts, "")
-}
-
-// CreateCloudImage create the cloud image
-func CreateCloudImage(client *gophercloud.ServiceClient, opts ImageCreatingOptsBuilder) (r CloudImageCreatingResult) {
-	b, err := opts.ToImageCreatingMap()
-	if err != nil {
-		r.Err = err
-		return r
-	}
-	_, r.Err = client.Post(actionCloudImageURL(client), b, &r.Body, nil)
-	return
 }

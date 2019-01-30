@@ -12,12 +12,6 @@ func listURL(c *gophercloud.ServiceClient) string {
 	return c.ServiceURL("images")
 }
 
-// `listCloudImagesURL` is a pure function. `listCloudImagesURL(c)` is a URL for
-// which a GET request will respond with a list of images in the service `c`.
-func listCloudImagesURL(c *gophercloud.ServiceClient) string {
-	return c.ServiceURL("cloudimages")
-}
-
 func createURL(c *gophercloud.ServiceClient) string {
 	return c.ServiceURL("images")
 }
@@ -38,17 +32,6 @@ func getURL(c *gophercloud.ServiceClient, imageID string) string {
 // updateURL update the attributes of image
 func updateURL(c *gophercloud.ServiceClient, imageID string) string {
 	return imageURL(c, imageID)
-}
-
-// `updateCloudImageURL` is a function to generate a url for update image
-// attributes
-func updateCloudImageURL(c *gophercloud.ServiceClient, imageID string) string {
-	return c.ServiceURL("cloudimages", imageID)
-}
-
-// actionCloudImageURL generate url to do the action of cloudimages
-func actionCloudImageURL(c *gophercloud.ServiceClient) string {
-	return c.ServiceURL("cloudimages", "action")
 }
 
 // `deleteURL` is a function to generate a url for image deletion
