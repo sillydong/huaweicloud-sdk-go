@@ -1,10 +1,11 @@
 package members
 
 import (
+	"encoding/json"
 	"time"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/pagination"
+	"github.com/huaweicloud/golangsdk"
+	"github.com/huaweicloud/golangsdk/pagination"
 )
 
 // Member represents a member of an Image.
@@ -46,7 +47,7 @@ func (r MemberPage) IsEmpty() (bool, error) {
 }
 
 type commonResult struct {
-	gophercloud.Result
+	golangsdk.Result
 }
 
 // CreateResult represents the result of a Create operation. Call its Extract
@@ -70,5 +71,47 @@ type UpdateResult struct {
 // DeleteResult represents the result of a Delete operation. Call its
 // ExtractErr method to determine if the request succeeded or failed.
 type DeleteResult struct {
-	gophercloud.ErrResult
+	golangsdk.ErrResult
+}
+
+// MemberSchemas presents the result of getting member schemas request
+type MemberSchemas struct {
+	// Name is the name of schemas
+	Name string `json:"name"`
+	// Properties is the explaination of schemas properties
+	Properties *json.RawMessage `json:"properties"`
+}
+
+// MemberSchemasResult represents the result of member schemas request
+type MemberSchemasResult struct {
+	golangsdk.Result
+}
+
+// Extract interprets the result as an MemberSchemas
+func (r MemberSchemasResult) Extract() (*MemberSchemas, error) {
+	var s *MemberSchemas
+	err := r.ExtractInto(&s)
+	return s, err
+}
+
+// MembersSchemas presents the result of getting members schemas request
+type MembersSchemas struct {
+	// Name is the name of schemas
+	Name string `json:"name"`
+	// Links is the links of schemas
+	Links []map[string]string `json:"links"`
+	// Properties is the explaination of schemas properties
+	Properties *json.RawMessage `json:"properties"`
+}
+
+// MembersSchemasResult represents the result of members schemas request
+type MembersSchemasResult struct {
+	golangsdk.Result
+}
+
+// Extract interprets the result as an MemberSchemas
+func (r MembersSchemasResult) Extract() (*MembersSchemas, error) {
+	var s *MembersSchemas
+	err := r.ExtractInto(&s)
+	return s, err
 }

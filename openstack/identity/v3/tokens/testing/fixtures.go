@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack/identity/v3/tokens"
-	"github.com/gophercloud/gophercloud/testhelper"
+	"github.com/huaweicloud/golangsdk"
+	"github.com/huaweicloud/golangsdk/openstack/identity/v3/tokens"
+	"github.com/huaweicloud/golangsdk/testhelper"
 )
 
 const testTokenID = "130f6c17-420e-4a0b-97b0-0c9cf2a05f30"
@@ -110,7 +110,7 @@ const TokenOutput = `
    }
 }`
 
-var expectedTokenTime, _ = time.Parse(gophercloud.RFC3339Milli,
+var expectedTokenTime, _ = time.Parse(golangsdk.RFC3339Milli,
 	"2017-06-03T02:19:49.000000Z")
 var ExpectedToken = tokens.Token{
 	ID:        testTokenID,
@@ -122,19 +122,19 @@ var catalogEntry1 = tokens.CatalogEntry{
 	Name: "nova",
 	Type: "compute",
 	Endpoints: []tokens.Endpoint{
-		tokens.Endpoint{
+		{
 			ID:        "3eac9e7588eb4eb2a4650cf5e079505f",
 			Region:    "RegionOne",
 			Interface: "admin",
 			URL:       "http://127.0.0.1:8774/v2.1/a99e9b4e620e4db09a2dfb6e42a01e66",
 		},
-		tokens.Endpoint{
+		{
 			ID:        "6b33fabc69c34ea782a3f6282582b59f",
 			Region:    "RegionOne",
 			Interface: "internal",
 			URL:       "http://127.0.0.1:8774/v2.1/a99e9b4e620e4db09a2dfb6e42a01e66",
 		},
-		tokens.Endpoint{
+		{
 			ID:        "dae63c71bee24070a71f5425e7a916b5",
 			Region:    "RegionOne",
 			Interface: "public",
@@ -147,19 +147,19 @@ var catalogEntry2 = tokens.CatalogEntry{
 	Name: "keystone",
 	Type: "identity",
 	Endpoints: []tokens.Endpoint{
-		tokens.Endpoint{
+		{
 			ID:        "0539aeff80954a0bb756cec496768d3d",
 			Region:    "RegionOne",
 			Interface: "admin",
 			URL:       "http://127.0.0.1:35357/v3",
 		},
-		tokens.Endpoint{
+		{
 			ID:        "15bdf2d0853e4c939993d29548b1b56f",
 			Region:    "RegionOne",
 			Interface: "public",
 			URL:       "http://127.0.0.1:5000/v3",
 		},
-		tokens.Endpoint{
+		{
 			ID:        "3b4423c54ba343c58226bc424cb11c4b",
 			Region:    "RegionOne",
 			Interface: "internal",

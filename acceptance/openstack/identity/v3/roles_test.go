@@ -5,11 +5,11 @@ package v3
 import (
 	"testing"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/acceptance/clients"
-	"github.com/gophercloud/gophercloud/acceptance/tools"
-	"github.com/gophercloud/gophercloud/openstack/identity/v3/domains"
-	"github.com/gophercloud/gophercloud/openstack/identity/v3/roles"
+	"github.com/huaweicloud/golangsdk"
+	"github.com/huaweicloud/golangsdk/acceptance/clients"
+	"github.com/huaweicloud/golangsdk/acceptance/tools"
+	"github.com/huaweicloud/golangsdk/openstack/identity/v3/domains"
+	"github.com/huaweicloud/golangsdk/openstack/identity/v3/roles"
 )
 
 func TestRolesList(t *testing.T) {
@@ -159,7 +159,7 @@ func TestRoleAssignToUserOnDomain(t *testing.T) {
 	}
 
 	domain, err := CreateDomain(t, client, &domains.CreateOpts{
-		Enabled: gophercloud.Disabled,
+		Enabled: golangsdk.Disabled,
 	})
 	if err != nil {
 		t.Fatal("Unable to create a domain")
@@ -218,7 +218,7 @@ func TestRoleAssignToGroupOnDomain(t *testing.T) {
 	}
 
 	domain, err := CreateDomain(t, client, &domains.CreateOpts{
-		Enabled: gophercloud.Disabled,
+		Enabled: golangsdk.Disabled,
 	})
 	if err != nil {
 		t.Fatal("Unable to create a domain")
@@ -267,6 +267,30 @@ func TestRoleAssignToGroupOnDomain(t *testing.T) {
 	t.Logf("Role assignments of group %s on domain %s:", group.Name, domain.Name)
 	for _, roleAssignment := range allRoleAssignments {
 		tools.PrintResource(t, roleAssignment)
+	}
+
+	err = roles.CheckRoleOf(client, role.ID, roles.CheckRoleOfOpts{
+		GroupID:  group.ID,
+		DomainID: domain.ID,
+	}).ExtractErr()
+	if err != nil {
+		t.Fatalf("Unable to check role of domain: %v", err)
+	}
+
+	allPages, err = roles.ListRolesOf(client, roles.ListRolesOfOpts{
+		GroupID:  group.ID,
+		DomainID: domain.ID,
+	}).AllPages()
+	if err != nil {
+		t.Fatalf("Unable to list roles of domain: %v", err)
+	}
+	allRoles, err := roles.ExtractRoles(allPages)
+	if err != nil {
+		t.Fatalf("Unable to extract roles: %v", err)
+	}
+
+	for _, role := range allRoles {
+		tools.PrintResource(t, role)
 	}
 }
 
@@ -324,5 +348,29 @@ func TestRoleAssignToGroupOnProject(t *testing.T) {
 	t.Logf("Role assignments of group %s on project %s:", group.Name, project.Name)
 	for _, roleAssignment := range allRoleAssignments {
 		tools.PrintResource(t, roleAssignment)
+	}
+
+	err = roles.CheckRoleOf(client, role.ID, roles.CheckRoleOfOpts{
+		GroupID:   group.ID,
+		ProjectID: project.ID,
+	}).ExtractErr()
+	if err != nil {
+		t.Fatalf("Unable to check role of project: %v", err)
+	}
+
+	allPages, err = roles.ListRolesOf(client, roles.ListRolesOfOpts{
+		GroupID:   group.ID,
+		ProjectID: project.ID,
+	}).AllPages()
+	if err != nil {
+		t.Fatalf("Unable to list roles of project: %v", err)
+	}
+	allRoles, err := roles.ExtractRoles(allPages)
+	if err != nil {
+		t.Fatalf("Unable to extract roles: %v", err)
+	}
+
+	for _, role := range allRoles {
+		tools.PrintResource(t, role)
 	}
 }

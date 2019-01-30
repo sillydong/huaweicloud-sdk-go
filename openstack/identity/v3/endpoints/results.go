@@ -1,12 +1,12 @@
 package endpoints
 
 import (
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/pagination"
+	"github.com/huaweicloud/golangsdk"
+	"github.com/huaweicloud/golangsdk/pagination"
 )
 
 type commonResult struct {
-	gophercloud.Result
+	golangsdk.Result
 }
 
 // Extract interprets a GetResult, CreateResult or UpdateResult as a concrete
@@ -34,7 +34,13 @@ type UpdateResult struct {
 // DeleteResult is the response from a Delete operation. Call its ExtractErr
 // method to determine if the call succeeded or failed.
 type DeleteResult struct {
-	gophercloud.ErrResult
+	golangsdk.ErrResult
+}
+
+// GetResult is the response from a Get operation. Call its Extract
+// method to interpret it as an Endpoint.
+type GetResult struct {
+	commonResult
 }
 
 // Endpoint describes the entry point for another service's API.
@@ -43,8 +49,8 @@ type Endpoint struct {
 	ID string `json:"id"`
 
 	// Availability is the interface type of the Endpoint (admin, internal,
-	// or public), referenced by the gophercloud.Availability type.
-	Availability gophercloud.Availability `json:"interface"`
+	// or public), referenced by the golangsdk.Availability type.
+	Availability golangsdk.Availability `json:"interface"`
 
 	// Name is the name of the Endpoint.
 	Name string `json:"name"`
@@ -57,6 +63,15 @@ type Endpoint struct {
 
 	// URL is the url of the Endpoint.
 	URL string `json:"url"`
+
+	// RegionID is the ID of the region the Endpoint is located in.
+	RegionID string `json:"region_id"`
+
+	// Enabled is the availablity of the Endpoint.
+	Enabled bool `json:"enabled"`
+
+	// Links is the links of the Endpoint
+	Links map[string]interface{} `json:"links"`
 }
 
 // EndpointPage is a single page of Endpoint results.

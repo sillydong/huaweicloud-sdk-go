@@ -6,10 +6,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gophercloud/gophercloud/openstack/identity/v2/tenants"
-	"github.com/gophercloud/gophercloud/openstack/identity/v2/tokens"
-	th "github.com/gophercloud/gophercloud/testhelper"
-	thclient "github.com/gophercloud/gophercloud/testhelper/client"
+	"github.com/huaweicloud/golangsdk/openstack/identity/v2/tenants"
+	"github.com/huaweicloud/golangsdk/openstack/identity/v2/tokens"
+	th "github.com/huaweicloud/golangsdk/testhelper"
+	thclient "github.com/huaweicloud/golangsdk/testhelper/client"
 )
 
 // ExpectedToken is the token that should be parsed from TokenCreationResponse.
@@ -58,7 +58,7 @@ var ExpectedServiceCatalog = &tokens.ServiceCatalog{
 var ExpectedUser = &tokens.User{
 	ID:       "a530fefc3d594c4ba2693a4ecd6be74e",
 	Name:     "apiserver",
-	Roles:    []tokens.Role{tokens.Role{Name: "member"}, tokens.Role{Name: "service"}},
+	Roles:    []tokens.Role{{Name: "member"}, {Name: "service"}},
 	UserName: "apiserver",
 }
 

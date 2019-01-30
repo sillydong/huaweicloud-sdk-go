@@ -3,12 +3,12 @@ package testing
 import (
 	"testing"
 
-	"github.com/gophercloud/gophercloud/openstack/identity/v3/groups"
-	"github.com/gophercloud/gophercloud/openstack/identity/v3/projects"
-	"github.com/gophercloud/gophercloud/openstack/identity/v3/users"
-	"github.com/gophercloud/gophercloud/pagination"
-	th "github.com/gophercloud/gophercloud/testhelper"
-	"github.com/gophercloud/gophercloud/testhelper/client"
+	"github.com/huaweicloud/golangsdk/openstack/identity/v3/groups"
+	"github.com/huaweicloud/golangsdk/openstack/identity/v3/projects"
+	"github.com/huaweicloud/golangsdk/openstack/identity/v3/users"
+	"github.com/huaweicloud/golangsdk/pagination"
+	th "github.com/huaweicloud/golangsdk/testhelper"
+	"github.com/huaweicloud/golangsdk/testhelper/client"
 )
 
 func TestListUsers(t *testing.T) {
@@ -174,4 +174,44 @@ func TestListInGroup(t *testing.T) {
 	actual, err := users.ExtractUsers(allPages)
 	th.AssertNoErr(t, err)
 	th.CheckDeepEquals(t, ExpectedUsersSlice, actual)
+}
+
+func TestUpdateUserPasswd(t *testing.T) {
+	th.SetupHTTP()
+	defer th.TeardownHTTP()
+	HandleUpdateUserPasswdSuccessfully(t)
+
+	opts := users.UpdatePasswdOpts{
+		OriginalPassword: "secretsecret",
+		Password:         "notthatsecret",
+	}
+	res := users.UpdatePasswd(client.ServiceClient(), "9fe1d3", opts)
+	th.AssertNoErr(t, res.Err)
+}
+
+func TestCheckGroupUser(t *testing.T) {
+	th.SetupHTTP()
+	defer th.TeardownHTTP()
+	HandleCheckGroupUserSuccessfully(t)
+
+	res := users.CheckGroupUser(client.ServiceClient(), "ea167b", "9fe1d3")
+	th.AssertNoErr(t, res.Err)
+}
+
+func TestDeleteGroupUser(t *testing.T) {
+	th.SetupHTTP()
+	defer th.TeardownHTTP()
+	HandleDeleteGroupUserSuccessfully(t)
+
+	res := users.DeleteGroupUser(client.ServiceClient(), "ea167b", "9fe1d3")
+	th.AssertNoErr(t, res.Err)
+}
+
+func TestAddUserToGroup(t *testing.T) {
+	th.SetupHTTP()
+	defer th.TeardownHTTP()
+	HandleAddUserToGroupSuccessfully(t)
+
+	res := users.AddUserToGroup(client.ServiceClient(), "ea167b", "9fe1d3")
+	th.AssertNoErr(t, res.Err)
 }

@@ -5,9 +5,9 @@ package v3
 import (
 	"testing"
 
-	"github.com/gophercloud/gophercloud/acceptance/clients"
-	"github.com/gophercloud/gophercloud/acceptance/tools"
-	"github.com/gophercloud/gophercloud/openstack/identity/v3/projects"
+	"github.com/huaweicloud/golangsdk/acceptance/clients"
+	"github.com/huaweicloud/golangsdk/acceptance/tools"
+	"github.com/huaweicloud/golangsdk/openstack/identity/v3/projects"
 )
 
 func TestProjectsList(t *testing.T) {
@@ -64,7 +64,7 @@ func TestProjectsGet(t *testing.T) {
 func TestProjectsCRUD(t *testing.T) {
 	client, err := clients.NewIdentityV3Client()
 	if err != nil {
-		t.Fatalf("Unable to obtain an identity client: %v")
+		t.Fatalf("Unable to obtain an identity client: %v", err)
 	}
 
 	project, err := CreateProject(t, client, nil)
@@ -91,7 +91,7 @@ func TestProjectsCRUD(t *testing.T) {
 func TestProjectsDomain(t *testing.T) {
 	client, err := clients.NewIdentityV3Client()
 	if err != nil {
-		t.Fatalf("Unable to obtain an identity client: %v")
+		t.Fatalf("Unable to obtain an identity client: %v", err)
 	}
 
 	var iTrue = true
@@ -126,14 +126,14 @@ func TestProjectsDomain(t *testing.T) {
 
 	_, err = projects.Update(client, projectDomain.ID, updateOpts).Extract()
 	if err != nil {
-		t.Fatalf("Unable to disable domain: %v")
+		t.Fatalf("Unable to disable domain: %v", err)
 	}
 }
 
 func TestProjectsNested(t *testing.T) {
 	client, err := clients.NewIdentityV3Client()
 	if err != nil {
-		t.Fatalf("Unable to obtain an identity client: %v")
+		t.Fatalf("Unable to obtain an identity client: %v", err)
 	}
 
 	projectMain, err := CreateProject(t, client, nil)

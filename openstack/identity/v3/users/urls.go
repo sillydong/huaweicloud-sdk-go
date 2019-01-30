@@ -1,35 +1,55 @@
 package users
 
-import "github.com/gophercloud/gophercloud"
+import "github.com/huaweicloud/golangsdk"
 
-func listURL(client *gophercloud.ServiceClient) string {
+// listURL generate url to query a user list
+func listURL(client *golangsdk.ServiceClient) string {
 	return client.ServiceURL("users")
 }
 
-func getURL(client *gophercloud.ServiceClient, userID string) string {
+// getURL generate url to query detailed information about a specified user
+func getURL(client *golangsdk.ServiceClient, userID string) string {
 	return client.ServiceURL("users", userID)
 }
 
-func createURL(client *gophercloud.ServiceClient) string {
+// createURL generate url to create a user under a tenant
+func createURL(client *golangsdk.ServiceClient) string {
 	return client.ServiceURL("users")
 }
 
-func updateURL(client *gophercloud.ServiceClient, userID string) string {
+// updateURL generate url to modify user information under a tenant
+func updateURL(client *golangsdk.ServiceClient, userID string) string {
 	return client.ServiceURL("users", userID)
 }
 
-func deleteURL(client *gophercloud.ServiceClient, userID string) string {
+// deleteURL generate url to delete a specified user
+func deleteURL(client *golangsdk.ServiceClient, userID string) string {
 	return client.ServiceURL("users", userID)
 }
 
-func listGroupsURL(client *gophercloud.ServiceClient, userID string) string {
+// listGroupsURL generate url to query the information about the user group
+func listGroupsURL(client *golangsdk.ServiceClient, userID string) string {
 	return client.ServiceURL("users", userID, "groups")
 }
 
-func listProjectsURL(client *gophercloud.ServiceClient, userID string) string {
+// listProjectsURL generate url to query the project information
+func listProjectsURL(client *golangsdk.ServiceClient, userID string) string {
 	return client.ServiceURL("users", userID, "projects")
 }
 
-func listInGroupURL(client *gophercloud.ServiceClient, groupID string) string {
+// updatePasswdURL generate url to change the password for a user
+func updatePasswdURL(client *golangsdk.ServiceClient, userID string) string {
+	return client.ServiceURL("users", userID, "password")
+}
+
+// listInGroupURL generate url to list users in group
+func listInGroupURL(client *golangsdk.ServiceClient, groupID string) string {
 	return client.ServiceURL("groups", groupID, "users")
+}
+
+// operateOnGroupUserURL generate url to modify group users
+func operateOnGroupUserURL(client *golangsdk.ServiceClient,
+	groupID string, userID string) string {
+
+	return client.ServiceURL("groups", groupID, "users", userID)
 }

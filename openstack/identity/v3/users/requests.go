@@ -1,10 +1,12 @@
 package users
 
 import (
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack/identity/v3/groups"
-	"github.com/gophercloud/gophercloud/openstack/identity/v3/projects"
-	"github.com/gophercloud/gophercloud/pagination"
+	"net/http"
+
+	"github.com/huaweicloud/golangsdk"
+	"github.com/huaweicloud/golangsdk/openstack/identity/v3/groups"
+	"github.com/huaweicloud/golangsdk/openstack/identity/v3/projects"
+	"github.com/huaweicloud/golangsdk/pagination"
 )
 
 // Option is a specific option defined at the API to enable features
@@ -51,12 +53,12 @@ type ListOpts struct {
 
 // ToUserListQuery formats a ListOpts into a query string.
 func (opts ListOpts) ToUserListQuery() (string, error) {
-	q, err := gophercloud.BuildQueryString(opts)
+	q, err := golangsdk.BuildQueryString(opts)
 	return q.String(), err
 }
 
 // List enumerates the Users to which the current token has access.
-func List(client *gophercloud.ServiceClient, opts ListOptsBuilder) pagination.Pager {
+func List(client *golangsdk.ServiceClient, opts ListOptsBuilder) pagination.Pager {
 	url := listURL(client)
 	if opts != nil {
 		query, err := opts.ToUserListQuery()
@@ -65,13 +67,17 @@ func List(client *gophercloud.ServiceClient, opts ListOptsBuilder) pagination.Pa
 		}
 		url += query
 	}
-	return pagination.NewPager(client, url, func(r pagination.PageResult) pagination.Page {
-		return UserPage{pagination.LinkedPageBase{PageResult: r}}
-	})
+	return pagination.NewPager(
+		client,
+		url,
+		func(r pagination.PageResult) pagination.Page {
+			return UserPage{pagination.LinkedPageBase{PageResult: r}}
+		},
+	)
 }
 
 // Get retrieves details on a single user, by ID.
-func Get(client *gophercloud.ServiceClient, id string) (r GetResult) {
+func Get(client *golangsdk.ServiceClient, id string) (r GetResult) {
 	_, r.Err = client.Get(getURL(client, id), &r.Body, nil)
 	return
 }
@@ -111,7 +117,7 @@ type CreateOpts struct {
 
 // ToUserCreateMap formats a CreateOpts into a create request.
 func (opts CreateOpts) ToUserCreateMap() (map[string]interface{}, error) {
-	b, err := gophercloud.BuildRequestBody(opts, "user")
+	b, err := golangsdk.BuildRequestBody(opts, "user")
 	if err != nil {
 		return nil, err
 	}
@@ -128,13 +134,13 @@ func (opts CreateOpts) ToUserCreateMap() (map[string]interface{}, error) {
 }
 
 // Create creates a new User.
-func Create(client *gophercloud.ServiceClient, opts CreateOptsBuilder) (r CreateResult) {
+func Create(client *golangsdk.ServiceClient, opts CreateOptsBuilder) (r CreateResult) {
 	b, err := opts.ToUserCreateMap()
 	if err != nil {
 		r.Err = err
 		return
 	}
-	_, r.Err = client.Post(createURL(client), &b, &r.Body, &gophercloud.RequestOpts{
+	_, r.Err = client.Post(createURL(client), &b, &r.Body, &golangsdk.RequestOpts{
 		OkCodes: []int{201},
 	})
 	return
@@ -175,7 +181,7 @@ type UpdateOpts struct {
 
 // ToUserUpdateMap formats a UpdateOpts into an update request.
 func (opts UpdateOpts) ToUserUpdateMap() (map[string]interface{}, error) {
-	b, err := gophercloud.BuildRequestBody(opts, "user")
+	b, err := golangsdk.BuildRequestBody(opts, "user")
 	if err != nil {
 		return nil, err
 	}
@@ -192,42 +198,59 @@ func (opts UpdateOpts) ToUserUpdateMap() (map[string]interface{}, error) {
 }
 
 // Update updates an existing User.
-func Update(client *gophercloud.ServiceClient, userID string, opts UpdateOptsBuilder) (r UpdateResult) {
+func Update(client *golangsdk.ServiceClient, userID string, opts UpdateOptsBuilder) (r UpdateResult) {
 	b, err := opts.ToUserUpdateMap()
 	if err != nil {
 		r.Err = err
 		return
 	}
-	_, r.Err = client.Patch(updateURL(client, userID), &b, &r.Body, &gophercloud.RequestOpts{
-		OkCodes: []int{200},
-	})
+	_, r.Err = client.Patch(
+		updateURL(client, userID),
+		&b,
+		&r.Body,
+		&golangsdk.RequestOpts{
+			OkCodes: []int{200},
+		},
+	)
 	return
 }
 
 // Delete deletes a user.
-func Delete(client *gophercloud.ServiceClient, userID string) (r DeleteResult) {
+func Delete(client *golangsdk.ServiceClient, userID string) (r DeleteResult) {
 	_, r.Err = client.Delete(deleteURL(client, userID), nil)
 	return
 }
 
 // ListGroups enumerates groups user belongs to.
-func ListGroups(client *gophercloud.ServiceClient, userID string) pagination.Pager {
+func ListGroups(client *golangsdk.ServiceClient, userID string) pagination.Pager {
 	url := listGroupsURL(client, userID)
-	return pagination.NewPager(client, url, func(r pagination.PageResult) pagination.Page {
-		return groups.GroupPage{LinkedPageBase: pagination.LinkedPageBase{PageResult: r}}
-	})
+	return pagination.NewPager(
+		client,
+		url,
+		func(r pagination.PageResult) pagination.Page {
+			return groups.GroupPage{
+				LinkedPageBase: pagination.LinkedPageBase{PageResult: r},
+			}
+		},
+	)
 }
 
 // ListProjects enumerates groups user belongs to.
-func ListProjects(client *gophercloud.ServiceClient, userID string) pagination.Pager {
+func ListProjects(client *golangsdk.ServiceClient, userID string) pagination.Pager {
 	url := listProjectsURL(client, userID)
-	return pagination.NewPager(client, url, func(r pagination.PageResult) pagination.Page {
-		return projects.ProjectPage{LinkedPageBase: pagination.LinkedPageBase{PageResult: r}}
-	})
+	return pagination.NewPager(
+		client,
+		url,
+		func(r pagination.PageResult) pagination.Page {
+			return projects.ProjectPage{
+				LinkedPageBase: pagination.LinkedPageBase{PageResult: r},
+			}
+		},
+	)
 }
 
 // ListInGroup enumerates users that belong to a group.
-func ListInGroup(client *gophercloud.ServiceClient, groupID string, opts ListOptsBuilder) pagination.Pager {
+func ListInGroup(client *golangsdk.ServiceClient, groupID string, opts ListOptsBuilder) pagination.Pager {
 	url := listInGroupURL(client, groupID)
 	if opts != nil {
 		query, err := opts.ToUserListQuery()
@@ -236,7 +259,82 @@ func ListInGroup(client *gophercloud.ServiceClient, groupID string, opts ListOpt
 		}
 		url += query
 	}
-	return pagination.NewPager(client, url, func(r pagination.PageResult) pagination.Page {
-		return UserPage{pagination.LinkedPageBase{PageResult: r}}
-	})
+	return pagination.NewPager(
+		client,
+		url,
+		func(r pagination.PageResult) pagination.Page {
+			return UserPage{pagination.LinkedPageBase{PageResult: r}}
+		},
+	)
+}
+
+// UpdatePasswdOptsBuilder is the interface for password updating parameters
+type UpdatePasswdOptsBuilder interface {
+	ToPasswdUpdateMap() (map[string]interface{}, error)
+}
+
+// UpdatePasswdOpts provides options used to update user password
+type UpdatePasswdOpts struct {
+	OriginalPassword string `json:"original_password"`
+	Password         string `json:"password"`
+}
+
+// ToPasswdUpdateMap formats a UpdatePasswdOpts into an http request
+func (opts UpdatePasswdOpts) ToPasswdUpdateMap() (
+	map[string]interface{}, error) {
+	return golangsdk.BuildRequestBody(opts, "user")
+}
+
+// UpdatePasswd update password by user itself
+func UpdatePasswd(client *golangsdk.ServiceClient,
+	userID string, opts UpdatePasswdOptsBuilder) (r UpdatePasswdResult) {
+
+	b, err := opts.ToPasswdUpdateMap()
+	if err != nil {
+		r.Err = err
+		return
+	}
+	_, r.Err = client.Post(updatePasswdURL(client, userID), &b, nil,
+		&golangsdk.RequestOpts{
+			OkCodes: []int{204},
+		},
+	)
+	return
+}
+
+// CheckGroupUser check if the user does exist in the group
+func CheckGroupUser(client *golangsdk.ServiceClient,
+	groupID string, userID string) (r CheckGroupUserResult) {
+
+	_, r.Err = client.Head(operateOnGroupUserURL(client, groupID, userID),
+		&golangsdk.RequestOpts{
+			OkCodes: []int{204},
+		},
+	)
+	return
+}
+
+// DeleteGroupUser deletes a user from a group.
+func DeleteGroupUser(client *golangsdk.ServiceClient,
+	groupID string, userID string) (r DeleteGroupUserResult) {
+
+	_, r.Err = client.Delete(operateOnGroupUserURL(client, groupID, userID),
+		&golangsdk.RequestOpts{
+			OkCodes: []int{204},
+		},
+	)
+	return
+}
+
+// AddUserToGroup add a user to a group
+func AddUserToGroup(client *golangsdk.ServiceClient,
+	groupID, userID string) (r AddUserToGroupResult) {
+
+	_, r.Err = client.Put(operateOnGroupUserURL(client, groupID, userID),
+		nil, nil,
+		&golangsdk.RequestOpts{
+			OkCodes: []int{http.StatusNoContent},
+		},
+	)
+	return
 }

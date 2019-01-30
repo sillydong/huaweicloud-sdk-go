@@ -1,7 +1,8 @@
 package tokens
 
-import "github.com/gophercloud/gophercloud"
+import "github.com/huaweicloud/golangsdk"
 
-func tokenURL(c *gophercloud.ServiceClient) string {
+// tokenURL generate url to obtaining or get the user token
+func tokenURL(c *golangsdk.ServiceClient) string {
 	return c.ServiceURL("auth", "tokens")
 }

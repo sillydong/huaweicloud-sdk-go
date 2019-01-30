@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"testing"
 
-	th "github.com/gophercloud/gophercloud/testhelper"
-	fakeclient "github.com/gophercloud/gophercloud/testhelper/client"
+	th "github.com/huaweicloud/golangsdk/testhelper"
+	fakeclient "github.com/huaweicloud/golangsdk/testhelper/client"
 )
 
 // HandlePutImageDataSuccessfully setup

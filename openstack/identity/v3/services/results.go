@@ -3,13 +3,13 @@ package services
 import (
 	"encoding/json"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/internal"
-	"github.com/gophercloud/gophercloud/pagination"
+	"github.com/huaweicloud/golangsdk"
+	"github.com/huaweicloud/golangsdk/internal"
+	"github.com/huaweicloud/golangsdk/pagination"
 )
 
 type serviceResult struct {
-	gophercloud.Result
+	golangsdk.Result
 }
 
 // Extract interprets a GetResult, CreateResult or UpdateResult as a concrete
@@ -43,16 +43,13 @@ type UpdateResult struct {
 // DeleteResult is the response from a Delete request. Call its ExtractErr
 // method to interpret it as a Service.
 type DeleteResult struct {
-	gophercloud.ErrResult
+	golangsdk.ErrResult
 }
 
 // Service represents an OpenStack Service.
 type Service struct {
 	// ID is the unique ID of the service.
 	ID string `json:"id"`
-
-	// Type is the type of the service.
-	Name string `json:"name"`
 
 	// Type is the type of the service.
 	Type string `json:"type"`
@@ -65,6 +62,12 @@ type Service struct {
 
 	// Extra is a collection of miscellaneous key/values.
 	Extra map[string]interface{} `json:"-"`
+
+	// Description is the description of the service.
+	Description string `json:"description"`
+
+	// Name is the name of the service.
+	Name string `json:"name"`
 }
 
 func (r *Service) UnmarshalJSON(b []byte) error {

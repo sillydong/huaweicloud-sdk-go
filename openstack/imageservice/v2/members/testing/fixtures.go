@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"testing"
 
-	th "github.com/gophercloud/gophercloud/testhelper"
-	fakeclient "github.com/gophercloud/gophercloud/testhelper/client"
+	th "github.com/huaweicloud/golangsdk/testhelper"
+	fakeclient "github.com/huaweicloud/golangsdk/testhelper/client"
 )
 
 // HandleCreateImageMemberSuccessfully setup
@@ -135,4 +135,20 @@ func HandleImageMemberUpdate(t *testing.T) *CallsCounter {
 // CallsCounter for checking if request handler was called at all
 type CallsCounter struct {
 	Counter int
+}
+
+// HandleMemberSchemasGet test setup
+func HandleMemberSchemasGet(t *testing.T) {
+	th.Mux.HandleFunc("/schemas/member", func(w http.ResponseWriter, r *http.Request) {
+		th.TestMethod(t, r, "GET")
+		w.WriteHeader(http.StatusOK)
+	})
+}
+
+// HandleMembersSchemasGet test setup
+func HandleMembersSchemasGet(t *testing.T) {
+	th.Mux.HandleFunc("/schemas/members", func(w http.ResponseWriter, r *http.Request) {
+		th.TestMethod(t, r, "GET")
+		w.WriteHeader(http.StatusOK)
+	})
 }

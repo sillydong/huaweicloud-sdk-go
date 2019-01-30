@@ -56,5 +56,37 @@ Example to Delete an Image
 	if err != nil {
 		panic(err)
 	}
+
+Example to Put a Tag to an Image
+
+	imageID := "1bea47ed-f6a9-463b-b423-14b9cca9ad27"
+	tag := "demoTag"
+	err := images.PutTag(imageClient, imageID, tag).ExtractErr()
+	if err != nil {
+		panic(err)
+	}
+
+Example to Delete a Tag from an Image
+
+	imageID := "1bea47ed-f6a9-463b-b423-14b9cca9ad27"
+	tag := "demoTag"
+	err := images.DeleteTag(imageClient, imageID, tag).ExtractErr()
+	if err != nil {
+		panic(err)
+	}
+
+Example to Get a Image Schemas
+
+	schemas, err := images.GetImageSchemas(imageClient).Extract()
+	if err != nil {
+		panic(err)
+	}
+
+Example to Get a Images Schemas
+
+	schemas, err := images.GetImagesSchemas(imageClient).Extract()
+	if err != nil {
+		panic(err)
+	}
 */
 package images

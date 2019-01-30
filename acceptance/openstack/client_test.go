@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack"
+	"github.com/huaweicloud/golangsdk"
+	"github.com/huaweicloud/golangsdk/openstack"
 )
 
 func TestAuthenticatedClient(t *testing.T) {
@@ -17,6 +17,8 @@ func TestAuthenticatedClient(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Unable to acquire credentials: %v", err)
 	}
+
+	t.Logf("AuthOptionsFromEnv: %+v", ao)
 
 	client, err := openstack.AuthenticatedClient(ao)
 	if err != nil {
@@ -30,7 +32,7 @@ func TestAuthenticatedClient(t *testing.T) {
 	t.Logf("Client successfully acquired a token: %v", client.TokenID)
 
 	// Find the storage service in the service catalog.
-	storage, err := openstack.NewObjectStorageV1(client, gophercloud.EndpointOpts{
+	storage, err := openstack.NewObjectStorageV1(client, golangsdk.EndpointOpts{
 		Region: os.Getenv("OS_REGION_NAME"),
 	})
 	if err != nil {
@@ -49,8 +51,7 @@ func TestReauth(t *testing.T) {
 	// Allow reauth
 	ao.AllowReauth = true
 
-	conf := gophercloud.NewConfig()
-	provider, err := openstack.NewClient(ao.IdentityEndpoint, ao.TenantID, conf)
+	provider, err := openstack.NewClient(ao.IdentityEndpoint)
 	if err != nil {
 		t.Fatalf("Unable to create provider: %v", err)
 	}
@@ -61,7 +62,7 @@ func TestReauth(t *testing.T) {
 	}
 
 	t.Logf("Creating a compute client")
-	_, err = openstack.NewComputeV2(provider, gophercloud.EndpointOpts{
+	_, err = openstack.NewComputeV2(provider, golangsdk.EndpointOpts{
 		Region: os.Getenv("OS_REGION_NAME"),
 	})
 	if err != nil {
@@ -78,7 +79,7 @@ func TestReauth(t *testing.T) {
 	}
 
 	t.Logf("Creating a compute client")
-	_, err = openstack.NewComputeV2(provider, gophercloud.EndpointOpts{
+	_, err = openstack.NewComputeV2(provider, golangsdk.EndpointOpts{
 		Region: os.Getenv("OS_REGION_NAME"),
 	})
 	if err != nil {

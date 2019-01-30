@@ -4,7 +4,7 @@ servers with a specified key pair.
 
 Example to List Key Pairs
 
-	allPages, err := keypairs.List(computeClient).AllPages()
+	allPages, err := keypairs.List(computeClient, nil).AllPages()
 	if err != nil {
 		panic(err)
 	}
@@ -58,7 +58,7 @@ Example to Create a Server With a Key Pair
 		FlavorRef: "flavor-uuid",
 	}
 
-	createOpts := keypairs.CreateOpts{
+	createOpts := keypairs.CreateOptsExt{
 		CreateOptsBuilder: serverCreateOpts,
 		KeyName:           "keypair-name",
 	}

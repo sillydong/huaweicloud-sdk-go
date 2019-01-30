@@ -5,16 +5,16 @@ package v3
 import (
 	"testing"
 
-	"github.com/gophercloud/gophercloud/acceptance/clients"
-	"github.com/gophercloud/gophercloud/acceptance/tools"
-	"github.com/gophercloud/gophercloud/openstack"
-	"github.com/gophercloud/gophercloud/openstack/identity/v3/tokens"
+	"github.com/huaweicloud/golangsdk/acceptance/clients"
+	"github.com/huaweicloud/golangsdk/acceptance/tools"
+	"github.com/huaweicloud/golangsdk/openstack"
+	"github.com/huaweicloud/golangsdk/openstack/identity/v3/tokens"
 )
 
 func TestGetToken(t *testing.T) {
 	client, err := clients.NewIdentityV3Client()
 	if err != nil {
-		t.Fatalf("Unable to obtain an identity client: %v")
+		t.Fatalf("Unable to obtain an identity client: %v", err)
 	}
 
 	ao, err := openstack.AuthOptionsFromEnv()
@@ -25,7 +25,7 @@ func TestGetToken(t *testing.T) {
 	authOptions := tokens.AuthOptions{
 		Username:   ao.Username,
 		Password:   ao.Password,
-		DomainName: "default",
+		DomainName: ao.DomainName,
 	}
 
 	token, err := tokens.Create(client, &authOptions).Extract()

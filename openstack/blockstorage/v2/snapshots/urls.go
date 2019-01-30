@@ -1,27 +1,48 @@
 package snapshots
 
-import "github.com/gophercloud/gophercloud"
+import "github.com/huaweicloud/golangsdk"
 
-func createURL(c *gophercloud.ServiceClient) string {
+// 5.1
+func createURL(c *golangsdk.ServiceClient) string {
 	return c.ServiceURL("snapshots")
 }
 
-func deleteURL(c *gophercloud.ServiceClient, id string) string {
+// 5.3
+func deleteURL(c *golangsdk.ServiceClient, id string) string {
 	return c.ServiceURL("snapshots", id)
 }
 
-func getURL(c *gophercloud.ServiceClient, id string) string {
+// 5.11
+func getURL(c *golangsdk.ServiceClient, id string) string {
 	return deleteURL(c, id)
 }
 
-func listURL(c *gophercloud.ServiceClient) string {
+// 5.5
+func updateURL(c *golangsdk.ServiceClient, id string) string {
+	return deleteURL(c, id)
+}
+
+// 5.7
+func listURL(c *golangsdk.ServiceClient) string {
 	return createURL(c)
 }
 
-func metadataURL(c *gophercloud.ServiceClient, id string) string {
+// 5.9
+func detailURL(c *golangsdk.ServiceClient) string {
+	return c.ServiceURL("snapshots", "detail")
+}
+
+// 5.15 5.17 5.21
+func metadataURL(c *golangsdk.ServiceClient, id string) string {
 	return c.ServiceURL("snapshots", id, "metadata")
 }
 
-func updateMetadataURL(c *gophercloud.ServiceClient, id string) string {
-	return metadataURL(c, id)
+// 5.19 5.25 5.23
+func metadataKeyURL(c *golangsdk.ServiceClient, id, key string) string {
+	return c.ServiceURL("snapshots", id, "metadata", key)
+}
+
+// 5.13
+func rollbackURL(c *golangsdk.ServiceClient, id string) string {
+	return c.ServiceURL("os-vendor-snapshots", id, "rollback")
 }

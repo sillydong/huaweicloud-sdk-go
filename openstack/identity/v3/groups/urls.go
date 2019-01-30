@@ -1,23 +1,28 @@
 package groups
 
-import "github.com/gophercloud/gophercloud"
+import "github.com/huaweicloud/golangsdk"
 
-func listURL(client *gophercloud.ServiceClient) string {
+// listURL generate url to list groups
+func listURL(client *golangsdk.ServiceClient) string {
 	return client.ServiceURL("groups")
 }
 
-func getURL(client *gophercloud.ServiceClient, groupID string) string {
+// getURL generate url to show group details
+func getURL(client *golangsdk.ServiceClient, groupID string) string {
 	return client.ServiceURL("groups", groupID)
 }
 
-func createURL(client *gophercloud.ServiceClient) string {
+// createURL generate url to create group
+func createURL(client *golangsdk.ServiceClient) string {
 	return client.ServiceURL("groups")
 }
 
-func updateURL(client *gophercloud.ServiceClient, groupID string) string {
+// updateURl generate url to update group
+func updateURL(client *golangsdk.ServiceClient, groupID string) string {
 	return client.ServiceURL("groups", groupID)
 }
 
-func deleteURL(client *gophercloud.ServiceClient, groupID string) string {
+// deleteURL generate url to delete group
+func deleteURL(client *golangsdk.ServiceClient, groupID string) string {
 	return client.ServiceURL("groups", groupID)
 }

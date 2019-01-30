@@ -3,10 +3,10 @@ package testing
 import (
 	"testing"
 
-	"github.com/gophercloud/gophercloud/openstack/identity/v3/roles"
-	"github.com/gophercloud/gophercloud/pagination"
-	th "github.com/gophercloud/gophercloud/testhelper"
-	"github.com/gophercloud/gophercloud/testhelper/client"
+	"github.com/huaweicloud/golangsdk/openstack/identity/v3/roles"
+	"github.com/huaweicloud/golangsdk/pagination"
+	th "github.com/huaweicloud/golangsdk/testhelper"
+	"github.com/huaweicloud/golangsdk/testhelper/client"
 )
 
 func TestListRoles(t *testing.T) {
@@ -173,4 +173,66 @@ func TestUnassign(t *testing.T) {
 		DomainID: "{domain_id}",
 	}).ExtractErr()
 	th.AssertNoErr(t, err)
+}
+
+func TestCheckRoleOf(t *testing.T) {
+	th.SetupHTTP()
+	defer th.TeardownHTTP()
+	HandleCheckRoleOfSuccessfully(t)
+
+	err := roles.CheckRoleOf(client.ServiceClient(), "{role_id}",
+		roles.CheckRoleOfOpts{
+			UserID:    "{user_id}",
+			ProjectID: "{project_id}",
+		}).ExtractErr()
+	th.AssertNoErr(t, err)
+
+	err = roles.CheckRoleOf(client.ServiceClient(), "{role_id}",
+		roles.CheckRoleOfOpts{
+			GroupID:   "{group_id}",
+			ProjectID: "{project_id}",
+		}).ExtractErr()
+	th.AssertNoErr(t, err)
+
+	err = roles.CheckRoleOf(client.ServiceClient(), "{role_id}",
+		roles.CheckRoleOfOpts{
+			UserID:   "{user_id}",
+			DomainID: "{domain_id}",
+		}).ExtractErr()
+	th.AssertNoErr(t, err)
+
+	err = roles.CheckRoleOf(client.ServiceClient(), "{role_id}",
+		roles.CheckRoleOfOpts{
+			GroupID:  "{group_id}",
+			DomainID: "{domain_id}",
+		}).ExtractErr()
+	th.AssertNoErr(t, err)
+}
+
+func TestListRolesOf(t *testing.T) {
+	th.SetupHTTP()
+	defer th.TeardownHTTP()
+	HandleListRolesOfSuccessfully(t)
+
+	count := 0
+	err := roles.ListRolesOf(
+		client.ServiceClient(),
+		roles.ListRolesOfOpts{
+			UserID:    "{user_id}",
+			ProjectID: "{project_id}",
+		},
+	).EachPage(func(page pagination.Page) (bool, error) {
+
+		count++
+
+		actual, err := roles.ExtractRoles(page)
+		th.AssertNoErr(t, err)
+
+		th.CheckDeepEquals(t, ExpectedRolesSlice, actual)
+
+		return true, nil
+	})
+
+	th.AssertNoErr(t, err)
+	th.CheckEquals(t, count, 1)
 }

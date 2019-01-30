@@ -5,15 +5,15 @@ package v2
 import (
 	"testing"
 
-	"github.com/gophercloud/gophercloud/acceptance/clients"
-	"github.com/gophercloud/gophercloud/acceptance/tools"
-	"github.com/gophercloud/gophercloud/openstack/identity/v2/tenants"
+	"github.com/huaweicloud/golangsdk/acceptance/clients"
+	"github.com/huaweicloud/golangsdk/acceptance/tools"
+	"github.com/huaweicloud/golangsdk/openstack/identity/v2/tenants"
 )
 
 func TestTenantsList(t *testing.T) {
 	client, err := clients.NewIdentityV2Client()
 	if err != nil {
-		t.Fatalf("Unable to obtain an identity client: %v")
+		t.Fatalf("Unable to obtain an identity client: %v", err)
 	}
 
 	allPages, err := tenants.List(client, nil).AllPages()
@@ -34,7 +34,7 @@ func TestTenantsList(t *testing.T) {
 func TestTenantsCRUD(t *testing.T) {
 	client, err := clients.NewIdentityV2AdminClient()
 	if err != nil {
-		t.Fatalf("Unable to obtain an identity client: %v")
+		t.Fatalf("Unable to obtain an identity client: %v", err)
 	}
 
 	tenant, err := CreateTenant(t, client, nil)

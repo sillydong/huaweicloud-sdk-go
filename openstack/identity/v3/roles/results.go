@@ -3,9 +3,9 @@ package roles
 import (
 	"encoding/json"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/internal"
-	"github.com/gophercloud/gophercloud/pagination"
+	"github.com/huaweicloud/golangsdk"
+	"github.com/huaweicloud/golangsdk/internal"
+	"github.com/huaweicloud/golangsdk/pagination"
 )
 
 // Role grants permissions to a user.
@@ -24,6 +24,21 @@ type Role struct {
 
 	// Extra is a collection of miscellaneous key/values.
 	Extra map[string]interface{} `json:"-"`
+
+	// Type is type of the role.
+	Type string `json:"type"`
+
+	// DisplayName is the displayed name of the role
+	DisplayName string `json:"display_name"`
+
+	// Catalog is the catelog of the role.
+	Catalog string `json:"catalog"`
+
+	// Policy contains detail policies of the role
+	Policy map[string]interface{} `json:"policy"`
+
+	// Description is the description of the role
+	Description string `json:"description"`
 }
 
 func (r *Role) UnmarshalJSON(b []byte) error {
@@ -57,7 +72,7 @@ func (r *Role) UnmarshalJSON(b []byte) error {
 }
 
 type roleResult struct {
-	gophercloud.Result
+	golangsdk.Result
 }
 
 // GetResult is the response from a Get operation. Call its Extract method
@@ -81,7 +96,7 @@ type UpdateResult struct {
 // DeleteResult is the response from a Delete operation. Call its ExtractErr to
 // determine if the request succeeded or failed.
 type DeleteResult struct {
-	gophercloud.ErrResult
+	golangsdk.ErrResult
 }
 
 // RolePage is a single page of Role results.
@@ -204,11 +219,17 @@ func ExtractRoleAssignments(r pagination.Page) ([]RoleAssignment, error) {
 // AssignmentResult represents the result of an assign operation.
 // Call ExtractErr method to determine if the request succeeded or failed.
 type AssignmentResult struct {
-	gophercloud.ErrResult
+	golangsdk.ErrResult
 }
 
 // UnassignmentResult represents the result of an unassign operation.
 // Call ExtractErr method to determine if the request succeeded or failed.
 type UnassignmentResult struct {
-	gophercloud.ErrResult
+	golangsdk.ErrResult
+}
+
+// CheckRoleOfResult is the response of checking a role existed in a group
+// of a domain or project request.
+type CheckRoleOfResult struct {
+	golangsdk.ErrResult
 }

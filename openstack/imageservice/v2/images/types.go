@@ -1,5 +1,9 @@
 package images
 
+import (
+	"time"
+)
+
 // ImageStatus image statuses
 // http://docs.openstack.org/developer/glance/statuses.html
 type ImageStatus string
@@ -78,15 +82,23 @@ const (
 	ImageMemberStatusAll ImageMemberStatus = "all"
 )
 
-type ImageVirtualEnvType string
+// ImageDateFilter represents a valid filter to use for filtering
+// images by their date during a List.
+type ImageDateFilter string
 
 const (
-	//如果弹性云服务器镜像，则取值为FusionCompute
-	ImageVirtualEnvTypeFusionCompute ImageVirtualEnvType = "FusionCompute"
-
-	//如果是数据卷镜像则取值是DataImage
-	ImageVirtualEnvTypeDataImage ImageVirtualEnvType = "DataImage"
-
-	//如果是裸金属服务器镜像，则取值是Ironic
-	ImageVirtualEnvTypeIronic ImageVirtualEnvType = "Ironic"
+	FilterGT  ImageDateFilter = "gt"
+	FilterGTE ImageDateFilter = "gte"
+	FilterLT  ImageDateFilter = "lt"
+	FilterLTE ImageDateFilter = "lte"
+	FilterNEQ ImageDateFilter = "neq"
+	FilterEQ  ImageDateFilter = "eq"
 )
+
+// ImageDateQuery represents a date field to be used for listing images.
+// If no filter is specified, the query will act as though FilterEQ was
+// set.
+type ImageDateQuery struct {
+	Date   time.Time
+	Filter ImageDateFilter
+}

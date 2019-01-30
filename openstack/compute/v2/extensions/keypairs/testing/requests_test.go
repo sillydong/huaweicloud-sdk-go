@@ -3,10 +3,10 @@ package testing
 import (
 	"testing"
 
-	"github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/keypairs"
-	"github.com/gophercloud/gophercloud/pagination"
-	th "github.com/gophercloud/gophercloud/testhelper"
-	"github.com/gophercloud/gophercloud/testhelper/client"
+	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/keypairs"
+	"github.com/huaweicloud/golangsdk/pagination"
+	th "github.com/huaweicloud/golangsdk/testhelper"
+	"github.com/huaweicloud/golangsdk/testhelper/client"
 )
 
 func TestList(t *testing.T) {
@@ -15,7 +15,7 @@ func TestList(t *testing.T) {
 	HandleListSuccessfully(t)
 
 	count := 0
-	err := keypairs.List(client.ServiceClient()).EachPage(func(page pagination.Page) (bool, error) {
+	err := keypairs.List(client.ServiceClient(), nil).EachPage(func(page pagination.Page) (bool, error) {
 		count++
 		actual, err := keypairs.ExtractKeyPairs(page)
 		th.AssertNoErr(t, err)

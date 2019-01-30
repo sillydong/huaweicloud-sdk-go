@@ -1,23 +1,23 @@
 package domains
 
-import "github.com/gophercloud/gophercloud"
+import "github.com/huaweicloud/golangsdk"
 
-func listURL(client *gophercloud.ServiceClient) string {
-	return client.ServiceURL("domains")
+func listURL(client *golangsdk.ServiceClient) string {
+	return client.ServiceURL("auth/domains")
 }
 
-func getURL(client *gophercloud.ServiceClient, domainID string) string {
-	return client.ServiceURL("domains", domainID)
+func getURL(client *golangsdk.ServiceClient, domainID string) string {
+	return client.ServiceURL("auth/domains", domainID)
 }
 
-func createURL(client *gophercloud.ServiceClient) string {
-	return client.ServiceURL("domains")
+func createURL(client *golangsdk.ServiceClient) string {
+	return client.ServiceURL("auth/domains")
 }
 
-func deleteURL(client *gophercloud.ServiceClient, domainID string) string {
-	return client.ServiceURL("domains", domainID)
+func deleteURL(client *golangsdk.ServiceClient, domainID string) string {
+	return client.ServiceURL("auth/domains", domainID)
 }
 
-func updateURL(client *gophercloud.ServiceClient, domainID string) string {
-	return client.ServiceURL("domains", domainID)
+func updateURL(client *golangsdk.ServiceClient, domainID string) string {
+	return client.ServiceURL("auth/domains", domainID)
 }

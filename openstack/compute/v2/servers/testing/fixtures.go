@@ -6,10 +6,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack/compute/v2/servers"
-	th "github.com/gophercloud/gophercloud/testhelper"
-	"github.com/gophercloud/gophercloud/testhelper/client"
+	"github.com/huaweicloud/golangsdk"
+	"github.com/huaweicloud/golangsdk/openstack/compute/v2/servers"
+	th "github.com/huaweicloud/golangsdk/testhelper"
+	"github.com/huaweicloud/golangsdk/testhelper/client"
 )
 
 // ServerListBody contains the canned body of a servers.List response.
@@ -392,16 +392,6 @@ var (
 	herpTimeUpdated, _ = time.Parse(time.RFC3339, "2014-09-25T13:10:10Z")
 	// ServerHerp is a Server struct that should correspond to the first result in ServerListBody.
 	ServerHerp = servers.Server{
-		PowerState:         1,
-		DiskConfig:         "MANUAL",
-		AvailbiltyZone:     "nova",
-		InstanceName:       "instance-0000001e",
-		HypervisorHostname: "devstack",
-		VMstate:            "active",
-		LaunchedAt:         "2014-09-25T13:10:10.000000",
-		VolumeAttached: []map[string]interface{}{
-
-		},
 		Status:  "ACTIVE",
 		Updated: herpTimeUpdated,
 		HostID:  "29d3c8c896a45aa4c34e52247875d7fefc3d94bbcc9f622b5d204362",
@@ -450,7 +440,7 @@ var (
 		TenantID: "fcad67a6189847c4aecfa3c81a05783b",
 		Metadata: map[string]string{},
 		SecurityGroups: []map[string]interface{}{
-			map[string]interface{}{
+			{
 				"name": "default",
 			},
 		},
@@ -460,17 +450,6 @@ var (
 	derpTimeUpdated, _ = time.Parse(time.RFC3339, "2014-09-25T13:04:49Z")
 	// ServerDerp is a Server struct that should correspond to the second server in ServerListBody.
 	ServerDerp = servers.Server{
-		PowerState:         1,
-		DiskConfig:         "MANUAL",
-		AvailbiltyZone:     "nova",
-		InstanceName:       "instance-0000001d",
-		HypervisorHostname: "devstack",
-		VMstate:            "active",
-		LaunchedAt:         "2014-09-25T13:04:49.000000",
-		VolumeAttached: []map[string]interface{}{
-
-		},
-
 		Status:  "ACTIVE",
 		Updated: derpTimeUpdated,
 		HostID:  "29d3c8c896a45aa4c34e52247875d7fefc3d94bbcc9f622b5d204362",
@@ -519,7 +498,7 @@ var (
 		TenantID: "fcad67a6189847c4aecfa3c81a05783b",
 		Metadata: map[string]string{},
 		SecurityGroups: []map[string]interface{}{
-			map[string]interface{}{
+			{
 				"name": "default",
 			},
 		},
@@ -529,16 +508,6 @@ var (
 	merpTimeUpdated, _ = time.Parse(time.RFC3339, "2014-09-25T13:04:49Z")
 	// ServerMerp is a Server struct that should correspond to the second server in ServerListBody.
 	ServerMerp = servers.Server{
-		PowerState:         1,
-		DiskConfig:         "MANUAL",
-		AvailbiltyZone:     "nova",
-		InstanceName:       "instance-0000001d",
-		HypervisorHostname: "devstack",
-		VMstate:            "active",
-		LaunchedAt:         "2014-09-25T13:04:49.000000",
-		VolumeAttached: []map[string]interface{}{
-
-		},
 		Status:  "ACTIVE",
 		Updated: merpTimeUpdated,
 		HostID:  "29d3c8c896a45aa4c34e52247875d7fefc3d94bbcc9f622b5d204362",
@@ -579,7 +548,7 @@ var (
 		TenantID: "fcad67a6189847c4aecfa3c81a05783b",
 		Metadata: map[string]string{},
 		SecurityGroups: []map[string]interface{}{
-			map[string]interface{}{
+			{
 				"name": "default",
 			},
 		},
@@ -601,7 +570,7 @@ type CreateOptsWithCustomField struct {
 }
 
 func (opts CreateOptsWithCustomField) ToServerCreateMap() (map[string]interface{}, error) {
-	return gophercloud.BuildRequestBody(opts, "server")
+	return golangsdk.BuildRequestBody(opts, "server")
 }
 
 // HandleServerCreationSuccessfully sets up the test server to respond to a server creation request
@@ -614,8 +583,7 @@ func HandleServerCreationSuccessfully(t *testing.T, response string) {
 			"server": {
 				"name": "derp",
 				"imageRef": "f90f6034-2570-4974-8351-6b49732ef2eb",
-				"flavorRef": "1",
-				"networks": []
+				"flavorRef": "1"
 			}
 		}`)
 
@@ -724,8 +692,7 @@ func HandleServerCreationWithCustomFieldSuccessfully(t *testing.T, response stri
 				"name": "derp",
 				"imageRef": "f90f6034-2570-4974-8351-6b49732ef2eb",
 				"flavorRef": "1",
-				"foo": "bar",
-				"networks": []
+				"foo": "bar"
 			}
 		}`)
 
@@ -746,8 +713,7 @@ func HandleServerCreationWithUserdata(t *testing.T, response string) {
 				"name": "derp",
 				"imageRef": "f90f6034-2570-4974-8351-6b49732ef2eb",
 				"flavorRef": "1",
-				"user_data": "dXNlcmRhdGEgc3RyaW5n",
-				"networks": []
+				"user_data": "dXNlcmRhdGEgc3RyaW5n"
 			}
 		}`)
 
@@ -770,8 +736,7 @@ func HandleServerCreationWithMetadata(t *testing.T, response string) {
 				"flavorRef": "1",
 				"metadata": {
 					"abc": "def"
-				},
-				"networks": []
+				}
 			}
 		}`)
 
@@ -1006,7 +971,7 @@ func HandleMetadataUpdateSuccessfully(t *testing.T) {
 
 // ListAddressesExpected represents an expected repsonse from a ListAddresses request.
 var ListAddressesExpected = map[string][]servers.Address{
-	"public": []servers.Address{
+	"public": {
 		{
 			Version: 4,
 			Address: "50.56.176.35",
@@ -1016,7 +981,7 @@ var ListAddressesExpected = map[string][]servers.Address{
 			Address: "2001:4800:790e:510:be76:4eff:fe04:84a8",
 		},
 	},
-	"private": []servers.Address{
+	"private": {
 		{
 			Version: 4,
 			Address: "10.180.3.155",

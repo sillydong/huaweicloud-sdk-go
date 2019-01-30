@@ -5,10 +5,9 @@ package v2
 import (
 	"testing"
 
-	"github.com/gophercloud/gophercloud/acceptance/clients"
-	"github.com/gophercloud/gophercloud/acceptance/tools"
-	"github.com/gophercloud/gophercloud/openstack/blockstorage/extensions/volumeactions"
-	"github.com/gophercloud/gophercloud/openstack/blockstorage/v2/volumes"
+	"github.com/huaweicloud/golangsdk/acceptance/clients"
+	"github.com/huaweicloud/golangsdk/acceptance/tools"
+	"github.com/huaweicloud/golangsdk/openstack/blockstorage/v2/volumes"
 )
 
 func TestVolumesList(t *testing.T) {
@@ -70,7 +69,7 @@ func TestVolumesCreateForceDestroy(t *testing.T) {
 
 	tools.PrintResource(t, newVolume)
 
-	err = volumeactions.ForceDelete(client, newVolume.ID).ExtractErr()
+	err = volumes.Delete(client, newVolume.ID).ExtractErr()
 	if err != nil {
 		t.Errorf("Unable to force delete volume: %v", err)
 	}

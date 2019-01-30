@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"testing"
 
-	th "github.com/gophercloud/gophercloud/testhelper"
-	fake "github.com/gophercloud/gophercloud/testhelper/client"
+	th "github.com/huaweicloud/golangsdk/testhelper"
+	fake "github.com/huaweicloud/golangsdk/testhelper/client"
 )
 
 const rootPath = "/os-security-groups"
@@ -303,7 +303,6 @@ func mockAddServerToGroupResponse(t *testing.T, serverID string) {
 
 		w.Header().Add("Content-Type", "application/json")
 		w.WriteHeader(http.StatusAccepted)
-		fmt.Fprintf(w, `{}`)
 	})
 }
 
@@ -323,6 +322,5 @@ func mockRemoveServerFromGroupResponse(t *testing.T, serverID string) {
 
 		w.Header().Add("Content-Type", "application/json")
 		w.WriteHeader(http.StatusAccepted)
-		fmt.Fprintf(w, `{}`)
 	})
 }

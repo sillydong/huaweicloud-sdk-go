@@ -5,65 +5,72 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/gophercloud/gophercloud/openstack/identity/v3/services"
-	th "github.com/gophercloud/gophercloud/testhelper"
-	"github.com/gophercloud/gophercloud/testhelper/client"
+	"github.com/huaweicloud/golangsdk/openstack/identity/v3/services"
+	th "github.com/huaweicloud/golangsdk/testhelper"
+	"github.com/huaweicloud/golangsdk/testhelper/client"
 )
 
 // ListOutput provides a single page of Service results.
 const ListOutput = `
-{
-    "links": {
-        "next": null,
-        "previous": null
-    },
-    "services": [
-        {
-            "id": "1234",
-            "links": {
-                "self": "https://example.com/identity/v3/services/1234"
-            },
-            "type": "identity",
-            "enabled": false,
+{ 
+    "services": [ 
+        { 
+            "name": "service-one", 
+            "links": { 
+                "self": "https://iamcore_links.com/v3/services/053d21d488d1463c818132d9d08fb617" 
+            }, 
+            "enabled": true, 
+            "type": "compute", 
+            "id": "053d21d488d1463c818132d9d08fb617", 
+            "description": "Service One",
             "extra": {
                 "name": "service-one",
                 "description": "Service One"
             }
-        },
-        {
-            "id": "9876",
-            "links": {
-                "self": "https://example.com/identity/v3/services/9876"
-            },
-            "type": "compute",
-            "enabled": false,
+        }, 
+        { 
+            "name": "service-two", 
+            "links": { 
+                "self": "https://iamcore_links.com/v3/services/c2474183dca7453bbd73123a0b78feae" 
+            }, 
+            "enabled": true, 
+            "type": "compute", 
+            "id": "c2474183dca7453bbd73123a0b78feae", 
+            "description": "Service Two",
             "extra": {
                 "name": "service-two",
-                "description": "Service Two",
-                "email": "service@example.com"
+                "description": "Service Two"
             }
         }
-    ]
+    ], 
+    "links": { 
+        "self": "https://iamcore_links.com/v3/services?type=compute", 
+        "previous": null, 
+        "next": null 
+    } 
 }
+
 `
 
 // GetOutput provides a Get result.
 const GetOutput = `
-{
-    "service": {
-        "id": "9876",
-        "links": {
-            "self": "https://example.com/identity/v3/services/9876"
-        },
-        "type": "compute",
-        "enabled": false,
-        "extra": {
-            "name": "service-two",
-            "description": "Service Two",
-            "email": "service@example.com"
-        }
-    }
+{ 
+    "service": { 
+		"name": "service-two", 
+		"links": { 
+			"self": "https://iamcore_links.com/v3/services/c2474183dca7453bbd73123a0b78feae" 
+		}, 
+		"enabled": true, 
+		"type": "compute", 
+		"id": "c2474183dca7453bbd73123a0b78feae", 
+		"description": "Service Two",
+		"extra": {
+			"name": "service-two",
+			"description": "Service Two"
+		}
+    } 
 }
+
 `
 
 // CreateRequest provides the input to a Create request.
@@ -71,9 +78,9 @@ const CreateRequest = `
 {
     "service": {
         "description": "Service Two",
-        "email": "service@example.com",
         "name": "service-two",
-        "type": "compute"
+        "type": "compute",
+        "email": "service@example.com"
     }
 }
 `
@@ -92,29 +99,32 @@ const UpdateRequest = `
 const UpdateOutput = `
 {
     "service": {
-        "id": "9876",
-        "links": {
-            "self": "https://example.com/identity/v3/services/9876"
-        },
-        "type": "compute2",
-        "enabled": false,
-        "extra": {
-            "name": "service-two",
-            "description": "Service Two Updated",
-            "email": "service@example.com"
-        }
+        "name": "service-two", 
+         "links": { 
+             "self": "https://iamcore_links.com/v3/services/c2474183dca7453bbd73123a0b78feae" 
+         }, 
+         "enabled": true, 
+         "type": "compute2", 
+         "id": "c2474183dca7453bbd73123a0b78feae", 
+         "description": "Service Two Updated",
+		"extra": {
+			"name": "service-two",
+			"description": "Service Two Updated"
+		}
     }
 }
 `
 
 // FirstService is the first service in the List request.
 var FirstService = services.Service{
-	ID: "1234",
+	ID: "053d21d488d1463c818132d9d08fb617",
 	Links: map[string]interface{}{
-		"self": "https://example.com/identity/v3/services/1234",
+		"self": "https://iamcore_links.com/v3/services/053d21d488d1463c818132d9d08fb617",
 	},
-	Type:    "identity",
-	Enabled: false,
+	Type:        "compute",
+	Enabled:     true,
+	Name:        "service-one",
+	Description: "Service One",
 	Extra: map[string]interface{}{
 		"name":        "service-one",
 		"description": "Service One",
@@ -123,31 +133,33 @@ var FirstService = services.Service{
 
 // SecondService is the second service in the List request.
 var SecondService = services.Service{
-	ID: "9876",
+	ID: "c2474183dca7453bbd73123a0b78feae",
 	Links: map[string]interface{}{
-		"self": "https://example.com/identity/v3/services/9876",
+		"self": "https://iamcore_links.com/v3/services/c2474183dca7453bbd73123a0b78feae",
 	},
-	Type:    "compute",
-	Enabled: false,
+	Type:        "compute",
+	Enabled:     true,
+	Name:        "service-two",
+	Description: "Service Two",
 	Extra: map[string]interface{}{
 		"name":        "service-two",
 		"description": "Service Two",
-		"email":       "service@example.com",
 	},
 }
 
 // SecondServiceUpdated is the SecondService should look after an Update.
 var SecondServiceUpdated = services.Service{
-	ID: "9876",
+	ID: "c2474183dca7453bbd73123a0b78feae",
 	Links: map[string]interface{}{
-		"self": "https://example.com/identity/v3/services/9876",
+		"self": "https://iamcore_links.com/v3/services/c2474183dca7453bbd73123a0b78feae",
 	},
-	Type:    "compute2",
-	Enabled: false,
+	Type:        "compute2",
+	Enabled:     true,
+	Name:        "service-two",
+	Description: "Service Two Updated",
 	Extra: map[string]interface{}{
 		"name":        "service-two",
 		"description": "Service Two Updated",
-		"email":       "service@example.com",
 	},
 }
 
@@ -171,7 +183,7 @@ func HandleListServicesSuccessfully(t *testing.T) {
 // HandleGetServiceSuccessfully creates an HTTP handler at `/services` on the
 // test handler mux that responds with a single service.
 func HandleGetServiceSuccessfully(t *testing.T) {
-	th.Mux.HandleFunc("/services/9876", func(w http.ResponseWriter, r *http.Request) {
+	th.Mux.HandleFunc("/services/c2474183dca7453bbd73123a0b78feae", func(w http.ResponseWriter, r *http.Request) {
 		th.TestMethod(t, r, "GET")
 		th.TestHeader(t, r, "Accept", "application/json")
 		th.TestHeader(t, r, "X-Auth-Token", client.TokenID)
@@ -198,7 +210,7 @@ func HandleCreateServiceSuccessfully(t *testing.T) {
 // HandleUpdateServiceSuccessfully creates an HTTP handler at `/services` on the
 // test handler mux that tests service update.
 func HandleUpdateServiceSuccessfully(t *testing.T) {
-	th.Mux.HandleFunc("/services/9876", func(w http.ResponseWriter, r *http.Request) {
+	th.Mux.HandleFunc("/services/c2474183dca7453bbd73123a0b78feae", func(w http.ResponseWriter, r *http.Request) {
 		th.TestMethod(t, r, "PATCH")
 		th.TestHeader(t, r, "X-Auth-Token", client.TokenID)
 		th.TestJSONRequest(t, r, UpdateRequest)

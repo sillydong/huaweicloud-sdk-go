@@ -32,7 +32,7 @@ Example to Create an Endpoint
 	serviceID := "e629d6e599d9489fb3ae5d9cc12eaea3"
 
 	createOpts := endpoints.CreateOpts{
-		Availability: gophercloud.AvailabilityPublic,
+		Availability: golangsdk.AvailabilityPublic,
 		Name:         "neutron",
 		Region:       "RegionOne",
 		URL:          "https://localhost:9696",
@@ -62,6 +62,13 @@ Example to Delete an Endpoint
 
 	endpointID := "ad59deeec5154d1fa0dcff518596f499"
 	err := endpoints.Delete(identityClient, endpointID).ExtractErr()
+	if err != nil {
+		panic(err)
+	}
+
+Example to Get an Endpoint
+	endpointID := "ad59deeec5154d1fa0dcff518596f499"
+	endpoint, err := endpoints.Get(identityClient, endpointID).ExtractErr()
 	if err != nil {
 		panic(err)
 	}

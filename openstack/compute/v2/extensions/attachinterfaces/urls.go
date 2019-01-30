@@ -1,18 +1,23 @@
 package attachinterfaces
 
-import "github.com/gophercloud/gophercloud"
+import "github.com/huaweicloud/golangsdk"
 
-func listInterfaceURL(client *gophercloud.ServiceClient, serverID string) string {
+// listInterfaceURL generate URL to list port interfaces
+func listInterfaceURL(client *golangsdk.ServiceClient, serverID string) string {
 	return client.ServiceURL("servers", serverID, "os-interface")
 }
 
-func getInterfaceURL(client *gophercloud.ServiceClient, serverID, portID string) string {
+// getInterfaceURL generate URL to show port interface details
+func getInterfaceURL(client *golangsdk.ServiceClient, serverID, portID string) string {
 	return client.ServiceURL("servers", serverID, "os-interface", portID)
 }
 
-func createInterfaceURL(client *gophercloud.ServiceClient, serverID string) string {
+// createInterfaceURL generate URL to attach interface
+func createInterfaceURL(client *golangsdk.ServiceClient, serverID string) string {
 	return client.ServiceURL("servers", serverID, "os-interface")
 }
-func deleteInterfaceURL(client *gophercloud.ServiceClient, serverID, portID string) string {
+
+// deleteInterfaceURL generate URL to detach interface
+func deleteInterfaceURL(client *golangsdk.ServiceClient, serverID, portID string) string {
 	return client.ServiceURL("servers", serverID, "os-interface", portID)
 }

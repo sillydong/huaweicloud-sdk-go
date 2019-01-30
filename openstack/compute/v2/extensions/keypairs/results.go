@@ -1,13 +1,17 @@
 package keypairs
 
 import (
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/pagination"
+	"github.com/huaweicloud/golangsdk"
+	"github.com/huaweicloud/golangsdk/pagination"
 )
 
 // KeyPair is an SSH key known to the OpenStack Cloud that is available to be
 // injected into servers.
 type KeyPair struct {
+	// PublicKey is the public key from this pair, in OpenSSH format.
+	// "ssh-rsa AAAAB3Nz..."
+	PublicKey string `json:"public_key"`
+
 	// Name is used to refer to this keypair from other services within this
 	// region.
 	Name string `json:"name"`
@@ -16,14 +20,20 @@ type KeyPair struct {
 	// or validate a longer public key.
 	Fingerprint string `json:"fingerprint"`
 
-	// PublicKey is the public key from this pair, in OpenSSH format.
-	// "ssh-rsa AAAAB3Nz..."
-	PublicKey string `json:"public_key"`
+	// CreateAt is a date of this key has been created
+	CreatedAt string `json:"created_at"`
 
-	// PrivateKey is the private key from this pair, in PEM format.
-	// "-----BEGIN RSA PRIVATE KEY-----\nMIICXA..."
-	// It is only present if this KeyPair was just returned from a Create call.
-	PrivateKey string `json:"private_key"`
+	// Deleted is a flag whether this key has been deleted or not
+	Deleted bool `json:"deleted"`
+
+	// DeletedAt is a date of this key has been deleted
+	DeletedAt string `json:"deleted_at"`
+
+	// ID is the id of this key
+	ID string `json:"id"`
+
+	// UpdatedAt is the last updated date of this key
+	UpdatedAt string `json:"updated_at"`
 
 	// UserID is the user who owns this KeyPair.
 	UserID string `json:"user_id"`
@@ -59,7 +69,7 @@ func ExtractKeyPairs(r pagination.Page) ([]KeyPair, error) {
 }
 
 type keyPairResult struct {
-	gophercloud.Result
+	golangsdk.Result
 }
 
 // Extract is a method that attempts to interpret any KeyPair resource response
@@ -87,5 +97,5 @@ type GetResult struct {
 // DeleteResult is the response from a Delete operation. Call its ExtractErr
 // method to determine if the call succeeded or failed.
 type DeleteResult struct {
-	gophercloud.ErrResult
+	golangsdk.ErrResult
 }

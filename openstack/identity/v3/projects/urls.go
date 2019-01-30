@@ -1,23 +1,27 @@
 package projects
 
-import "github.com/gophercloud/gophercloud"
+import "github.com/huaweicloud/golangsdk"
 
-func listURL(client *gophercloud.ServiceClient) string {
+// listURL generate url to querying information about a specified project
+func listURL(client *golangsdk.ServiceClient) string {
 	return client.ServiceURL("projects")
 }
 
-func getURL(client *gophercloud.ServiceClient, projectID string) string {
+// getURL generate url to show project details
+func getURL(client *golangsdk.ServiceClient, projectID string) string {
 	return client.ServiceURL("projects", projectID)
 }
 
-func createURL(client *gophercloud.ServiceClient) string {
+// createURL generate url to add project
+func createURL(client *golangsdk.ServiceClient) string {
 	return client.ServiceURL("projects")
 }
 
-func deleteURL(client *gophercloud.ServiceClient, projectID string) string {
+func deleteURL(client *golangsdk.ServiceClient, projectID string) string {
 	return client.ServiceURL("projects", projectID)
 }
 
-func updateURL(client *gophercloud.ServiceClient, projectID string) string {
+// updateURL generate url to update project
+func updateURL(client *golangsdk.ServiceClient, projectID string) string {
 	return client.ServiceURL("projects", projectID)
 }

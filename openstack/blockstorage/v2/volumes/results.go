@@ -2,11 +2,10 @@ package volumes
 
 import (
 	"encoding/json"
-	"io"
 	"time"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/pagination"
+	"github.com/huaweicloud/golangsdk"
+	"github.com/huaweicloud/golangsdk/pagination"
 )
 
 type Attachment struct {
@@ -23,7 +22,7 @@ func (r *Attachment) UnmarshalJSON(b []byte) error {
 	type tmp Attachment
 	var s struct {
 		tmp
-		AttachedAt gophercloud.JSONRFC3339MilliNoZ `json:"attached_at"`
+		AttachedAt golangsdk.JSONRFC3339MilliNoZ `json:"attached_at"`
 	}
 	err := json.Unmarshal(b, &s)
 	if err != nil {
@@ -76,36 +75,24 @@ type Volume struct {
 	ConsistencyGroupID string `json:"consistencygroup_id"`
 	// Multiattach denotes if the volume is multi-attach capable.
 	Multiattach bool `json:"multiattach"`
-
-	//Cloud hard disk uri self-description information.
-	Links []map[string]string `json:"links"`
-
-	//Whether it is a shared cloud drive.
-	Shareable bool `json:"shareable"`
-	//Volume image metadata
-	VolumeImageMetadata map[string]string `json:"volume_image_metadata"`
-
-	//The tenant ID to which the cloud drive belongs.
-	TenantAttr string `json:"os-vol-tenant-attr:tenant_id"`
-
-	//The host name to which the cloud drive belongs.
-	HostAttr string `json:"os-vol-host-attr:host"`
-	//Reserved attribute
-	RepAttrDriverData string `json:"os-volume-replication:driver_data"`
-	//Reserved attribute
-	RepAttrExtendedStatus string `json:"os-volume-replication:extended_status"`
-	//Reserved attribute
-	MigAttrStat string `json:"os-vol-mig-status-attr:migstat"`
-	//Reserved attribute
-	MigAttrNameID string `json:"os-vol-mig-status-attr:name_id"`
+	// Links to volume uris
+	Links []golangsdk.Link `json:"links"`
+	// Flag defines if volume is shareable, deprecated in request
+	Shareable      bool   `json:"shareable"`
+	TenentID       string `json:"os-vol-tenant-attr:tenant_id"`
+	MigStat        string `json:"os-vol-mig-status-attr:migstat"`
+	NameID         string `json:"os-vol-mig-status-attr:name_id"`
+	DriverData     string `json:"os-volume-replication:driver_data"`
+	ExtendedStatus string `json:"os-volume-replication:extended_status"`
+	Host           string `json:"os-vol-host-attr:host"`
 }
 
 func (r *Volume) UnmarshalJSON(b []byte) error {
 	type tmp Volume
 	var s struct {
 		tmp
-		CreatedAt gophercloud.JSONRFC3339MilliNoZ `json:"created_at"`
-		UpdatedAt gophercloud.JSONRFC3339MilliNoZ `json:"updated_at"`
+		CreatedAt golangsdk.JSONRFC3339MilliNoZ `json:"created_at"`
+		UpdatedAt golangsdk.JSONRFC3339MilliNoZ `json:"updated_at"`
 	}
 	err := json.Unmarshal(b, &s)
 	if err != nil {
@@ -138,7 +125,7 @@ func ExtractVolumes(r pagination.Page) ([]Volume, error) {
 }
 
 type commonResult struct {
-	gophercloud.Result
+	golangsdk.Result
 }
 
 // Extract will get the Volume object out of the commonResult object.
@@ -173,74 +160,39 @@ type UpdateResult struct {
 
 // DeleteResult contains the response body and error from a Delete request.
 type DeleteResult struct {
-	gophercloud.ErrResult
+	golangsdk.ErrResult
 }
 
-/*************** 自研 ********************/
-type QuotaSetInfo struct {
-	//查询请求返回的配额信息
-	QuoSet QuotaSet `json:"quota_set"`
+// MetadataResult contains the response body and error from a Metadata request.
+type MetadataResult struct {
+	commonResult
 }
 
-//查询请求返回的配额信息
-type QuotaSet struct {
-	//租户id
-	Id string `json:"id"`
-
-	//云硬盘数量，键值对，包含：reserved（预留）、limit（最大）和in_use（已使用）
-	Volumes map[string]int `json:"volumes"`
-
-	//快照数量，键值对，包含：reserved（预留）、limit（最大）和in_use（已使用）
-	Snapshots map[string]int `json:"snapshots"`
-
-	//总大小（快照+云硬盘），单位为GB，键值对，包含：reserved（预留）、limit（最大）和in_use（已使用）
-	Gigabytes map[string]int `json:"gigabytes"`
-
-	//为某个volume_type预留的云硬盘个数，键值对，包含：reserved（预留）、limit（最大）和in_use（已使用）
-	VolumesType map[string]int `json:"volumes_TYPE"`
-
-	//为某个volume_type预留快照个数，键值对，包含：reserved（预留）、limit（最大）和in_use（已使用）
-	SnapshotsType map[string]int `json:"snapshots_TYPE"`
-
-	//为某个volume_type预留的size大小，单位为GB，键值对，包含：reserved（预留）、limit（最大）和in_use（已使用）
-	GigabytesType map[string]int `json:"gigabytes_TYPE"`
-
-	//备份个数，键值对，包含：reserved（预留）、limit（最大）和in_use（已使用）
-	Backups map[string]int `json:"backups"`
-
-	//备份大小，单位为GB，键值对，包含：reserved（预留）、limit（最大）和in_use（已使用）
-	BackupGigabytes map[string]int `json:"backup_gigabytes"`
-
-	//出现错误时，返回的错误码，具体含义参考下面的返回值列表
-	Code string `json:"code"`
-
-	//出现错误时，返回的错误消息
-	Message string `json:"message"`
-}
-
-func (r commonResult) ExtractQuotaSet() (*QuotaSetInfo, error) {
-	var qs *QuotaSetInfo
-	err := r.ExtractIntoQuotaSet(&qs)
-	return qs, err
-}
-
-func (r commonResult) ExtractIntoQuotaSet(to interface{}) error {
+// ExtractMetadata returns the metadata from a response from Metadata requests.
+func (r MetadataResult) ExtractMetadata() (map[string]interface{}, error) {
 	if r.Err != nil {
-		return r.Err
+		return nil, r.Err
 	}
+	m := r.Body.(map[string]interface{})["meta"]
+	return m.(map[string]interface{}), nil
+}
 
-	if reader, ok := r.Body.(io.Reader); ok {
-		if readCloser, ok := reader.(io.Closer); ok {
-			defer readCloser.Close()
-		}
-		return json.NewDecoder(reader).Decode(to)
-	}
+// DeleteMetadataResult contains the response body and error from a DeleteMetadata request.
+type DeleteMetadataKeyResult struct {
+	golangsdk.ErrResult
+}
 
-	b, err := json.Marshal(r.Body)
-	if err != nil {
-		return err
-	}
-	err = json.Unmarshal(b, to)
+// ExtendSizeResult contains the response body and error from an ExtendSize request.
+type ExtendSizeResult struct {
+	golangsdk.ErrResult
+}
 
-	return err
+// SetBootableResult contains the response body and error from an SetBootable request
+type SetBootableResult struct {
+	golangsdk.ErrResult
+}
+
+// SetReadOnlyResult contains the response body and error from an SetReadOnly request
+type SetReadOnlyResult struct {
+	golangsdk.ErrResult
 }

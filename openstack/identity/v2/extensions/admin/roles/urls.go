@@ -1,6 +1,6 @@
 package roles
 
-import "github.com/gophercloud/gophercloud"
+import "github.com/huaweicloud/golangsdk"
 
 const (
 	ExtPath  = "OS-KSADM"
@@ -8,14 +8,17 @@ const (
 	UserPath = "users"
 )
 
-func resourceURL(c *gophercloud.ServiceClient, id string) string {
+// resourceURL generates URL for listing resources.
+func resourceURL(c *golangsdk.ServiceClient, id string) string {
 	return c.ServiceURL(ExtPath, RolePath, id)
 }
 
-func rootURL(c *gophercloud.ServiceClient) string {
+// rootURL generates URL for listing all available global roles.
+func rootURL(c *golangsdk.ServiceClient) string {
 	return c.ServiceURL(ExtPath, RolePath)
 }
 
-func userRoleURL(c *gophercloud.ServiceClient, tenantID, userID, roleID string) string {
+// userRoleURL generates URL for getting role of user.
+func userRoleURL(c *golangsdk.ServiceClient, tenantID, userID, roleID string) string {
 	return c.ServiceURL("tenants", tenantID, UserPath, userID, RolePath, ExtPath, roleID)
 }

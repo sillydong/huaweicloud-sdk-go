@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/internal"
-	"github.com/gophercloud/gophercloud/pagination"
+	"github.com/huaweicloud/golangsdk"
+	"github.com/huaweicloud/golangsdk/internal"
+	"github.com/huaweicloud/golangsdk/pagination"
 )
 
 // User represents a User in the OpenStack Identity Service.
@@ -46,8 +46,8 @@ func (r *User) UnmarshalJSON(b []byte) error {
 	type tmp User
 	var s struct {
 		tmp
-		Extra             map[string]interface{}          `json:"extra"`
-		PasswordExpiresAt gophercloud.JSONRFC3339MilliNoZ `json:"password_expires_at"`
+		Extra             map[string]interface{}        `json:"extra"`
+		PasswordExpiresAt golangsdk.JSONRFC3339MilliNoZ `json:"password_expires_at"`
 	}
 	err := json.Unmarshal(b, &s)
 	if err != nil {
@@ -77,7 +77,7 @@ func (r *User) UnmarshalJSON(b []byte) error {
 }
 
 type userResult struct {
-	gophercloud.Result
+	golangsdk.Result
 }
 
 // GetResult is the response from a Get operation. Call its Extract method
@@ -101,7 +101,7 @@ type UpdateResult struct {
 // DeleteResult is the response from a Delete operation. Call its ExtractErr to
 // determine if the request succeeded or failed.
 type DeleteResult struct {
-	gophercloud.ErrResult
+	golangsdk.ErrResult
 }
 
 // UserPage is a single page of User results.
@@ -146,4 +146,26 @@ func (r userResult) Extract() (*User, error) {
 	}
 	err := r.ExtractInto(&s)
 	return s.User, err
+}
+
+// UpdatePasswordResult is the response from updating password operation. Call
+// its ExtractErr to determine the http response status.
+type UpdatePasswdResult struct {
+	golangsdk.ErrResult
+}
+
+// CheckGroupUserResult is the response from checking the user is existed in
+// the group.
+type CheckGroupUserResult struct {
+	golangsdk.ErrResult
+}
+
+// DeleteGroupUserResult is the response of deleting the user from a group.
+type DeleteGroupUserResult struct {
+	golangsdk.ErrResult
+}
+
+// AddUserToGroupResult is the response of adding a user to a group.
+type AddUserToGroupResult struct {
+	golangsdk.ErrResult
 }

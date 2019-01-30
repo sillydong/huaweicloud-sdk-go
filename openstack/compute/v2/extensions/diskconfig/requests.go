@@ -1,10 +1,8 @@
 package diskconfig
 
 import (
-	"fmt"
-
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack/compute/v2/servers"
+	"github.com/huaweicloud/golangsdk"
+	"github.com/huaweicloud/golangsdk/openstack/compute/v2/servers"
 )
 
 // DiskConfig represents one of the two possible settings for the DiskConfig
@@ -62,13 +60,9 @@ type RebuildOptsExt struct {
 // ToServerRebuildMap adds the diskconfig option to the base server rebuild options.
 func (opts RebuildOptsExt) ToServerRebuildMap() (map[string]interface{}, error) {
 	if opts.DiskConfig != Auto && opts.DiskConfig != Manual {
-		//		err := gophercloud.ErrInvalidInput{}
-		//		err.Argument = "diskconfig.RebuildOptsExt.DiskConfig"
-		//		err.Info = "Must be either diskconfig.Auto or diskconfig.Manual"
-		//		return nil, err
-
-		message := fmt.Sprintf(gophercloud.CE_InvalidInputMessage, "diskconfig.RebuildOptsExt.DiskConfig Must be either diskconfig.Auto or diskconfig.Manual")
-		err := gophercloud.NewSystemCommonError(gophercloud.CE_InvalidInputCode, message)
+		err := golangsdk.ErrInvalidInput{}
+		err.Argument = "diskconfig.RebuildOptsExt.DiskConfig"
+		err.Info = "Must be either diskconfig.Auto or diskconfig.Manual"
 		return nil, err
 	}
 
@@ -94,13 +88,9 @@ type ResizeOptsExt struct {
 // ToServerResizeMap adds the diskconfig option to the base server creation options.
 func (opts ResizeOptsExt) ToServerResizeMap() (map[string]interface{}, error) {
 	if opts.DiskConfig != Auto && opts.DiskConfig != Manual {
-		//		err := gophercloud.ErrInvalidInput{}
-		//		err.Argument = "diskconfig.ResizeOptsExt.DiskConfig"
-		//		err.Info = "Must be either diskconfig.Auto or diskconfig.Manual"
-		//		return nil, err
-
-		message := fmt.Sprintf(gophercloud.CE_InvalidInputMessage, "diskconfig.RebuildOptsExt.DiskConfig Must be either diskconfig.Auto or diskconfig.Manual")
-		err := gophercloud.NewSystemCommonError(gophercloud.CE_InvalidInputCode, message)
+		err := golangsdk.ErrInvalidInput{}
+		err.Argument = "diskconfig.ResizeOptsExt.DiskConfig"
+		err.Info = "Must be either diskconfig.Auto or diskconfig.Manual"
 		return nil, err
 	}
 

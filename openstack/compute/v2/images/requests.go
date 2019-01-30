@@ -1,10 +1,8 @@
 package images
 
 import (
-	"fmt"
-
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/pagination"
+	"github.com/huaweicloud/golangsdk"
+	"github.com/huaweicloud/golangsdk/pagination"
 )
 
 // ListOptsBuilder allows extensions to add additional parameters to the
@@ -40,12 +38,12 @@ type ListOpts struct {
 
 // ToImageListQuery formats a ListOpts into a query string.
 func (opts ListOpts) ToImageListQuery() (string, error) {
-	q, err := gophercloud.BuildQueryString(opts)
+	q, err := golangsdk.BuildQueryString(opts)
 	return q.String(), err
 }
 
 // ListDetail enumerates the available images.
-func ListDetail(client *gophercloud.ServiceClient, opts ListOptsBuilder) pagination.Pager {
+func ListDetail(client *golangsdk.ServiceClient, opts ListOptsBuilder) pagination.Pager {
 	url := listDetailURL(client)
 	if opts != nil {
 		query, err := opts.ToImageListQuery()
@@ -60,20 +58,20 @@ func ListDetail(client *gophercloud.ServiceClient, opts ListOptsBuilder) paginat
 }
 
 // Get returns data about a specific image by its ID.
-func Get(client *gophercloud.ServiceClient, id string) (r GetResult) {
+func Get(client *golangsdk.ServiceClient, id string) (r GetResult) {
 	_, r.Err = client.Get(getURL(client, id), &r.Body, nil)
 	return
 }
 
 // Delete deletes the specified image ID.
-func Delete(client *gophercloud.ServiceClient, id string) (r DeleteResult) {
+func Delete(client *golangsdk.ServiceClient, id string) (r DeleteResult) {
 	_, r.Err = client.Delete(deleteURL(client, id), nil)
 	return
 }
 
 // IDFromName is a convienience function that returns an image's ID given its
 // name.
-func IDFromName(client *gophercloud.ServiceClient, name string) (string, error) {
+func IDFromName(client *golangsdk.ServiceClient, name string) (string, error) {
 	count := 0
 	id := ""
 	allPages, err := ListDetail(client, nil).AllPages()
@@ -95,25 +93,17 @@ func IDFromName(client *gophercloud.ServiceClient, name string) (string, error) 
 
 	switch count {
 	case 0:
-		//		err := &gophercloud.ErrResourceNotFound{}
-		//		err.ResourceType = "image"
-		//		err.Name = name
-		//		return "", err
-
-		message := fmt.Sprintf(gophercloud.CE_ResourceNotFoundMessage, "image", name)
-		err := gophercloud.NewSystemCommonError(gophercloud.CE_ResourceNotFoundCode, message)
+		err := &golangsdk.ErrResourceNotFound{}
+		err.ResourceType = "image"
+		err.Name = name
 		return "", err
 	case 1:
 		return id, nil
 	default:
-		//		err := &gophercloud.ErrMultipleResourcesFound{}
-		//		err.ResourceType = "image"
-		//		err.Name = name
-		//		err.Count = count
-		//		return "", err
-
-		message := fmt.Sprintf(gophercloud.CE_MultipleResourcesFoundMessage, count, "image", name)
-		err := gophercloud.NewSystemCommonError(gophercloud.CE_MultipleResourcesFoundCode, message)
+		err := &golangsdk.ErrMultipleResourcesFound{}
+		err.ResourceType = "image"
+		err.Name = name
+		err.Count = count
 		return "", err
 	}
 }

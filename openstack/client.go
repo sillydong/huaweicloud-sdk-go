@@ -2,25 +2,15 @@ package openstack
 
 import (
 	"fmt"
-	"net/http"
 	"net/url"
 	"reflect"
 	"regexp"
 	"strings"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/auth"
-	akskAuth "github.com/gophercloud/gophercloud/auth/aksk"
-	tokenAuth "github.com/gophercloud/gophercloud/auth/token"
-	tokens2 "github.com/gophercloud/gophercloud/openstack/identity/v2/tokens"
-	tokens3 "github.com/gophercloud/gophercloud/openstack/identity/v3/tokens"
-	"github.com/gophercloud/gophercloud/openstack/utils"
-
-	"github.com/gophercloud/gophercloud/openstack/identity/v3/endpoints"
-	"github.com/gophercloud/gophercloud/openstack/identity/v3/services"
-	"github.com/gophercloud/gophercloud/pagination"
-	"time"
-
+	"github.com/huaweicloud/golangsdk"
+	tokens2 "github.com/huaweicloud/golangsdk/openstack/identity/v2/tokens"
+	tokens3 "github.com/huaweicloud/golangsdk/openstack/identity/v3/tokens"
+	"github.com/huaweicloud/golangsdk/openstack/utils"
 )
 
 const (
@@ -33,75 +23,46 @@ const (
 	v3 = "v3"
 )
 
-const (
-	//compute v2 microVersion
-	computeMicroVersion       = "2.26"
-	objectSstoreMicroVersion  = ""
-	networkMicroVersion       = ""
-	vpcv1MicroVersion         = ""
-	vpcv2MicroVersion         = ""
-	volumeMicroVersion        = ""
-	volumev2MicroVersion      = ""
-	volumev3MicroVersion      = ""
-	sharev2MicroVersion       = ""
-	cdnMicroVersion           = ""
-	orchestrationMicroVersion = ""
-	databaseMicroVersion      = ""
-	dnsMicroVersion           = ""
-	imageMicroVersion         = ""
-	loadBalancerMicroVersion  = ""
-	ecsMicroVersion           = ""
-	ecsv1_1MicroVersion       = ""
-	ecsv2MicroVersion         = ""
-	imageSelfDevMicroVersion  = ""
-	bssMicroVersion           = ""
-	cesMicroVersion           = ""
-)
-
-/* 重写RoundTrip，实现reauth 限制3次 */
-type MyRoundTripper struct {
-	rt                http.RoundTripper
-	numReauthAttempts int
-}
-
-func newHTTPClient() http.Client {
-	return http.Client{
-		Transport: &MyRoundTripper{
-			rt: http.DefaultTransport,
-		},
-	}
-}
-
-func (mrt *MyRoundTripper) RoundTrip(request *http.Request) (*http.Response, error) {
-	response, err := mrt.rt.RoundTrip(request)
-	if response == nil {
-		return nil, err
-	}
-
-	if response.StatusCode == http.StatusUnauthorized {
-		if mrt.numReauthAttempts == 3 {
-			return response, fmt.Errorf("Tried to re-authenticate 3 times with no success.")
-		}
-		mrt.numReauthAttempts++
-	}
-
-	return response, err
-}
-
 /*
-func NewProviderClientWithOptions(options auth.AuthOptionsProvider, conf *gophercloud.Config) (*gophercloud.ProviderClient, error) {
-	client, err := NewClient(options.GetIdentityEndpoint(), options.GetProjectId(), conf)
+NewClient prepares an unauthenticated ProviderClient instance.
+Most users will probably prefer using the AuthenticatedClient function
+instead.
+
+This is useful if you wish to explicitly control the version of the identity
+service that's used for authentication explicitly, for example.
+
+A basic example of using this would be:
+
+	ao, err := openstack.AuthOptionsFromEnv()
+	provider, err := openstack.NewClient(ao.IdentityEndpoint)
+	client, err := openstack.NewIdentityV3(provider, golangsdk.EndpointOpts{})
+*/
+func NewClient(endpoint string) (*golangsdk.ProviderClient, error) {
+	u, err := url.Parse(endpoint)
 	if err != nil {
 		return nil, err
 	}
 
-	err = Authenticate(client, options)
-	if err != nil {
-		return nil, err
+	u.RawQuery, u.Fragment = "", ""
+
+	var base string
+	versionRe := regexp.MustCompile("v[0-9.]+/?")
+	if version := versionRe.FindString(u.Path); version != "" {
+		base = strings.Replace(u.String(), version, "", -1)
+	} else {
+		base = u.String()
 	}
-	return client, nil
+
+	endpoint = golangsdk.NormalizeURL(endpoint)
+	base = golangsdk.NormalizeURL(base)
+
+	p := new(golangsdk.ProviderClient)
+	p.IdentityBase = base
+	p.IdentityEndpoint = endpoint
+	p.UseTokenLock()
+
+	return p, nil
 }
-*/
 
 /*
 AuthenticatedClient logs in to an OpenStack cloud found at the identity endpoint
@@ -119,12 +80,12 @@ Example:
 
 	ao, err := openstack.AuthOptionsFromEnv()
 	provider, err := openstack.AuthenticatedClient(ao)
-	client, err := openstack.NewNetworkV2(client, EndpointOpts{
+	client, err := openstack.NewNetworkV2(client, golangsdk.EndpointOpts{
 		Region: os.Getenv("OS_REGION_NAME"),
 	})
 */
-func AuthenticatedClient(options auth.AuthOptionsProvider) (*gophercloud.ProviderClient, error) {
-	client, err := NewClient(options.GetIdentityEndpoint(), options.GetDomainId(), options.GetProjectId(), gophercloud.NewConfig())
+func AuthenticatedClient(options golangsdk.AuthOptions) (*golangsdk.ProviderClient, error) {
+	client, err := NewClient(options.IdentityEndpoint)
 	if err != nil {
 		return nil, err
 	}
@@ -136,71 +97,9 @@ func AuthenticatedClient(options auth.AuthOptionsProvider) (*gophercloud.Provide
 	return client, nil
 }
 
-/*
-NewClient prepares an unauthenticated ProviderClient instance.
-Most users will probably prefer using the AuthenticatedClient function
-instead.
-
-This is useful if you wish to explicitly control the version of the identity
-service that's used for authentication explicitly, for example.
-
-A basic example of using this would be:
-
-	ao, err := openstack.AuthOptionsFromEnv()
-	provider, err := openstack.NewClient(ao.IdentityEndpoint)
-	client, err := openstack.NewIdentityV3(provider, gophercloud.EndpointOpts{})
-*/
-func NewClient(endpoint, domainID, projectID string, conf *gophercloud.Config) (*gophercloud.ProviderClient, error) {
-	if endpoint == "" {
-		message := fmt.Sprintf(gophercloud.CE_MissingInputMessage, "IdentityEndpoint")
-		err := gophercloud.NewSystemCommonError(gophercloud.CE_MissingInputCode, message)
-		return nil, err
-	}
-	u, err := url.Parse(endpoint)
-	if err != nil {
-		return nil, err
-	}
-
-	if domainID == "" {
-		message := fmt.Sprintf(gophercloud.CE_MissingInputMessage, "domainID")
-		err := gophercloud.NewSystemCommonError(gophercloud.CE_MissingInputCode, message)
-		return nil, err
-	}
-
-	if projectID == "" {
-		message := fmt.Sprintf(gophercloud.CE_MissingInputMessage, "projectID")
-		err := gophercloud.NewSystemCommonError(gophercloud.CE_MissingInputCode, message)
-		return nil, err
-	}
-
-	u.RawQuery, u.Fragment = "", ""
-
-	var base string
-	versionRe := regexp.MustCompile("v[0-9.]+/?")
-	if version := versionRe.FindString(u.Path); version != "" {
-		base = strings.Replace(u.String(), version, "", -1)
-	} else {
-		base = u.String()
-	}
-
-	endpoint = gophercloud.NormalizeURL(endpoint)
-	base = gophercloud.NormalizeURL(base)
-
-	p := new(gophercloud.ProviderClient)
-	p.IdentityBase = base
-	p.IdentityEndpoint = endpoint
-	p.DomainID = domainID
-	p.ProjectID = projectID
-	p.Conf = conf
-	p.UseTokenLock()
-	p.HTTPClient = newHTTPClient() //自定义httpclient，限制reauth为3次
-
-	return p, nil
-}
-
 // Authenticate or re-authenticate against the most recent identity service
 // supported at the provided endpoint.
-func Authenticate(client *gophercloud.ProviderClient, options auth.AuthOptionsProvider) error {
+func Authenticate(client *golangsdk.ProviderClient, options golangsdk.AuthOptions) error {
 	versions := []*utils.Version{
 		{ID: v2, Priority: 20, Suffix: "/v2.0/"},
 		{ID: v3, Priority: 30, Suffix: "/v3/"},
@@ -211,125 +110,23 @@ func Authenticate(client *gophercloud.ProviderClient, options auth.AuthOptionsPr
 		return err
 	}
 
-	authOptions, isTokenAuthOptions := options.(tokenAuth.TokenOptions)
-
-	if isTokenAuthOptions {
-		switch chosen.ID {
-		case v2:
-			return tokenAuthV2(client, endpoint, authOptions, gophercloud.EndpointOpts{})
-		case v3:
-			return tokenAuthV3(client, endpoint, &authOptions, gophercloud.EndpointOpts{})
-		default:
-			// The switch statement must be out of date from the versions list.
-			return fmt.Errorf("Unrecognized identity version: %s", chosen.ID)
-		}
-	} else {
-		akskOptions, isAKSKOptions := options.(akskAuth.AKSKOptions)
-
-		if isAKSKOptions {
-			return akskAuthV3(client, endpoint, akskOptions, gophercloud.EndpointOpts{})
-		} else {
-			return fmt.Errorf("Unrecognized auth options provider: %s", reflect.TypeOf(options))
-		}
+	switch chosen.ID {
+	case v2:
+		return v2auth(client, endpoint, options, golangsdk.EndpointOpts{})
+	case v3:
+		return v3auth(client, endpoint, &options, golangsdk.EndpointOpts{})
+	default:
+		// The switch statement must be out of date from the versions list.
+		return fmt.Errorf("Unrecognized identity version: %s", chosen.ID)
 	}
-}
-
-func getEntryByServiceId(entries []tokens3.CatalogEntry, serviceId string) *tokens3.CatalogEntry {
-	if entries == nil {
-		return nil
-	}
-
-	for idx, _ := range entries {
-		if entries[idx].ID == serviceId {
-			return &entries[idx]
-		}
-	}
-
-	return nil
-}
-
-func akskAuthV3(client *gophercloud.ProviderClient, endpoint string, options akskAuth.AKSKOptions, eo gophercloud.EndpointOpts) error {
-	v3Client, err := NewIdentityV3(client, eo)
-	if err != nil {
-		return err
-	}
-
-	if endpoint != "" {
-		v3Client.Endpoint = endpoint
-	}
-
-	v3Client.AKSKOptions = options
-
-	var entries = make([]tokens3.CatalogEntry, 0, 1)
-	serviceListErr:=services.List(v3Client, services.ListOpts{}).EachPage(func(page pagination.Page) (bool, error) {
-		serviceLst, err := services.ExtractServices(page)
-		if err != nil {
-			return false, err
-		}
-
-		for _, svc := range serviceLst {
-			entry := tokens3.CatalogEntry{
-				Type: svc.Type,
-				Name: svc.Name,
-				ID:   svc.ID,
-			}
-			entries = append(entries, entry)
-		}
-
-		return true, nil
-	})
-
-	if serviceListErr!=nil{
-		return serviceListErr
-	}
-
-	endpointListErr:=endpoints.List(v3Client, endpoints.ListOpts{}).EachPage(func(page pagination.Page) (bool, error) {
-		endpointList, err := endpoints.ExtractEndpoints(page)
-		if err != nil {
-			return false, err
-		}
-
-		for _, endpoint := range endpointList {
-			entry := getEntryByServiceId(entries, endpoint.ServiceID)
-
-
-			if entry != nil {
-				entry.Endpoints = append(entry.Endpoints, tokens3.Endpoint{
-					URL:       strings.Replace(endpoint.URL, "$(tenant_id)s", options.ProjectID, -1),
-					Region:    endpoint.Region,
-					Interface: string(endpoint.Availability),
-					ID:        endpoint.ID,
-				})
-			}
-		}
-
-		client.EndpointLocator = func(opts gophercloud.EndpointOpts) (string, error) {
-			return GetEndpointURLForAKSKAuth(&tokens3.ServiceCatalog{
-				Entries: entries,
-			}, opts, options)
-		}
-
-		return true, nil
-	})
-
-	if endpointListErr!=nil{
-		return endpointListErr
-	}
-
-	if client.EndpointLocator == nil {
-		return gophercloud.NewSystemCommonError(gophercloud.CE_NoEndPointInCatalogCode, gophercloud.CE_NoEndPointInCatalogMessage)
-	} else {
-		return nil
-	}
-
 }
 
 // AuthenticateV2 explicitly authenticates against the identity v2 endpoint.
-func AuthenticateV2(client *gophercloud.ProviderClient, options tokenAuth.TokenOptions, eo gophercloud.EndpointOpts) error {
-	return tokenAuthV2(client, "", options, eo)
+func AuthenticateV2(client *golangsdk.ProviderClient, options golangsdk.AuthOptions, eo golangsdk.EndpointOpts) error {
+	return v2auth(client, "", options, eo)
 }
 
-func tokenAuthV2(client *gophercloud.ProviderClient, endpoint string, options tokenAuth.TokenOptions, eo gophercloud.EndpointOpts) error {
+func v2auth(client *golangsdk.ProviderClient, endpoint string, options golangsdk.AuthOptions, eo golangsdk.EndpointOpts) error {
 	v2Client, err := NewIdentityV2(client, eo)
 	if err != nil {
 		return err
@@ -362,25 +159,14 @@ func tokenAuthV2(client *gophercloud.ProviderClient, endpoint string, options to
 	}
 
 	if options.AllowReauth {
-		// here we're creating a throw-away client (tac). it's a copy of the user's provider client, but
-		// with the token and reauth func zeroed out. combined with setting `AllowReauth` to `false`,
-		// this should retry authentication only once
-		tac := *client
-		tac.ReauthFunc = nil
-		tac.TokenID = ""
-		tao := options
-		tao.AllowReauth = false
 		client.ReauthFunc = func() error {
-			err := tokenAuthV2(&tac, endpoint, tao, eo)
-			if err != nil {
-				return err
-			}
-			client.TokenID = tac.TokenID
-			return nil
+			client.TokenID = ""
+			return v2auth(client, endpoint, options, eo)
 		}
 	}
 	client.TokenID = token.ID
-	client.EndpointLocator = func(opts gophercloud.EndpointOpts) (string, error) {
+	client.ProjectID = token.Tenant.ID
+	client.EndpointLocator = func(opts golangsdk.EndpointOpts) (string, error) {
 		return V2EndpointURL(catalog, opts)
 	}
 
@@ -388,11 +174,11 @@ func tokenAuthV2(client *gophercloud.ProviderClient, endpoint string, options to
 }
 
 // AuthenticateV3 explicitly authenticates against the identity v3 service.
-func AuthenticateV3(client *gophercloud.ProviderClient, options tokens3.AuthOptionsBuilder, eo gophercloud.EndpointOpts) error {
-	return tokenAuthV3(client, "", options, eo)
+func AuthenticateV3(client *golangsdk.ProviderClient, options tokens3.AuthOptionsBuilder, eo golangsdk.EndpointOpts) error {
+	return v3auth(client, "", options, eo)
 }
 
-func tokenAuthV3(client *gophercloud.ProviderClient, endpoint string, opts tokens3.AuthOptionsBuilder, eo gophercloud.EndpointOpts) error {
+func v3auth(client *golangsdk.ProviderClient, endpoint string, opts tokens3.AuthOptionsBuilder, eo golangsdk.EndpointOpts) error {
 	// Override the generated service endpoint with the one returned by the version endpoint.
 	v3Client, err := NewIdentityV3(client, eo)
 	if err != nil {
@@ -410,43 +196,26 @@ func tokenAuthV3(client *gophercloud.ProviderClient, endpoint string, opts token
 		return err
 	}
 
+	project, err := result.ExtractProject()
+	if err != nil {
+		return err
+	}
+
 	catalog, err := result.ExtractServiceCatalog()
 	if err != nil {
 		return err
 	}
 
 	client.TokenID = token.ID
+	client.ProjectID = project.ID
 
 	if opts.CanReauth() {
-		// here we're creating a throw-away client (tac). it's a copy of the user's provider client, but
-		// with the token and reauth func zeroed out. combined with setting `AllowReauth` to `false`,
-		// this should retry authentication only once
-		tac := *client
-		tac.ReauthFunc = nil
-		tac.TokenID = ""
-		var tao tokens3.AuthOptionsBuilder
-		switch ot := opts.(type) {
-		case *tokenAuth.TokenOptions:
-			o := *ot
-			o.AllowReauth = false
-			tao = &o
-		case *tokens3.TokenOptions:
-			o := *ot
-			o.AllowReauth = false
-			tao = &o
-		default:
-			tao = opts
-		}
 		client.ReauthFunc = func() error {
-			err := tokenAuthV3(&tac, endpoint, tao, eo)
-			if err != nil {
-				return err
-			}
-			client.TokenID = tac.TokenID
-			return nil
+			client.TokenID = ""
+			return v3auth(client, endpoint, opts, eo)
 		}
 	}
-	client.EndpointLocator = func(opts gophercloud.EndpointOpts) (string, error) {
+	client.EndpointLocator = func(opts golangsdk.EndpointOpts) (string, error) {
 		return V3EndpointURL(catalog, opts)
 	}
 
@@ -455,11 +224,11 @@ func tokenAuthV3(client *gophercloud.ProviderClient, endpoint string, opts token
 
 // NewIdentityV2 creates a ServiceClient that may be used to interact with the
 // v2 identity service.
-func NewIdentityV2(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
+func NewIdentityV2(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
 	endpoint := client.IdentityBase + "v2.0/"
 	clientType := "identity"
 	var err error
-	if !reflect.DeepEqual(eo, gophercloud.EndpointOpts{}) {
+	if !reflect.DeepEqual(eo, golangsdk.EndpointOpts{}) {
 		eo.ApplyDefaults(clientType)
 		endpoint, err = client.EndpointLocator(eo)
 		if err != nil {
@@ -467,7 +236,7 @@ func NewIdentityV2(client *gophercloud.ProviderClient, eo gophercloud.EndpointOp
 		}
 	}
 
-	return &gophercloud.ServiceClient{
+	return &golangsdk.ServiceClient{
 		ProviderClient: client,
 		Endpoint:       endpoint,
 		Type:           clientType,
@@ -476,11 +245,11 @@ func NewIdentityV2(client *gophercloud.ProviderClient, eo gophercloud.EndpointOp
 
 // NewIdentityV3 creates a ServiceClient that may be used to access the v3
 // identity service.
-func NewIdentityV3(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
+func NewIdentityV3(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
 	endpoint := client.IdentityBase + "v3/"
 	clientType := "identity"
 	var err error
-	if !reflect.DeepEqual(eo, gophercloud.EndpointOpts{}) {
+	if !reflect.DeepEqual(eo, golangsdk.EndpointOpts{}) {
 		eo.ApplyDefaults(clientType)
 		endpoint, err = client.EndpointLocator(eo)
 		if err != nil {
@@ -495,56 +264,15 @@ func NewIdentityV3(client *gophercloud.ProviderClient, eo gophercloud.EndpointOp
 		endpoint = endpoint + "v3/"
 	}
 
-	return &gophercloud.ServiceClient{
+	return &golangsdk.ServiceClient{
 		ProviderClient: client,
 		Endpoint:       endpoint,
 		Type:           clientType,
 	}, nil
 }
 
-func getMicoreVersion(client *gophercloud.ProviderClient, url string) (versionData string) {
-
-	type Links struct {
-		Rel  string `json:"rel"`
-		Href string `json:"href"`
-		Type string `json:"type,omitempty"`
-	}
-
-	type MediaTypes struct {
-		Type string `json:"type"`
-		Base string `json:"base"`
-	}
-	type version struct {
-		MinVersion string        `json:"min_version"`
-		Links      [] Links      `json:"links"`
-		ID         string        `json:"id"`
-		Updated    time.Time     `json:"updated"`
-		Version    string        `json:"version"`
-		Status     string        `json:"status"`
-		MediaTypes [] MediaTypes `json:"media-types"`
-	}
-
-	type Versions struct {
-		Versions [] version `json:"versions"`
-	}
-
-	var to Versions
-	_, err := client.Request("GET", url, &gophercloud.RequestOpts{JSONResponse: &to, OkCodes: []int{200, 201, 300}})
-
-	if err != nil {
-		return
-	}
-
-	for _, v := range to.Versions {
-		if v.Version != "" {
-			return v.Version
-		}
-	}
-	return
-}
-
-func initClientOpts(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts, clientType string, microversion string) (*gophercloud.ServiceClient, error) {
-	sc := new(gophercloud.ServiceClient)
+func initClientOpts(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts, clientType string) (*golangsdk.ServiceClient, error) {
+	sc := new(golangsdk.ServiceClient)
 	eo.ApplyDefaults(clientType)
 	url, err := client.EndpointLocator(eo)
 	if err != nil {
@@ -553,147 +281,247 @@ func initClientOpts(client *gophercloud.ProviderClient, eo gophercloud.EndpointO
 	sc.ProviderClient = client
 	sc.Endpoint = url
 	sc.Type = clientType
-
-	//if clientType != "compute" {
-	//	return sc, nil
-	//}
-	//
-	//url1 := strings.Split(url, "/")
-	//base := url1[0] + "//" + url1[2]
-	//versionData := getMicoreVersion(client, base)
-	//if versionData != "" {
-	//	if microversion > versionData {
-	//		sc.Microversion = versionData
-	//	} else {
-	//		sc.Microversion = microversion
-	//	}
-	//}
-
 	return sc, nil
 }
 
 // NewObjectStorageV1 creates a ServiceClient that may be used with the v1
 // object storage package.
-func NewObjectStorageV1(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	return initClientOpts(client, eo, "object-store",objectSstoreMicroVersion )
+func NewObjectStorageV1(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	return initClientOpts(client, eo, "object-store")
 }
 
 // NewComputeV2 creates a ServiceClient that may be used with the v2 compute
 // package.
-func NewComputeV2(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	return initClientOpts(client, eo, "compute", computeMicroVersion)
+func NewComputeV2(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	return initClientOpts(client, eo, "compute")
 }
 
 // NewNetworkV2 creates a ServiceClient that may be used with the v2 network
 // package.
-func NewNetworkV2(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	sc, err := initClientOpts(client, eo, "network",networkMicroVersion)
+func NewNetworkV2(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "network")
 	sc.ResourceBase = sc.Endpoint + "v2.0/"
 	return sc, err
 }
 
 // NewBlockStorageV1 creates a ServiceClient that may be used to access the v1
 // block storage service.
-func NewBlockStorageV1(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	return initClientOpts(client, eo, "volume",volumeMicroVersion)
+func NewBlockStorageV1(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	return initClientOpts(client, eo, "volume")
 }
 
 // NewBlockStorageV2 creates a ServiceClient that may be used to access the v2
 // block storage service.
-func NewBlockStorageV2(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	return initClientOpts(client, eo, "volumev2",volumev2MicroVersion)
+func NewBlockStorageV2(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	return initClientOpts(client, eo, "volumev2")
 }
 
 // NewBlockStorageV3 creates a ServiceClient that may be used to access the v3 block storage service.
-func NewBlockStorageV3(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	return initClientOpts(client, eo, "volumev3",volumev3MicroVersion)
+func NewBlockStorageV3(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	return initClientOpts(client, eo, "volumev3")
 }
 
 // NewSharedFileSystemV2 creates a ServiceClient that may be used to access the v2 shared file system service.
-func NewSharedFileSystemV2(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	return initClientOpts(client, eo, "sharev2",sharev2MicroVersion)
+func NewSharedFileSystemV2(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	return initClientOpts(client, eo, "sharev2")
 }
 
 // NewCDNV1 creates a ServiceClient that may be used to access the OpenStack v1
 // CDN service.
-func NewCDNV1(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	return initClientOpts(client, eo, "cdn",cdnMicroVersion)
+func NewCDNV1(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	return initClientOpts(client, eo, "cdn")
 }
 
 // NewOrchestrationV1 creates a ServiceClient that may be used to access the v1
 // orchestration service.
-func NewOrchestrationV1(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	return initClientOpts(client, eo, "orchestration",orchestrationMicroVersion)
+func NewOrchestrationV1(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	return initClientOpts(client, eo, "orchestration")
 }
 
 // NewDBV1 creates a ServiceClient that may be used to access the v1 DB service.
-func NewDBV1(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	return initClientOpts(client, eo, "database",databaseMicroVersion)
+func NewDBV1(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	return initClientOpts(client, eo, "database")
 }
 
 // NewDNSV2 creates a ServiceClient that may be used to access the v2 DNS
 // service.
-func NewDNSV2(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	sc, err := initClientOpts(client, eo, "dns",dnsMicroVersion)
+func NewDNSV2(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "dns")
 	sc.ResourceBase = sc.Endpoint + "v2/"
 	return sc, err
 }
 
 // NewImageServiceV2 creates a ServiceClient that may be used to access the v2
 // image service.
-func NewImageServiceV2(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	sc, err := initClientOpts(client, eo, "image",imageMicroVersion)
+func NewImageServiceV2(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "image")
 	sc.ResourceBase = sc.Endpoint + "v2/"
+	return sc, err
+}
+
+// NewImageServiceV1 creates a ServiceClient that may be used to access the v1
+// image service.
+func NewImageServiceV1(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "image")
+	sc.ResourceBase = sc.Endpoint + "v1/"
 	return sc, err
 }
 
 // NewLoadBalancerV2 creates a ServiceClient that may be used to access the v2
 // load balancer service.
-func NewLoadBalancerV2(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	sc, err := initClientOpts(client, eo, "load-balancer",loadBalancerMicroVersion)
+func NewLoadBalancerV2(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "load-balancer")
 	sc.ResourceBase = sc.Endpoint + "v2.0/"
 	return sc, err
 }
 
-/* 自研 */
-
-func NewECSV1(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	return initClientOpts(client, eo, "ecs",ecsMicroVersion)
-}
-
-func NewECSV1_1(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	return initClientOpts(client, eo, "ecsv1.1",ecsv1_1MicroVersion)
-}
-
-func NewECSV2(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	return initClientOpts(client, eo, "ecsv2",ecsv2MicroVersion)
-}
-
-func NewIMSV2(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	sc, err := initClientOpts(client, eo, "image",imageSelfDevMicroVersion)
-	sc.ResourceBase = sc.Endpoint + "v2/"
+// NewOtcV1 creates a ServiceClient that may be used with the v1 network package.
+func NewElbV1(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts, otctype string) (*golangsdk.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "compute")
+	//fmt.Printf("client=%+v.\n", sc)
+	sc.Endpoint = strings.Replace(strings.Replace(sc.Endpoint, "ecs", otctype, 1), "/v2/", "/v1.0/", 1)
+	//fmt.Printf("url=%s.\n", sc.Endpoint)
+	sc.ResourceBase = sc.Endpoint
+	sc.Type = otctype
 	return sc, err
 }
 
-func NewBSSV1(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	sc, err := initClientOpts(client, eo, "bss",bssMicroVersion)
-	sc.ResourceBase = sc.Endpoint + "v1.0/"
+// NewSmnServiceV2 creates a ServiceClient that may be used to access the v2 Simple Message Notification service.
+func NewSmnServiceV2(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+
+	sc, err := initClientOpts(client, eo, "compute")
+	sc.Endpoint = strings.Replace(sc.Endpoint, "ecs", "smn", 1)
+	sc.ResourceBase = sc.Endpoint + "notifications/"
+	sc.Type = "smn"
+	return sc, err
+}
+
+//NewRdsServiceV1 creates the a ServiceClient that may be used to access the v1
+//rds service which is a service of db instances management.
+func NewRdsServiceV1(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	newsc, err := initClientOpts(client, eo, "compute")
+	rdsendpoint := strings.Replace(strings.Replace(newsc.Endpoint, "ecs", "rds", 1), "/v2/", "/rds/v1/", 1)
+	newsc.Endpoint = rdsendpoint
+	newsc.ResourceBase = rdsendpoint
+	newsc.Type = "rds"
+	return newsc, err
+}
+
+func NewCESClient(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "ces")
+	if err != nil {
+		return nil, err
+	}
+	sc.ResourceBase = sc.Endpoint
+	return sc, err
+}
+
+// NewDRSServiceV2 creates a ServiceClient that may be used to access the v2 Data Replication Service.
+func NewDRSServiceV2(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "volumev2")
+	return sc, err
+}
+
+func NewComputeV1(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "compute")
+	e := strings.Replace(sc.Endpoint, "v2", "v1", 1)
+	sc.Endpoint = e
+	sc.ResourceBase = e
+	return sc, err
+}
+
+//NewAutoScalingService creates a ServiceClient that may be used to access the
+//auto-scaling service of huawei public cloud
+func NewAutoScalingService(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "as")
+	return sc, err
+}
+
+// NewKmsKeyV1 creates a ServiceClient that may be used to access the v1
+// kms key service.
+func NewKmsKeyV1(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "compute")
+	sc.Endpoint = strings.Replace(sc.Endpoint, "ecs", "kms", 1)
+	sc.Endpoint = sc.Endpoint[:strings.LastIndex(sc.Endpoint, "v2")+3]
+	sc.Endpoint = strings.Replace(sc.Endpoint, "v2", "v1.0", 1)
+	sc.ResourceBase = sc.Endpoint
+	sc.Type = "kms"
+	return sc, err
+}
+
+func NewElasticLoadBalancer(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	//sc, err := initClientOpts1(client, eo, "elb")
+	sc, err := initClientOpts(client, eo, "compute")
+	if err != nil {
+		return sc, err
+	}
+	sc.Endpoint = strings.Replace(sc.Endpoint, "ecs", "elb", 1)
+	sc.Endpoint = sc.Endpoint[:strings.LastIndex(sc.Endpoint, "v2")+3]
+	sc.Endpoint = strings.Replace(sc.Endpoint, "v2", "v1.0", 1)
+	sc.ResourceBase = sc.Endpoint
 	return sc, err
 }
 
 // NewNetworkV1 creates a ServiceClient that may be used with the v1 network
 // package.
-func NewVPCV1(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	sc, err := initClientOpts(client, eo, "vpc", vpcv1MicroVersion)
+func NewNetworkV1(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "network")
+	sc.ResourceBase = sc.Endpoint + "v1/"
 	return sc, err
 }
 
-func NewCESV1(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	sc, err := initClientOpts(client, eo, "cesv1", cesMicroVersion)
+// NewNatV2 creates a ServiceClient that may be used with the v2 nat package.
+func NewNatV2(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "network")
+	sc.Endpoint = strings.Replace(sc.Endpoint, "vpc", "nat", 1)
+	sc.Endpoint = strings.Replace(sc.Endpoint, "myhwclouds", "myhuaweicloud", 1)
+	sc.ResourceBase = sc.Endpoint + "v2.0/"
 	return sc, err
 }
 
-func NewVPCV2(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
-	sc, err := initClientOpts(client, eo, "vpcv2.0", vpcv1MicroVersion)
+// NewMapReduceV1 creates a ServiceClient that may be used with the v1 MapReduce service.
+func NewMapReduceV1(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "mrs")
+	sc.ResourceBase = sc.Endpoint + client.ProjectID + "/"
+	return sc, err
+}
+
+// NewAntiDDoSV1 creates a ServiceClient that may be used with the v1 Anti DDoS Service
+// package.
+func NewAntiDDoSV1(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "antiddos")
+	sc.ResourceBase = sc.Endpoint + "v1/" + client.ProjectID + "/"
+	return sc, err
+}
+
+// NewAntiDDoSV2 creates a ServiceClient that may be used with the v2 Anti DDoS Service
+// package.
+func NewAntiDDoSV2(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "antiddos")
+	sc.ResourceBase = sc.Endpoint + "v2/" + client.ProjectID + "/"
+	return sc, err
+}
+
+func NewEvsV2(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "blockstorage")
+	sc.ResourceBase = sc.Endpoint + "v2/" + client.ProjectID + "/"
+	return sc, err
+}
+
+// NewDMSServiceV1 creates a ServiceClient that may be used to access the v1 Distributed Message Service.
+func NewDMSServiceV1(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "dms")
+	return sc, err
+}
+
+// NewDCSServiceV1 creates a ServiceClient that may be used to access the v1 Distributed Cache Service.
+func NewDCSServiceV1(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "dcs")
+	return sc, err
+}
+
+// NewOBSService creates a ServiceClient that may be used to access the Object Storage Service.
+func NewOBSService(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "object")
 	return sc, err
 }

@@ -9,12 +9,12 @@ import (
 	"path"
 	"time"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/pagination"
+	"github.com/huaweicloud/golangsdk"
+	"github.com/huaweicloud/golangsdk/pagination"
 )
 
 type serverResult struct {
-	gophercloud.Result
+	golangsdk.Result
 }
 
 // Extract interprets any serverResult as a Server, if possible.
@@ -53,7 +53,7 @@ type UpdateResult struct {
 // DeleteResult is the response from a Delete operation. Call its ExtractErr
 // method to determine if the call succeeded or failed.
 type DeleteResult struct {
-	gophercloud.ErrResult
+	golangsdk.ErrResult
 }
 
 // RebuildResult is the response from a Rebuild operation. Call its Extract
@@ -65,7 +65,7 @@ type RebuildResult struct {
 // ActionResult represents the result of server action operations, like reboot.
 // Call its ExtractErr method to determine if the action succeeded or failed.
 type ActionResult struct {
-	gophercloud.ErrResult
+	golangsdk.ErrResult
 }
 
 // RescueResult is the response from a Rescue operation. Call its ExtractErr
@@ -77,13 +77,13 @@ type RescueResult struct {
 // CreateImageResult is the response from a CreateImage operation. Call its
 // ExtractImageID method to retrieve the ID of the newly created image.
 type CreateImageResult struct {
-	gophercloud.Result
+	golangsdk.Result
 }
 
 // GetPasswordResult represent the result of a get os-server-password operation.
 // Call its ExtractPassword method to retrieve the password.
 type GetPasswordResult struct {
-	gophercloud.Result
+	golangsdk.Result
 }
 
 // ExtractPassword gets the encrypted password.
@@ -145,22 +145,6 @@ func (r RescueResult) Extract() (string, error) {
 
 // Server represents a server/instance in the OpenStack cloud.
 type Server struct {
-
-	//volume attached
-	VolumeAttached []map[string]interface{} `json:"os-extended-volumes:volumes_attached"`
-
-	//availbility zone
-	AvailbiltyZone string `json:"OS-EXT-AZ:availability_zone"`
-
-	// task state
-	TaskState string `json:"OS-EXT-STS:task_state"`
-
-	// power state
-	PowerState int `json:"OS-EXT-STS:power_state"`
-
-	//  vm state
-	VMstate string `json:"OS-EXT-STS:vm_state"`
-
 	// ID uniquely identifies this server amongst all other servers,
 	// including those not accessible to the current tenant.
 	ID string `json:"id"`
@@ -197,7 +181,7 @@ type Server struct {
 
 	// Image refers to a JSON object, which itself indicates the OS image used to
 	// deploy the server.
-	Image map[string]interface{} `json:"image"`
+	Image map[string]interface{} `json:"-"`
 
 	// Flavor refers to a JSON object, which itself indicates the hardware
 	// configuration of the deployed server.
@@ -230,58 +214,6 @@ type Server struct {
 
 	// Fault contains failure information about a server.
 	Fault Fault `json:"fault"`
-
-	//DCF
-	DiskConfig string `json:"OS-DCF:diskConfig"`
-	//server tags
-	Tags []string `json:"tags"`
-
-	//host status
-	HostStatus string `json:"host_status"`
-	//host description
-	Description string `json:"description"`
-	//bool type whether server locked
-	Locked *bool `json:"locked"`
-	// server hostname
-	Hostname string `json:"OS-EXT-SRV-ATTR:hostname"`
-	//server kernel_id
-	KernelID string `json:"OS-EXT-SRV-ATTR:kernel_id"`
-	// server ramdisk_id
-	RamdiskID string `json:"OS-EXT-SRV-ATTR:ramdisk_id"`
-	//launch_index
-	LaunchIndex *int `json:"OS-EXT-SRV-ATTR:launch_index"`
-	//user_data
-	UserData string `json:"OS-EXT-SRV-ATTR:user_data"`
-	//reservation_id
-	ReservationID string `json:"OS-EXT-SRV-ATTR:reservation_id"`
-	//root_device_name
-	RootDeviceName string `json:"OS-EXT-SRV-ATTR:root_device_name"`
-	//hypervisor_hostname
-	HypervisorHostname string `json:"OS-EXT-SRV-ATTR:hypervisor_hostname"`
-	//instance_name
-	InstanceName string `json:"OS-EXT-SRV-ATTR:instance_name"`
-
-	//instance launched time
-	LaunchedAt string `json:"OS-SRV-USG:launched_at"`
-	//instance terminated time
-	TerminatedAt string `json:"OS-SRV-USG:terminated_at"`
-	//Reserved attribute
-	ConfigDrive string `json:"config_drive"`
-	//Reserved attribute
-	EvsOpts int `json:"evs_opts"`
-	//Reserved attribute
-	HyperThreadAffinity string `json:"hyperThreadAffinity"`
-	//Reserved attribute
-	NumaOpts int `json:"numa_opts"`
-	//Reserved attribute
-	VcpuAffinity []int `json:"vcpuAffinity"`
-}
-
-//ListBrief接口返回的结构
-type ServerBrief struct {
-	ID    string
-	Name  string
-	Links []interface{}
 }
 
 type Fault struct {
@@ -335,13 +267,13 @@ func (r ServerPage) IsEmpty() (bool, error) {
 // next page of results.
 func (r ServerPage) NextPageURL() (string, error) {
 	var s struct {
-		Links []gophercloud.Link `json:"servers_links"`
+		Links []golangsdk.Link `json:"servers_links"`
 	}
 	err := r.ExtractInto(&s)
 	if err != nil {
 		return "", err
 	}
-	return gophercloud.ExtractNextURL(s.Links)
+	return golangsdk.ExtractNextURL(s.Links)
 }
 
 // ExtractServers interprets the results of a single page from a List() call,
@@ -352,18 +284,11 @@ func ExtractServers(r pagination.Page) ([]Server, error) {
 	return s, err
 }
 
-//对应ListBrief接口
-func ExtractServerBriefs(r pagination.Page) ([]ServerBrief, error) {
-	var sb []ServerBrief
-	err := ExtractServersInto(r, &sb)
-	return sb, err
-}
-
 // MetadataResult contains the result of a call for (potentially) multiple
 // key-value pairs. Call its Extract method to interpret it as a
 // map[string]interface.
 type MetadataResult struct {
-	gophercloud.Result
+	golangsdk.Result
 }
 
 // GetMetadataResult contains the result of a Get operation. Call its Extract
@@ -387,7 +312,7 @@ type UpdateMetadataResult struct {
 // MetadatumResult contains the result of a call for individual a single
 // key-value pair.
 type MetadatumResult struct {
-	gophercloud.Result
+	golangsdk.Result
 }
 
 // GetMetadatumResult contains the result of a Get operation. Call its Extract
@@ -405,7 +330,7 @@ type CreateMetadatumResult struct {
 // DeleteMetadatumResult contains the result of a Delete operation. Call its
 // ExtractErr method to determine if the call succeeded or failed.
 type DeleteMetadatumResult struct {
-	gophercloud.ErrResult
+	golangsdk.ErrResult
 }
 
 // Extract interprets any MetadataResult as a Metadata, if possible.

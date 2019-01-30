@@ -1,6 +1,6 @@
 package users
 
-import "github.com/gophercloud/gophercloud"
+import "github.com/huaweicloud/golangsdk"
 
 const (
 	tenantPath = "tenants"
@@ -8,14 +8,17 @@ const (
 	rolePath   = "roles"
 )
 
-func ResourceURL(c *gophercloud.ServiceClient, id string) string {
+// ResourceURL generates URL for listing resource of a single user
+func ResourceURL(c *golangsdk.ServiceClient, id string) string {
 	return c.ServiceURL(userPath, id)
 }
 
-func rootURL(c *gophercloud.ServiceClient) string {
+// rootURL generates URL for listing exist users
+func rootURL(c *golangsdk.ServiceClient) string {
 	return c.ServiceURL(userPath)
 }
 
-func listRolesURL(c *gophercloud.ServiceClient, tenantID, userID string) string {
+// listRolesURL generates URL for list roles of user
+func listRolesURL(c *golangsdk.ServiceClient, tenantID, userID string) string {
 	return c.ServiceURL(tenantPath, tenantID, userPath, userID, rolePath)
 }

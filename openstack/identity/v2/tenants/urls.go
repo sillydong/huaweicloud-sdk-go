@@ -1,23 +1,28 @@
 package tenants
 
-import "github.com/gophercloud/gophercloud"
+import "github.com/huaweicloud/golangsdk"
 
-func listURL(client *gophercloud.ServiceClient) string {
+// listURL generates URL for listing tenants.
+func listURL(client *golangsdk.ServiceClient) string {
 	return client.ServiceURL("tenants")
 }
 
-func getURL(client *gophercloud.ServiceClient, tenantID string) string {
+// getURL generates URL for getting tenant.
+func getURL(client *golangsdk.ServiceClient, tenantID string) string {
 	return client.ServiceURL("tenants", tenantID)
 }
 
-func createURL(client *gophercloud.ServiceClient) string {
+// createURL generates URL for createing tenant.
+func createURL(client *golangsdk.ServiceClient) string {
 	return client.ServiceURL("tenants")
 }
 
-func deleteURL(client *gophercloud.ServiceClient, tenantID string) string {
+// deleteURL generates URL for deleteing tenant.
+func deleteURL(client *golangsdk.ServiceClient, tenantID string) string {
 	return client.ServiceURL("tenants", tenantID)
 }
 
-func updateURL(client *gophercloud.ServiceClient, tenantID string) string {
+// updateURL generates URL for updating a tenant.
+func updateURL(client *golangsdk.ServiceClient, tenantID string) string {
 	return client.ServiceURL("tenants", tenantID)
 }
