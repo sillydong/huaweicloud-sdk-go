@@ -3,7 +3,7 @@ package testing
 import (
 	"testing"
 
-	"github.com/huaweicloud/golangsdk/openstack/imageservice/v1/cloudimages"
+	"github.com/huaweicloud/golangsdk/openstack/ims/v1/cloudimages"
 	th "github.com/huaweicloud/golangsdk/testhelper"
 	fakeclient "github.com/huaweicloud/golangsdk/testhelper/client"
 )
