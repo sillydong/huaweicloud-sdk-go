@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/pagination"
+	"github.com/gophercloud/gophercloud"
+	"github.com/gophercloud/gophercloud/pagination"
 )
 
 // Snapshot contains all the information associated with a Cinder Snapshot.

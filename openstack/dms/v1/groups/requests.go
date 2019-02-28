@@ -1,8 +1,8 @@
 package groups
 
 import (
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/pagination"
+	"github.com/gophercloud/gophercloud"
+	"github.com/gophercloud/gophercloud/pagination"
 )
 
 // CreateOpsBuilder is used for creating group parameters.

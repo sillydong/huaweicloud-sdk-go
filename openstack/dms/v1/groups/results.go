@@ -1,8 +1,8 @@
 package groups
 
 import (
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/pagination"
+	"github.com/gophercloud/gophercloud"
+	"github.com/gophercloud/gophercloud/pagination"
 )
 
 // GroupCreate response

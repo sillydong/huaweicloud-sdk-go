@@ -3,7 +3,7 @@ package quotasets
 import (
 	"fmt"
 
-	"github.com/huaweicloud/golangsdk"
+	"github.com/gophercloud/gophercloud"
 )
 
 // GetUsage returns detailed public data about a previously created QuotaSet.

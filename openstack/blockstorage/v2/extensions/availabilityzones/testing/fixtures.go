@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"testing"
 
-	az "github.com/huaweicloud/golangsdk/openstack/blockstorage/v2/extensions/availabilityzones"
-	th "github.com/huaweicloud/golangsdk/testhelper"
-	"github.com/huaweicloud/golangsdk/testhelper/client"
+	az "github.com/gophercloud/gophercloud/openstack/blockstorage/v2/extensions/availabilityzones"
+	th "github.com/gophercloud/gophercloud/testhelper"
+	"github.com/gophercloud/gophercloud/testhelper/client"
 )
 
 const GetOutput = `

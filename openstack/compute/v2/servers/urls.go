@@ -1,6 +1,6 @@
 package servers
 
-import "github.com/huaweicloud/golangsdk"
+import "github.com/gophercloud/gophercloud"
 
 // createURL generate url to create server
 func createURL(client *golangsdk.ServiceClient) string {

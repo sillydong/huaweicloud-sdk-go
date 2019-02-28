@@ -1,8 +1,8 @@
 package apiversions
 
 import (
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/pagination"
+	"github.com/gophercloud/gophercloud"
+	"github.com/gophercloud/gophercloud/pagination"
 )
 
 // List lists all the API versions available to end-users.

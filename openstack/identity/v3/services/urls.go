@@ -1,6 +1,6 @@
 package services
 
-import "github.com/huaweicloud/golangsdk"
+import "github.com/gophercloud/gophercloud"
 
 // listURL generate url to querying services
 func listURL(client *golangsdk.ServiceClient) string {

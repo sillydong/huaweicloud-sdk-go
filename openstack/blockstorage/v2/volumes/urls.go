@@ -1,6 +1,6 @@
 package volumes
 
-import "github.com/huaweicloud/golangsdk"
+import "github.com/gophercloud/gophercloud"
 
 // `createURL` is a pure function. `createURL(c)` is a URL for which a POST
 // request will response with a blockstorage struct in the service `c`.

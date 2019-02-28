@@ -1,8 +1,8 @@
 package attachinterfaces
 
 import (
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/pagination"
+	"github.com/gophercloud/gophercloud"
+	"github.com/gophercloud/gophercloud/pagination"
 )
 
 // List makes a request against the nova API to list the server's interfaces.

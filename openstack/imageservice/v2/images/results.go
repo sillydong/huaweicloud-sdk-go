@@ -6,9 +6,9 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/internal"
-	"github.com/huaweicloud/golangsdk/pagination"
+	"github.com/gophercloud/gophercloud"
+	"github.com/gophercloud/gophercloud/internal"
+	"github.com/gophercloud/gophercloud/pagination"
 )
 
 // Image represents an image found in the OpenStack Image service.

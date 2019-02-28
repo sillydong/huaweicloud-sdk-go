@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"testing"
 
-	th "github.com/huaweicloud/golangsdk/testhelper"
-	"github.com/huaweicloud/golangsdk/testhelper/client"
+	th "github.com/gophercloud/gophercloud/testhelper"
+	"github.com/gophercloud/gophercloud/testhelper/client"
 )
 
 func mockStartServerResponse(t *testing.T, id string) {

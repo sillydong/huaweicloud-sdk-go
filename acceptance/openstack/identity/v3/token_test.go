@@ -5,10 +5,10 @@ package v3
 import (
 	"testing"
 
-	"github.com/huaweicloud/golangsdk/acceptance/clients"
-	"github.com/huaweicloud/golangsdk/acceptance/tools"
-	"github.com/huaweicloud/golangsdk/openstack"
-	"github.com/huaweicloud/golangsdk/openstack/identity/v3/tokens"
+	"github.com/gophercloud/gophercloud/acceptance/clients"
+	"github.com/gophercloud/gophercloud/acceptance/tools"
+	"github.com/gophercloud/gophercloud/openstack"
+	"github.com/gophercloud/gophercloud/openstack/identity/v3/tokens"
 )
 
 func TestGetToken(t *testing.T) {

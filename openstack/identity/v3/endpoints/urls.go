@@ -1,6 +1,6 @@
 package endpoints
 
-import "github.com/huaweicloud/golangsdk"
+import "github.com/gophercloud/gophercloud"
 
 // listURL generate url to querying endpoints
 func listURL(client *golangsdk.ServiceClient) string {

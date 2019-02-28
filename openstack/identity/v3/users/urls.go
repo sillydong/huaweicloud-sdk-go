@@ -1,6 +1,6 @@
 package users
 
-import "github.com/huaweicloud/golangsdk"
+import "github.com/gophercloud/gophercloud"
 
 // listURL generate url to query a user list
 func listURL(client *golangsdk.ServiceClient) string {

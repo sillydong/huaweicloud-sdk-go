@@ -1,7 +1,7 @@
 package volumes
 
 import (
-	"github.com/huaweicloud/golangsdk"
+	"github.com/gophercloud/gophercloud"
 )
 
 // WaitForStatus will continually poll the resource, checking for a particular

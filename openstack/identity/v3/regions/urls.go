@@ -1,6 +1,6 @@
 package regions
 
-import "github.com/huaweicloud/golangsdk"
+import "github.com/gophercloud/gophercloud"
 
 // listURL generate url to list regions
 func listURL(client *golangsdk.ServiceClient) string {

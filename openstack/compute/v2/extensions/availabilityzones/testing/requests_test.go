@@ -3,9 +3,9 @@ package testing
 import (
 	"testing"
 
-	az "github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/availabilityzones"
-	th "github.com/huaweicloud/golangsdk/testhelper"
-	"github.com/huaweicloud/golangsdk/testhelper/client"
+	az "github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/availabilityzones"
+	th "github.com/gophercloud/gophercloud/testhelper"
+	"github.com/gophercloud/gophercloud/testhelper/client"
 )
 
 // Verifies that availability zones can be listed correctly

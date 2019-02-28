@@ -6,17 +6,17 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/acceptance/clients"
-	"github.com/huaweicloud/golangsdk/acceptance/tools"
-	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/attachinterfaces"
-	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/availabilityzones"
-	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/extendedstatus"
-	//"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/lockunlock"
-	//"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/pauseunpause"
-	//"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/suspendresume"
-	"github.com/huaweicloud/golangsdk/openstack/compute/v2/servers"
-	th "github.com/huaweicloud/golangsdk/testhelper"
+	"github.com/gophercloud/gophercloud"
+	"github.com/gophercloud/gophercloud/acceptance/clients"
+	"github.com/gophercloud/gophercloud/acceptance/tools"
+	"github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/attachinterfaces"
+	"github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/availabilityzones"
+	"github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/extendedstatus"
+	//"github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/lockunlock"
+	//"github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/pauseunpause"
+	//"github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/suspendresume"
+	"github.com/gophercloud/gophercloud/openstack/compute/v2/servers"
+	th "github.com/gophercloud/gophercloud/testhelper"
 )
 
 func TestServersCreateDestroy(t *testing.T) {

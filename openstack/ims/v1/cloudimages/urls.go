@@ -1,7 +1,7 @@
 package cloudimages
 
 import (
-	"github.com/huaweicloud/golangsdk"
+	"github.com/gophercloud/gophercloud"
 )
 
 // getImageTagsURL generate a url for getting tags of an image

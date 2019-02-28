@@ -1,6 +1,6 @@
 package roles
 
-import "github.com/huaweicloud/golangsdk"
+import "github.com/gophercloud/gophercloud"
 
 const (
 	rolePath = "roles"

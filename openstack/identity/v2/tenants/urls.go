@@ -1,6 +1,6 @@
 package tenants
 
-import "github.com/huaweicloud/golangsdk"
+import "github.com/gophercloud/gophercloud"
 
 // listURL generates URL for listing tenants.
 func listURL(client *golangsdk.ServiceClient) string {

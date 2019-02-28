@@ -1,7 +1,7 @@
 package maintainwindows
 
 import (
-	"github.com/huaweicloud/golangsdk"
+	"github.com/gophercloud/gophercloud"
 )
 
 // GetResponse response

@@ -1,8 +1,8 @@
 package keypairs
 
 import (
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/pagination"
+	"github.com/gophercloud/gophercloud"
+	"github.com/gophercloud/gophercloud/pagination"
 )
 
 // KeyPair is an SSH key known to the OpenStack Cloud that is available to be

@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/floatingips"
-	th "github.com/huaweicloud/golangsdk/testhelper"
-	"github.com/huaweicloud/golangsdk/testhelper/client"
+	"github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/floatingips"
+	th "github.com/gophercloud/gophercloud/testhelper"
+	"github.com/gophercloud/gophercloud/testhelper/client"
 )
 
 // ListOutput is a sample response to a List call.

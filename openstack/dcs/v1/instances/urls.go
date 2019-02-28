@@ -1,6 +1,6 @@
 package instances
 
-import "github.com/huaweicloud/golangsdk"
+import "github.com/gophercloud/gophercloud"
 
 // endpoint/instances
 const resourcePath = "instances"

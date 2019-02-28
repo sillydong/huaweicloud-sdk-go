@@ -3,9 +3,9 @@ package testing
 import (
 	"testing"
 
-	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/schedulerhints"
-	"github.com/huaweicloud/golangsdk/openstack/compute/v2/servers"
-	th "github.com/huaweicloud/golangsdk/testhelper"
+	"github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/schedulerhints"
+	"github.com/gophercloud/gophercloud/openstack/compute/v2/servers"
+	th "github.com/gophercloud/gophercloud/testhelper"
 )
 
 func TestCreateOpts(t *testing.T) {

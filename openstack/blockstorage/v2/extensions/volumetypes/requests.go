@@ -1,8 +1,8 @@
 package volumetypes
 
 import (
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/pagination"
+	"github.com/gophercloud/gophercloud"
+	"github.com/gophercloud/gophercloud/pagination"
 )
 
 // Get retrieves the Volume Type with the provided ID. To extract the Volume Type object

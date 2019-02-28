@@ -1,6 +1,6 @@
 package availabilityzones
 
-import "github.com/huaweicloud/golangsdk/pagination"
+import "github.com/gophercloud/gophercloud/pagination"
 
 // ZoneState represents the current state of the availability zone.
 type ZoneState struct {

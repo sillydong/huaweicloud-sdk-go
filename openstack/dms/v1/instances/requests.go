@@ -1,7 +1,7 @@
 package instances
 
 import (
-	"github.com/huaweicloud/golangsdk"
+	"github.com/gophercloud/gophercloud"
 )
 
 // CreateOpsBuilder is used for creating instance parameters.

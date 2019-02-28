@@ -3,8 +3,8 @@ package apiversions
 import (
 	"time"
 
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/pagination"
+	"github.com/gophercloud/gophercloud"
+	"github.com/gophercloud/gophercloud/pagination"
 )
 
 // APIVersion represents an API version for the Shared File System service.

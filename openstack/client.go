@@ -7,10 +7,10 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/huaweicloud/golangsdk"
-	tokens2 "github.com/huaweicloud/golangsdk/openstack/identity/v2/tokens"
-	tokens3 "github.com/huaweicloud/golangsdk/openstack/identity/v3/tokens"
-	"github.com/huaweicloud/golangsdk/openstack/utils"
+	"github.com/gophercloud/gophercloud"
+	tokens2 "github.com/gophercloud/gophercloud/openstack/identity/v2/tokens"
+	tokens3 "github.com/gophercloud/gophercloud/openstack/identity/v3/tokens"
+	"github.com/gophercloud/gophercloud/openstack/utils"
 )
 
 const (

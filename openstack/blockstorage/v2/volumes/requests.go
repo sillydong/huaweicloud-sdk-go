@@ -1,8 +1,8 @@
 package volumes
 
 import (
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/pagination"
+	"github.com/gophercloud/gophercloud"
+	"github.com/gophercloud/gophercloud/pagination"
 )
 
 // CreateOptsBuilder allows extensions to add additional parameters to the

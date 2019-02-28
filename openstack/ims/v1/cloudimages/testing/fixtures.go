@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"testing"
 
-	th "github.com/huaweicloud/golangsdk/testhelper"
+	th "github.com/gophercloud/gophercloud/testhelper"
 )
 
 // HandleImageTagsListSuccessfully test setup

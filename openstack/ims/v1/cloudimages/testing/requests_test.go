@@ -3,9 +3,9 @@ package testing
 import (
 	"testing"
 
-	"github.com/huaweicloud/golangsdk/openstack/ims/v1/cloudimages"
-	th "github.com/huaweicloud/golangsdk/testhelper"
-	fakeclient "github.com/huaweicloud/golangsdk/testhelper/client"
+	"github.com/gophercloud/gophercloud/openstack/ims/v1/cloudimages"
+	th "github.com/gophercloud/gophercloud/testhelper"
+	fakeclient "github.com/gophercloud/gophercloud/testhelper/client"
 )
 
 func TestListImageTags(t *testing.T) {

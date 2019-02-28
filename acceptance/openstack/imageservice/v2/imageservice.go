@@ -5,10 +5,10 @@ package v2
 import (
 	"testing"
 
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/acceptance/tools"
-	"github.com/huaweicloud/golangsdk/openstack/imageservice/v2/images"
-	th "github.com/huaweicloud/golangsdk/testhelper"
+	"github.com/gophercloud/gophercloud"
+	"github.com/gophercloud/gophercloud/acceptance/tools"
+	"github.com/gophercloud/gophercloud/openstack/imageservice/v2/images"
+	th "github.com/gophercloud/gophercloud/testhelper"
 )
 
 // CreateEmptyImage will create an image, but with no actual image data.

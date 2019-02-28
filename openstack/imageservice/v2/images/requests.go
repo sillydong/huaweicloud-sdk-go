@@ -6,8 +6,8 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/pagination"
+	"github.com/gophercloud/gophercloud"
+	"github.com/gophercloud/gophercloud/pagination"
 )
 
 // ListOptsBuilder allows extensions to add additional parameters to the

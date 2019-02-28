@@ -10,8 +10,8 @@ import (
 
 	"net/http"
 
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/openstack"
+	"github.com/gophercloud/gophercloud"
+	"github.com/gophercloud/gophercloud/openstack"
 )
 
 // AcceptanceTestChoices contains image and flavor selections for use by the acceptance tests.

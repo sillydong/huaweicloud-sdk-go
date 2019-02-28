@@ -5,11 +5,11 @@ package v2
 import (
 	"testing"
 
-	"github.com/huaweicloud/golangsdk/acceptance/clients"
-	"github.com/huaweicloud/golangsdk/acceptance/tools"
-	"github.com/huaweicloud/golangsdk/openstack/imageservice/v2/members"
-	"github.com/huaweicloud/golangsdk/pagination"
-	th "github.com/huaweicloud/golangsdk/testhelper"
+	"github.com/gophercloud/gophercloud/acceptance/clients"
+	"github.com/gophercloud/gophercloud/acceptance/tools"
+	"github.com/gophercloud/gophercloud/openstack/imageservice/v2/members"
+	"github.com/gophercloud/gophercloud/pagination"
+	th "github.com/gophercloud/gophercloud/testhelper"
 )
 
 func TestListImageMembers(t *testing.T) {

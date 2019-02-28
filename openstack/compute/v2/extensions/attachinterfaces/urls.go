@@ -1,6 +1,6 @@
 package attachinterfaces
 
-import "github.com/huaweicloud/golangsdk"
+import "github.com/gophercloud/gophercloud"
 
 // listInterfaceURL generate URL to list port interfaces
 func listInterfaceURL(client *golangsdk.ServiceClient, serverID string) string {

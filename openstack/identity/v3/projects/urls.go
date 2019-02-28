@@ -1,6 +1,6 @@
 package projects
 
-import "github.com/huaweicloud/golangsdk"
+import "github.com/gophercloud/gophercloud"
 
 // listURL generate url to querying information about a specified project
 func listURL(client *golangsdk.ServiceClient) string {

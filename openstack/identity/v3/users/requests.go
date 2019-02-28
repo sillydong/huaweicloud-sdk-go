@@ -3,10 +3,10 @@ package users
 import (
 	"net/http"
 
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/openstack/identity/v3/groups"
-	"github.com/huaweicloud/golangsdk/openstack/identity/v3/projects"
-	"github.com/huaweicloud/golangsdk/pagination"
+	"github.com/gophercloud/gophercloud"
+	"github.com/gophercloud/gophercloud/openstack/identity/v3/groups"
+	"github.com/gophercloud/gophercloud/openstack/identity/v3/projects"
+	"github.com/gophercloud/gophercloud/pagination"
 )
 
 // Option is a specific option defined at the API to enable features

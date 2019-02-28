@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/openstack"
+	"github.com/gophercloud/gophercloud"
+	"github.com/gophercloud/gophercloud/openstack"
 )
 
 func TestAuthenticatedClient(t *testing.T) {

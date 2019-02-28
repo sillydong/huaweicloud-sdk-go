@@ -6,12 +6,12 @@ package v2
 import (
 	"testing"
 
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/acceptance/clients"
-	"github.com/huaweicloud/golangsdk/acceptance/tools"
-	"github.com/huaweicloud/golangsdk/openstack/blockstorage/v2/snapshots"
-	"github.com/huaweicloud/golangsdk/openstack/blockstorage/v2/volumes"
-	th "github.com/huaweicloud/golangsdk/testhelper"
+	"github.com/gophercloud/gophercloud"
+	"github.com/gophercloud/gophercloud/acceptance/clients"
+	"github.com/gophercloud/gophercloud/acceptance/tools"
+	"github.com/gophercloud/gophercloud/openstack/blockstorage/v2/snapshots"
+	"github.com/gophercloud/gophercloud/openstack/blockstorage/v2/volumes"
+	th "github.com/gophercloud/gophercloud/testhelper"
 )
 
 // CreateVolume will create a volume with a random name and size of 1GB. An

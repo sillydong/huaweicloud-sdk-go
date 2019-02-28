@@ -4,7 +4,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/huaweicloud/golangsdk"
+	"github.com/gophercloud/gophercloud"
 )
 
 // getURL generates URL fot getting detail of specified version

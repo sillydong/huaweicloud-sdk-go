@@ -1,8 +1,8 @@
 package diskconfig
 
 import (
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/openstack/compute/v2/servers"
+	"github.com/gophercloud/gophercloud"
+	"github.com/gophercloud/gophercloud/openstack/compute/v2/servers"
 )
 
 // DiskConfig represents one of the two possible settings for the DiskConfig

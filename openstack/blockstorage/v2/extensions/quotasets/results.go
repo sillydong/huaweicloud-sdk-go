@@ -1,7 +1,7 @@
 package quotasets
 
 import (
-	"github.com/huaweicloud/golangsdk"
+	"github.com/gophercloud/gophercloud"
 )
 
 // QuotaSet is a set of operational limits that allow for control of block

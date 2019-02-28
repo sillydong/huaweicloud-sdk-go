@@ -1,6 +1,6 @@
 package groups
 
-import "github.com/huaweicloud/golangsdk"
+import "github.com/gophercloud/gophercloud"
 
 // listURL generate url to list groups
 func listURL(client *golangsdk.ServiceClient) string {

@@ -5,10 +5,10 @@ package v2
 import (
 	"testing"
 
-	"github.com/huaweicloud/golangsdk/acceptance/clients"
-	bs "github.com/huaweicloud/golangsdk/acceptance/openstack/blockstorage/v2"
-	"github.com/huaweicloud/golangsdk/acceptance/tools"
-	th "github.com/huaweicloud/golangsdk/testhelper"
+	"github.com/gophercloud/gophercloud/acceptance/clients"
+	bs "github.com/gophercloud/gophercloud/acceptance/openstack/blockstorage/v2"
+	"github.com/gophercloud/gophercloud/acceptance/tools"
+	th "github.com/gophercloud/gophercloud/testhelper"
 )
 
 func TestVolumeAttachAttachment(t *testing.T) {

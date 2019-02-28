@@ -1,8 +1,8 @@
 package flavors
 
 import (
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/pagination"
+	"github.com/gophercloud/gophercloud"
+	"github.com/gophercloud/gophercloud/pagination"
 )
 
 // DetailOptsBuilder allows extensions to add additional parameters to the

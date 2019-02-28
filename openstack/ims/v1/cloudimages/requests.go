@@ -3,7 +3,7 @@ package cloudimages
 import (
 	"net/http"
 
-	"github.com/huaweicloud/golangsdk"
+	"github.com/gophercloud/gophercloud"
 )
 
 // ListImageTagsOpts is the options for list image tags operation

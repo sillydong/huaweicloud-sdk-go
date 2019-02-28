@@ -5,10 +5,10 @@ package v3
 import (
 	"testing"
 
-	"github.com/huaweicloud/golangsdk/acceptance/clients"
-	"github.com/huaweicloud/golangsdk/acceptance/tools"
-	"github.com/huaweicloud/golangsdk/openstack/identity/v3/groups"
-	"github.com/huaweicloud/golangsdk/openstack/identity/v3/users"
+	"github.com/gophercloud/gophercloud/acceptance/clients"
+	"github.com/gophercloud/gophercloud/acceptance/tools"
+	"github.com/gophercloud/gophercloud/openstack/identity/v3/groups"
+	"github.com/gophercloud/gophercloud/openstack/identity/v3/users"
 )
 
 func TestGroupUsersCRUD(t *testing.T) {

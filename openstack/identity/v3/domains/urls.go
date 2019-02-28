@@ -1,6 +1,6 @@
 package domains
 
-import "github.com/huaweicloud/golangsdk"
+import "github.com/gophercloud/gophercloud"
 
 func listURL(client *golangsdk.ServiceClient) string {
 	return client.ServiceURL("auth/domains")

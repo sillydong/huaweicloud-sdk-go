@@ -1,7 +1,7 @@
 package volumetypes
 
 import (
-	"github.com/huaweicloud/golangsdk"
+	"github.com/gophercloud/gophercloud"
 )
 
 // listURL generate URL for list volumetypes.

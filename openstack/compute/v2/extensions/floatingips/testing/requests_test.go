@@ -3,10 +3,10 @@ package testing
 import (
 	"testing"
 
-	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/floatingips"
-	"github.com/huaweicloud/golangsdk/pagination"
-	th "github.com/huaweicloud/golangsdk/testhelper"
-	"github.com/huaweicloud/golangsdk/testhelper/client"
+	"github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/floatingips"
+	"github.com/gophercloud/gophercloud/pagination"
+	th "github.com/gophercloud/gophercloud/testhelper"
+	"github.com/gophercloud/gophercloud/testhelper/client"
 )
 
 func TestList(t *testing.T) {

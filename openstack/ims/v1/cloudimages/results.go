@@ -1,7 +1,7 @@
 package cloudimages
 
 import (
-	"github.com/huaweicloud/golangsdk"
+	"github.com/gophercloud/gophercloud"
 )
 
 // ImageTagsResult represents the result of image tags query

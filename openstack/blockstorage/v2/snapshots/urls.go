@@ -1,6 +1,6 @@
 package snapshots
 
-import "github.com/huaweicloud/golangsdk"
+import "github.com/gophercloud/gophercloud"
 
 // 5.1
 func createURL(c *golangsdk.ServiceClient) string {

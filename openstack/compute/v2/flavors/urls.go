@@ -1,6 +1,6 @@
 package flavors
 
-import "github.com/huaweicloud/golangsdk"
+import "github.com/gophercloud/gophercloud"
 
 // getURL generate URL to get flavor detail
 func getURL(client *golangsdk.ServiceClient, id string) string {

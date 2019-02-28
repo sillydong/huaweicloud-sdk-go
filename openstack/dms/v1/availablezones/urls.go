@@ -3,7 +3,7 @@ package availablezones
 import (
 	"strings"
 
-	"github.com/huaweicloud/golangsdk"
+	"github.com/gophercloud/gophercloud"
 )
 
 // endpoint/availablezones

@@ -5,8 +5,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/openstack/compute/v2/servers"
+	"github.com/gophercloud/gophercloud"
+	"github.com/gophercloud/gophercloud/openstack/compute/v2/servers"
 )
 
 // SchedulerHints represents a set of scheduling hints that are passed to the

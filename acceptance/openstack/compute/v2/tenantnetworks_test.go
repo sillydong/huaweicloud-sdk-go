@@ -5,10 +5,10 @@ package v2
 import (
 	"testing"
 
-	"github.com/huaweicloud/golangsdk/acceptance/clients"
-	"github.com/huaweicloud/golangsdk/acceptance/tools"
-	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/tenantnetworks"
-	th "github.com/huaweicloud/golangsdk/testhelper"
+	"github.com/gophercloud/gophercloud/acceptance/clients"
+	"github.com/gophercloud/gophercloud/acceptance/tools"
+	"github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/tenantnetworks"
+	th "github.com/gophercloud/gophercloud/testhelper"
 )
 
 func TestTenantNetworksList(t *testing.T) {

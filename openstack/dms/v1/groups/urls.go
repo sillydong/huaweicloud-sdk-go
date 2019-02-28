@@ -3,7 +3,7 @@ package groups
 import (
 	"fmt"
 
-	"github.com/huaweicloud/golangsdk"
+	"github.com/gophercloud/gophercloud"
 )
 
 // endpoint/queues/{queue_id}/groups

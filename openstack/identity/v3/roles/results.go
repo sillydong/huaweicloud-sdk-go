@@ -3,9 +3,9 @@ package roles
 import (
 	"encoding/json"
 
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/internal"
-	"github.com/huaweicloud/golangsdk/pagination"
+	"github.com/gophercloud/gophercloud"
+	"github.com/gophercloud/gophercloud/internal"
+	"github.com/gophercloud/gophercloud/pagination"
 )
 
 // Role grants permissions to a user.
