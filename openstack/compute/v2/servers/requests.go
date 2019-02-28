@@ -43,7 +43,7 @@ type ListOpts struct {
 	Status string `q:"status"`
 
 	// Host is the name of the host as a string.
-	//Host string `q:"host"`
+	Host string `q:"host"`
 
 	// Marker is a UUID of the server at which you want to set a marker.
 	Marker string `q:"marker"`
@@ -139,6 +139,40 @@ type File struct {
 	Contents []byte
 }
 
+// BlockDeviceDescription is used with in CreateOpts to description block device
+type BlockDeviceDescription struct {
+	// SourceType is the source type of this block device, currently its value
+	// should be one of volume, image and snapshot
+	SourceType string `json:"source_type"`
+
+	// DestinationType is the current type of block device, for now only support
+	// volume
+	DestinationType string `json:"destination_type"`
+
+	// GuestFormat is the local file system format, such as swap or ext4
+	GuestFormat string `json:"guest_format,omitempty"`
+
+	// DeviceName is the device name
+	DeviceName string `json:"device_name,omitempty"`
+
+	// DeleteOnTermination is a mark, whether or not delete this device while
+	// deleting computing service
+	DeleteOnTermination bool `json:"delete_on_termination,omitempty"`
+
+	// BootIndex is the mark of boot device, 0 means this is a boot device,
+	// -1 not
+	BootIndex string `json:"boot_index"`
+
+	// UUID is the uuid of this volume
+	UUID string `json:"uuid"`
+
+	// VolumeSize is the volume size
+	VolumeSize string `json:"volume_size,omitempty"`
+
+	// VolumeType is the volume type
+	VolumeType string `json:"volume_type,omitempty"`
+}
+
 // MarshalJSON marshals the escaped file, base64 encoding the contents.
 func (f *File) MarshalJSON() ([]byte, error) {
 	file := struct {
@@ -153,21 +187,21 @@ func (f *File) MarshalJSON() ([]byte, error) {
 
 // CreateOpts specifies server creation parameters.
 type CreateOpts struct {
-	//secret for logging in server
-	KeyName string `json:"-"`
+	// KeyName is the name of keypair
+	KeyName string `json:"key_name,omitempty"`
 
-	//the maxum of servers created
-	MaxCount int `json:"-"`
+	// MinCount the minimal number of creation, default 1
+	MinCount int `json:"min_count,omitempty"`
 
-	//the minum of servers created
-	MinCount int `json:"-"`
+	// MaxCount the maximal number of creation, default same to MinCount
+	MaxCount int `json:"max_count,omitempty"`
 
 	// Name is the name to assign to the newly launched server.
 	Name string `json:"name" required:"true"`
 	// ImageRef [optional; required if ImageName is not provided] is the ID or
 	// full URL to the image that contains the server's OS and initial state.
 	// Also optional if using the boot-from-volume extension.
-	ImageRef string `json:"imageRef,omitempty"`
+	ImageRef string `json:"imageRef"`
 
 	// ImageName [optional; required if ImageRef is not provided] is the name of
 	// the image that contains the server's OS and initial state.
@@ -223,12 +257,15 @@ type CreateOpts struct {
 	// flavor ID by name.
 	ServiceClient *gophercloud.ServiceClient `json:"-"`
 
+	// BlockDeviceMappingV2 represents a list of descriptions of the block
+	// storage device
+	BlockDeviceMappingV2 []*BlockDeviceDescription `json:"block_device_mapping_v2,omitempty"`
+
 	//DCF
 	DiskConfig string `json:"OS-DCF:diskConfig,omitempty"`
 
 	// whether support return server reservation_id .
 	ReturnReservationID *bool `json:"return_reservation_id,omitempty"`
-
 }
 
 // ToServerCreateMap assembles a request body based on the contents of a
@@ -386,10 +423,10 @@ type UpdateOpts struct {
 	Description string `json:"description,omitempty"`
 
 	// AccessIPv4 provides a new IPv4 address for the instance.
-	//AccessIPv4 string `json:"accessIPv4,omitempty"`
+	AccessIPv4 string `json:"accessIPv4,omitempty"`
 
 	// AccessIPv6 provides a new IPv6 address for the instance.
-	//AccessIPv6 string `json:"accessIPv6,omitempty"`
+	AccessIPv6 string `json:"accessIPv6,omitempty"`
 }
 
 // ToServerUpdateMap formats an UpdateOpts structure into a request body.

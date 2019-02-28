@@ -25,6 +25,21 @@ type KeyPair struct {
 	// It is only present if this KeyPair was just returned from a Create call.
 	PrivateKey string `json:"private_key"`
 
+	// CreateAt is a date of this key has been created
+	CreatedAt string `json:"created_at"`
+
+	// Deleted is a flag whether this key has been deleted or not
+	Deleted bool `json:"deleted"`
+
+	// DeletedAt is a date of this key has been deleted
+	DeletedAt string `json:"deleted_at"`
+
+	// ID is the id of this key
+	ID string `json:"id"`
+
+	// UpdatedAt is the last updated date of this key
+	UpdatedAt string `json:"updated_at"`
+
 	// UserID is the user who owns this KeyPair.
 	UserID string `json:"user_id"`
 }

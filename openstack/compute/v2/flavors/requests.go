@@ -65,6 +65,12 @@ type ListOpts struct {
 	// AccessType, if provided, instructs List which set of flavors to return.
 	// If IsPublic not provided, flavors for the current project are returned.
 	AccessType AccessType `q:"is_public"`
+
+	// SortKey instructs the results are sorted by the key
+	SortKey string `q:"sort_key"`
+
+	// SortDir instructs the sort direction
+	SortDir string `q:"sort_dir"`
 }
 
 // ToFlavorListQuery formats a ListOpts into a query string.

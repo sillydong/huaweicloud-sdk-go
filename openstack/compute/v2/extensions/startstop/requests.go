@@ -2,6 +2,7 @@ package startstop
 
 import "github.com/gophercloud/gophercloud"
 
+// actionURL generate url for server action
 func actionURL(client *gophercloud.ServiceClient, id string) string {
 	return client.ServiceURL("servers", id, "action")
 }

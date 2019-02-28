@@ -31,9 +31,37 @@ func (opts CreateOptsExt) ToServerCreateMap() (map[string]interface{}, error) {
 	return base, nil
 }
 
+// ListOptsBuilder allows extensions to add additional parameters to the list
+// request.
+type ListOptsBuilder interface {
+	ToKeypairListQuery() (string, error)
+}
+
+// ListOpts filters the results returned by the List() function.
+type ListOpts struct {
+	// Limit instructs List to refrain from sending excessively large lists.
+	Limit int `q:"limit"`
+	// Marker represents a keypair name which the list would begin from.
+	Marker string `q:"marker"`
+}
+
+// ToKeypairListQuery formats a ListOpts into a query string.
+func (opts ListOpts) ToKeypairListQuery() (string, error) {
+	return q.String(), err
+}
+
 // List returns a Pager that allows you to iterate over a collection of KeyPairs.
-func List(client *gophercloud.ServiceClient) pagination.Pager {
-	return pagination.NewPager(client, listURL(client), func(r pagination.PageResult) pagination.Page {
+func List(client *gophercloud.ServiceClient, opts ListOptsBuilder) pagination.Pager {
+	url := listURL(client)
+	if opts != nil {
+		query, err := opts.ToKeypairListQuery()
+		if err != nil {
+			return pagination.Pager{Err: err}
+		}
+		url += query
+	}
+
+	return pagination.NewPager(client, url, func(r pagination.PageResult) pagination.Page {
 		return KeyPairPage{pagination.SinglePageBase(r)}
 	})
 }
@@ -52,6 +80,13 @@ type CreateOpts struct {
 	// PublicKey [optional] is a pregenerated OpenSSH-formatted public key.
 	// If provided, this key will be imported and no new key will be created.
 	PublicKey string `json:"public_key,omitempty"`
+
+	// Type is the key pair type normally should be one of ssh or x509. Since
+	// version 2.2
+	Type string `json:"type,omitempty"`
+
+	// UserID is the user id of this key. Since version 2.10
+	UserID string `json:"user_id,omitempty"`
 }
 
 // ToKeyPairCreateMap constructs a request body from CreateOpts.
