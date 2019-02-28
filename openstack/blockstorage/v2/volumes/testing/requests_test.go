@@ -256,3 +256,134 @@ func TestGetWithExtensions(t *testing.T) {
 		t.Errorf("Expected error when providing non-pointer struct")
 	}
 }
+
+
+func TestGetMetadata(t *testing.T) {
+	th.SetupHTTP()
+	defer th.TeardownHTTP()
+
+	MockGetMetadataResponse(t)
+
+	v, err := volumes.GetMetadata(client.ServiceClient(), "8dd7c486-8e9f-49fe-bceb-26aa7e312b66").ExtractMetadata()
+	th.AssertNoErr(t, err)
+
+	th.AssertEquals(t, v["key"], "val")
+}
+
+func TestCreateMetadata(t *testing.T) {
+	th.SetupHTTP()
+	defer th.TeardownHTTP()
+
+	MockCreateMetadataResponse(t)
+
+	option := volumes.MetadataOpts{
+		Metadata: map[string]string{
+			"key": "val",
+		},
+	}
+
+	v, err := volumes.CreateMetadata(client.ServiceClient(), "8dd7c486-8e9f-49fe-bceb-26aa7e312b66", &option).ExtractMetadata()
+	th.AssertNoErr(t, err)
+
+	th.AssertEquals(t, v["key"], "val")
+}
+
+func TestUpdateMetadata(t *testing.T) {
+	th.SetupHTTP()
+	defer th.TeardownHTTP()
+
+	MockUpdateMetadataResponse(t)
+
+	option := volumes.MetadataOpts{
+		Metadata: map[string]string{
+			"key": "val",
+		},
+	}
+
+	v, err := volumes.UpdateMetadata(client.ServiceClient(), "8dd7c486-8e9f-49fe-bceb-26aa7e312b66", &option).ExtractMetadata()
+	th.AssertNoErr(t, err)
+
+	th.AssertEquals(t, v["key"], "val")
+}
+
+func TestGetMetadataKey(t *testing.T) {
+	th.SetupHTTP()
+	defer th.TeardownHTTP()
+
+	MockGetMetadataKeyResponse(t)
+
+	v, err := volumes.GetMetadataKey(client.ServiceClient(), "8dd7c486-8e9f-49fe-bceb-26aa7e312b66", "key").ExtractMetadata()
+	th.AssertNoErr(t, err)
+
+	th.AssertEquals(t, v["key"], "val")
+}
+
+func TestUpdateMetadataKey(t *testing.T) {
+	th.SetupHTTP()
+	defer th.TeardownHTTP()
+
+	MockUpdateMetadataKeyResponse(t)
+
+	option := volumes.MetadataOpts{
+		Metadata: map[string]string{
+			"key": "val",
+		},
+	}
+
+	v, err := volumes.UpdateMetadataKey(client.ServiceClient(), "8dd7c486-8e9f-49fe-bceb-26aa7e312b66", "key", &option).ExtractMetadata()
+	th.AssertNoErr(t, err)
+
+	th.AssertEquals(t, v["key"], "val")
+}
+
+func TestDeleteMetadataKey(t *testing.T) {
+	th.SetupHTTP()
+	defer th.TeardownHTTP()
+
+	MockDeleteMetadataKeyResponse(t)
+
+	res := volumes.DeleteMetadataKey(client.ServiceClient(), "8dd7c486-8e9f-49fe-bceb-26aa7e312b66", "key")
+	th.AssertNoErr(t, res.Err)
+}
+
+func TestExtendSize(t *testing.T) {
+	th.SetupHTTP()
+	defer th.TeardownHTTP()
+
+	MockExtendSizeResponse(t)
+
+	options := &volumes.ExtendSizeOpts{
+		NewSize: 3,
+	}
+
+	err := volumes.ExtendSize(client.ServiceClient(), "8dd7c486-8e9f-49fe-bceb-26aa7e312b66", options).ExtractErr()
+	th.AssertNoErr(t, err)
+}
+
+func TestSetBootable(t *testing.T) {
+	th.SetupHTTP()
+	defer th.TeardownHTTP()
+
+	MockSetBootableResponse(t)
+
+	options := &volumes.SetBootableOpts{
+		Bootable: true,
+	}
+
+	err := volumes.SetBootable(client.ServiceClient(), "8dd7c486-8e9f-49fe-bceb-26aa7e312b66", options).ExtractErr()
+	th.AssertNoErr(t, err)
+}
+
+func TestSetReadOnly(t *testing.T) {
+	th.SetupHTTP()
+	defer th.TeardownHTTP()
+
+	MockSetReadOnlyResponse(t)
+
+	options := &volumes.SetReadOnlyOpts{
+		ReadOnly: true,
+	}
+
+	err := volumes.SetReadOnly(client.ServiceClient(), "8dd7c486-8e9f-49fe-bceb-26aa7e312b66", options).ExtractErr()
+	th.AssertNoErr(t, err)
+}
