@@ -52,9 +52,6 @@ type Service struct {
 	ID string `json:"id"`
 
 	// Type is the type of the service.
-	Name string `json:"name"`
-
-	// Type is the type of the service.
 	Type string `json:"type"`
 
 	// Enabled is whether or not the service is enabled.
@@ -65,6 +62,12 @@ type Service struct {
 
 	// Extra is a collection of miscellaneous key/values.
 	Extra map[string]interface{} `json:"-"`
+
+	// Description is the description of the service.
+	Description string `json:"description"`
+
+	// Name is the name of the service.
+	Name string `json:"name"`
 }
 
 func (r *Service) UnmarshalJSON(b []byte) error {

@@ -147,3 +147,25 @@ func (r userResult) Extract() (*User, error) {
 	err := r.ExtractInto(&s)
 	return s.User, err
 }
+
+// UpdatePasswordResult is the response from updating password operation. Call
+// its ExtractErr to determine the http response status.
+type UpdatePasswdResult struct {
+	gophercloud.ErrResult
+}
+
+// CheckGroupUserResult is the response from checking the user is existed in
+// the group.
+type CheckGroupUserResult struct {
+	gophercloud.ErrResult
+}
+
+// DeleteGroupUserResult is the response of deleting the user from a group.
+type DeleteGroupUserResult struct {
+	gophercloud.ErrResult
+}
+
+// AddUserToGroupResult is the response of adding a user to a group.
+type AddUserToGroupResult struct {
+	gophercloud.ErrResult
+}

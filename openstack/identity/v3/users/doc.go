@@ -119,5 +119,49 @@ Example to List Users in a Group
 		fmt.Printf("%+v\n", user)
 	}
 
+Example to Update User Password
+
+	userID := "0fe36e73809d46aeae6705c39077b1b3"
+
+	opts := users.UpdatePasswdOpts {
+		OriginalPassword: "old-user-password",
+		Password: "new-user-password",
+	}
+
+	err := users.UpdatePasswd(identityClient, userID, opts).ExtractErr()
+	if err != nil {
+		panic(err)
+	}
+
+Example to Check User in a Group
+
+	groupID := "bede500ee1124ae9b0006ff859758b3a"
+	userID := "0fe36e73809d46aeae6705c39077b1b3"
+
+	err := users.CheckGroupUser(identityClient, groupID, userID).ExtractErr()
+	if err != nil {
+		panic(err)
+	}
+
+Example to Delete User from a Group
+
+	groupID := "bede500ee1124ae9b0006ff859758b3a"
+	userID := "0fe36e73809d46aeae6705c39077b1b3"
+
+	err := users.DeleteGroupUser(identityClient, groupID, userID).ExtractErr()
+	if err != nil {
+		panic(err)
+	}
+
+Example to Add a User to a Group
+
+	groupID := "bede500ee1124ae9b0006ff859758b3a"
+	userID := "0fe36e73809d46aeae6705c39077b1b3"
+
+	err := users.AddUserToGroup(identityClient, groupID, userID).ExtractErr()
+	if err != nil {
+		panic(err)
+	}
+
 */
 package users

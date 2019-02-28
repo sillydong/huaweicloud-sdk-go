@@ -1,6 +1,8 @@
 package users
 
 import (
+	"net/http"
+
 	"github.com/gophercloud/gophercloud"
 	"github.com/gophercloud/gophercloud/openstack/identity/v3/groups"
 	"github.com/gophercloud/gophercloud/openstack/identity/v3/projects"
@@ -239,4 +241,75 @@ func ListInGroup(client *gophercloud.ServiceClient, groupID string, opts ListOpt
 	return pagination.NewPager(client, url, func(r pagination.PageResult) pagination.Page {
 		return UserPage{pagination.LinkedPageBase{PageResult: r}}
 	})
+}
+
+// UpdatePasswdOptsBuilder is the interface for password updating parameters
+type UpdatePasswdOptsBuilder interface {
+	ToPasswdUpdateMap() (map[string]interface{}, error)
+}
+
+// UpdatePasswdOpts provides options used to update user password
+type UpdatePasswdOpts struct {
+	OriginalPassword string `json:"original_password"`
+	Password         string `json:"password"`
+}
+
+// ToPasswdUpdateMap formats a UpdatePasswdOpts into an http request
+func (opts UpdatePasswdOpts) ToPasswdUpdateMap() (
+	map[string]interface{}, error) {
+	return gophercloud.BuildRequestBody(opts, "user")
+}
+
+// UpdatePasswd update password by user itself
+func UpdatePasswd(client *gophercloud.ServiceClient,
+	userID string, opts UpdatePasswdOptsBuilder) (r UpdatePasswdResult) {
+
+	b, err := opts.ToPasswdUpdateMap()
+	if err != nil {
+		r.Err = err
+		return
+	}
+	_, r.Err = client.Post(updatePasswdURL(client, userID), &b, nil,
+		&gophercloud.RequestOpts{
+			OkCodes: []int{204},
+		},
+	)
+	return
+}
+
+// CheckGroupUser check if the user does exist in the group
+func CheckGroupUser(client *gophercloud.ServiceClient,
+	groupID string, userID string) (r CheckGroupUserResult) {
+
+	_, r.Err = client.Head(operateOnGroupUserURL(client, groupID, userID),
+		&gophercloud.RequestOpts{
+			OkCodes: []int{204},
+		},
+	)
+	return
+}
+
+// DeleteGroupUser deletes a user from a group.
+func DeleteGroupUser(client *gophercloud.ServiceClient,
+	groupID string, userID string) (r DeleteGroupUserResult) {
+
+	_, r.Err = client.Delete(operateOnGroupUserURL(client, groupID, userID),
+		&gophercloud.RequestOpts{
+			OkCodes: []int{204},
+		},
+	)
+	return
+}
+
+// AddUserToGroup add a user to a group
+func AddUserToGroup(client *gophercloud.ServiceClient,
+	groupID, userID string) (r AddUserToGroupResult) {
+
+	_, r.Err = client.Put(operateOnGroupUserURL(client, groupID, userID),
+		nil, nil,
+		&gophercloud.RequestOpts{
+			OkCodes: []int{http.StatusNoContent},
+		},
+	)
+	return
 }
