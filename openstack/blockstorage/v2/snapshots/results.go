@@ -36,6 +36,12 @@ type Snapshot struct {
 
 	// User-defined key-value pairs.
 	Metadata map[string]string `json:"metadata"`
+
+	// ID of Project
+	ProjectID string `json:"os-extended-snapshot-attributes:project_id"`
+
+	// Progress of snapshot
+	Progress string `json:"os-extended-snapshot-attributes:progress"`
 }
 
 // CreateResult contains the response body and error from a Create request.
@@ -50,6 +56,41 @@ type GetResult struct {
 
 // DeleteResult contains the response body and error from a Delete request.
 type DeleteResult struct {
+	gophercloud.ErrResult
+}
+
+type UpdateResult struct {
+	commonResult
+}
+
+type RollbackResult struct {
+	commonResult
+}
+
+func (r RollbackResult) ExtractVolumeID() (string, error) {
+	if r.Err != nil {
+		return "", r.Err
+	}
+	m := r.Body.(map[string]interface{})["rollback"]
+	return m.(map[string]interface{})["volume_id"].(string), nil
+}
+
+// MetadataResult contains the response body and error from a Metadata request.
+type MetadataResult struct {
+	commonResult
+}
+
+// ExtractMetadata returns the metadata from a response from Metadata requests.
+func (r MetadataResult) ExtractMetadata() (map[string]interface{}, error) {
+	if r.Err != nil {
+		return nil, r.Err
+	}
+	m := r.Body.(map[string]interface{})["metadata"]
+	return m.(map[string]interface{}), nil
+}
+
+// DeleteMetadataResult contains the response body and error from a DeleteMetadata request.
+type DeleteMetadataKeyResult struct {
 	gophercloud.ErrResult
 }
 
@@ -82,11 +123,12 @@ func (r SnapshotPage) IsEmpty() (bool, error) {
 	resp, err := ExtractSnapshots(r)
 	return len(resp.SnapshotsLinks) == 0, err
 }
-type SnapshotList struct {
-	Snapshots []Snapshot `json:"snapshots"`
-	SnapshotsLinks []map[string]string `json:"snapshots_links"`
 
+type SnapshotList struct {
+	Snapshots      []Snapshot          `json:"snapshots"`
+	SnapshotsLinks []map[string]string `json:"snapshots_links"`
 }
+
 // ExtractSnapshots extracts and returns Snapshots. It is used while iterating over a snapshots.List call.
 func ExtractSnapshots(r pagination.Page) (SnapshotList, error) {
 	var s SnapshotList

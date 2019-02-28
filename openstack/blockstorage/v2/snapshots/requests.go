@@ -93,6 +93,9 @@ type ListOpts struct {
 
 	//Returns the number of results limit, an integer greater than 0. The default is 1000.
 	Limit int `q:"limit"`
+
+	// SnapshotID will filter by a specified volume ID.
+	SnapshotID string `q:"volume_id"`
 }
 
 // ToSnapshotListQuery formats a ListOpts into a query string.
@@ -117,37 +120,146 @@ func List(client *gophercloud.ServiceClient, opts ListOptsBuilder) pagination.Pa
 	})
 }
 
-// UpdateMetadataOptsBuilder allows extensions to add additional parameters to
-// the Update request.
-type UpdateMetadataOptsBuilder interface {
-	ToSnapshotUpdateMetadataMap() (map[string]interface{}, error)
+func Detail(client *gophercloud.ServiceClient, opts ListOptsBuilder) pagination.Pager {
+	url := detailURL(client)
+	if opts != nil {
+		query, err := opts.ToSnapshotListQuery()
+		if err != nil {
+			return pagination.Pager{Err: err}
+		}
+		url += query
+	}
+
+	return pagination.NewPager(client, url, func(r pagination.PageResult) pagination.Page {
+		return SnapshotPage{pagination.SinglePageBase(r)}
+	})
 }
 
-// UpdateMetadataOpts contain options for updating an existing Snapshot. This
-// object is passed to the snapshots.Update function. For more information
-// about the parameters, see the Snapshot object.
-type UpdateMetadataOpts struct {
-	Metadata map[string]interface{} `json:"metadata,omitempty"`
+type UpdateOptsBuilder interface {
+	ToSnapshotUpdateMap() (map[string]interface{}, error)
 }
 
-// ToSnapshotUpdateMetadataMap assembles a request body based on the contents of
-// an UpdateMetadataOpts.
-func (opts UpdateMetadataOpts) ToSnapshotUpdateMetadataMap() (map[string]interface{}, error) {
-	return gophercloud.BuildRequestBody(opts, "")
+type UpdateOpts struct {
+	Name               string `json:"name,omitempty"`
+	Description        string `json:"description,omitempty"`
+	DisplayName        string `json:"display_name,omitempty"`
+	DisplayDescription string `json:"display_description,omitempty"`
 }
 
-// UpdateMetadata will update the Snapshot with provided information. To
-// extract the updated Snapshot from the response, call the ExtractMetadata
-// method on the UpdateMetadataResult.
-func UpdateMetadata(client *gophercloud.ServiceClient, id string, opts UpdateMetadataOptsBuilder) (r UpdateMetadataResult) {
-	b, err := opts.ToSnapshotUpdateMetadataMap()
+func (opts UpdateOpts) ToSnapshotUpdateMap() (map[string]interface{}, error) {
+	return gophercloud.BuildRequestBody(opts, "snapshot")
+}
+
+func Update(client *gophercloud.ServiceClient, id string, opts UpdateOptsBuilder) (r UpdateResult) {
+	b, err := opts.ToSnapshotUpdateMap()
 	if err != nil {
 		r.Err = err
 		return
 	}
-	_, r.Err = client.Put(updateMetadataURL(client, id), b, &r.Body, &gophercloud.RequestOpts{
+	_, r.Err = client.Put(updateURL(client, id), b, &r.Body, &gophercloud.RequestOpts{
 		OkCodes: []int{200},
 	})
+	return
+}
+
+type RollbackOptsBuilder interface {
+	ToSnapshotRollbackMap() (map[string]interface{}, error)
+}
+
+type RollbackOpts struct {
+	VolumeID string `json:"volume_id,omitempty"`
+	Name     string `json:"name,omitempty"`
+}
+
+func (opts RollbackOpts) ToSnapshotRollbackMap() (map[string]interface{}, error) {
+	return gophercloud.BuildRequestBody(opts, "rollback")
+}
+
+func Rollback(client *gophercloud.ServiceClient, id string, opts RollbackOptsBuilder) (r RollbackResult) {
+	b, err := opts.ToSnapshotRollbackMap()
+	if err != nil {
+		r.Err = err
+		return
+	}
+	_, r.Err = client.Post(rollbackURL(client, id), b, &r.Body, &gophercloud.RequestOpts{
+		OkCodes: []int{202},
+	})
+	return
+}
+
+// MetadataOptsBuilder allows extensions to add additional parameters to
+// the meatadata requests.
+type MetadataOptsBuilder interface {
+	ToSnapshotMetadataMap() (map[string]interface{}, error)
+}
+
+// MetadataOpts contain options for creating or updating an existing Voulme. This
+// object is passed to the volumes create and update function. For more information
+// about the parameters, see the Snapshot object.
+type MetadataOpts struct {
+	Metadata map[string]string `json:"metadata,omitempty"`
+}
+
+// ToSnapshotMetadataMap assembles a request body based on the contents of
+// an MetadataOpts.
+func (opts MetadataOpts) ToSnapshotMetadataMap() (map[string]interface{}, error) {
+	return gophercloud.BuildRequestBody(opts, "")
+}
+
+// CreateMetadata create metadata for Snapshot.
+func CreateMetadata(client *gophercloud.ServiceClient, id string, opts MetadataOptsBuilder) (r MetadataResult) {
+	b, err := opts.ToSnapshotMetadataMap()
+	if err != nil {
+		r.Err = err
+		return
+	}
+	_, r.Err = client.Post(metadataURL(client, id), b, &r.Body, &gophercloud.RequestOpts{
+		OkCodes: []int{202},
+	})
+	return
+}
+
+// GetMetadata returns exist metadata of Snapshot.
+func GetMetadata(client *gophercloud.ServiceClient, id string) (r MetadataResult) {
+	_, r.Err = client.Get(metadataURL(client, id), &r.Body, nil)
+	return
+}
+
+// UpdateMetadata will update metadata according to request map.
+func UpdateMetadata(client *gophercloud.ServiceClient, id string, opts MetadataOptsBuilder) (r MetadataResult) {
+	b, err := opts.ToSnapshotMetadataMap()
+	if err != nil {
+		r.Err = err
+		return
+	}
+	_, r.Err = client.Put(metadataURL(client, id), b, &r.Body, &gophercloud.RequestOpts{
+		OkCodes: []int{202},
+	})
+	return
+}
+
+// GetMetadataKey return specific key value in metadata.
+func GetMetadataKey(client *gophercloud.ServiceClient, id, key string) (r MetadataResult) {
+	_, r.Err = client.Get(metadataKeyURL(client, id, key), &r.Body, nil)
+	return
+}
+
+// UpdateMetadataKey update sepcific key to the given map key value.
+func UpdateMetadataKey(client *gophercloud.ServiceClient, id, key string, opts MetadataOptsBuilder) (r MetadataResult) {
+	b, err := opts.ToSnapshotMetadataMap()
+	if err != nil {
+		r.Err = err
+		return
+	}
+	_, r.Err = client.Put(metadataKeyURL(client, id, key), b, &r.Body, &gophercloud.RequestOpts{
+		OkCodes: []int{202},
+	})
+	return
+}
+
+// DeleteMetadataKey delete specific key in metadata
+func DeleteMetadataKey(client *gophercloud.ServiceClient, id, key string) (r DeleteMetadataKeyResult) {
+	_, r.Err = client.Delete(metadataKeyURL(client, id, key), nil)
 	return
 }
 

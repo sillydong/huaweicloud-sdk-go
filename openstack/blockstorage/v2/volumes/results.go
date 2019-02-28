@@ -244,3 +244,37 @@ func (r commonResult) ExtractIntoQuotaSet(to interface{}) error {
 
 	return err
 }
+
+// MetadataResult contains the response body and error from a Metadata request.
+type MetadataResult struct {
+	commonResult
+}
+
+// ExtractMetadata returns the metadata from a response from Metadata requests.
+func (r MetadataResult) ExtractMetadata() (map[string]interface{}, error) {
+	if r.Err != nil {
+		return nil, r.Err
+	}
+	m := r.Body.(map[string]interface{})["meta"]
+	return m.(map[string]interface{}), nil
+}
+
+// DeleteMetadataResult contains the response body and error from a DeleteMetadata request.
+type DeleteMetadataKeyResult struct {
+	gophercloud.ErrResult
+}
+
+// ExtendSizeResult contains the response body and error from an ExtendSize request.
+type ExtendSizeResult struct {
+	gophercloud.ErrResult
+}
+
+// SetBootableResult contains the response body and error from an SetBootable request
+type SetBootableResult struct {
+	gophercloud.ErrResult
+}
+
+// SetReadOnlyResult contains the response body and error from an SetReadOnly request
+type SetReadOnlyResult struct {
+	gophercloud.ErrResult
+}
