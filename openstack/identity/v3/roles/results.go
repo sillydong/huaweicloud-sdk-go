@@ -24,6 +24,21 @@ type Role struct {
 
 	// Extra is a collection of miscellaneous key/values.
 	Extra map[string]interface{} `json:"-"`
+
+	// Type is type of the role.
+	Type string `json:"type"`
+
+	// DisplayName is the displayed name of the role
+	DisplayName string `json:"display_name"`
+
+	// Catalog is the catelog of the role.
+	Catalog string `json:"catalog"`
+
+	// Policy contains detail policies of the role
+	Policy map[string]interface{} `json:"policy"`
+
+	// Description is the description of the role
+	Description string `json:"description"`
 }
 
 func (r *Role) UnmarshalJSON(b []byte) error {
@@ -210,5 +225,11 @@ type AssignmentResult struct {
 // UnassignmentResult represents the result of an unassign operation.
 // Call ExtractErr method to determine if the request succeeded or failed.
 type UnassignmentResult struct {
+	gophercloud.ErrResult
+}
+
+// CheckRoleOfResult is the response of checking a role existed in a group
+// of a domain or project request.
+type CheckRoleOfResult struct {
 	gophercloud.ErrResult
 }

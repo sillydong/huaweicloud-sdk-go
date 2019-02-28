@@ -9,7 +9,6 @@ import (
 	"github.com/gophercloud/gophercloud"
 	"github.com/gophercloud/gophercloud/internal"
 	"github.com/gophercloud/gophercloud/pagination"
-	"github.com/sillydong/golangsdk"
 )
 
 // Image represents an image found in the OpenStack Image service.
@@ -176,17 +175,17 @@ type GetResult struct {
 // DeleteResult represents the result of a Delete operation. Call its
 // ExtractErr method to interpret it as an Image.
 type DeleteResult struct {
-	golangsdk.ErrResult
+	gophercloud.ErrResult
 }
 
 // PutTagResult represents the result of a put tag operation.
 type PutTagResult struct {
-	golangsdk.ErrResult
+	gophercloud.ErrResult
 }
 
 // DeleteTagResult represents the result of a delete tag operation.
 type DeleteTagResult struct {
-	golangsdk.ErrResult
+	gophercloud.ErrResult
 }
 
 // ImagePage represents the results of a List request.
@@ -242,7 +241,7 @@ type ImageSchemas struct {
 
 // ImageSchemasResult represents the result of Image schemas request
 type ImageSchemasResult struct {
-	golangsdk.Result
+	gophercloud.Result
 }
 
 // Extract interprets the result as an ImageSchemas
@@ -264,7 +263,7 @@ type ImagesSchemas struct {
 
 // ImagesSchemasResult represents the result of Images schemas request
 type ImagesSchemasResult struct {
-	golangsdk.Result
+	gophercloud.Result
 }
 
 // Extract interprets the result as an ImagesSchemas
@@ -281,7 +280,7 @@ type CloudImageCreatingJob struct {
 
 // CloudImageCreatingResult represents the result of image creating
 type CloudImageCreatingResult struct {
-	golangsdk.Result
+	gophercloud.Result
 }
 
 // Extract interprets the result as a CloudImageCreatingJob

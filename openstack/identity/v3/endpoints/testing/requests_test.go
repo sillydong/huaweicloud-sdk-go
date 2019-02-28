@@ -65,6 +65,9 @@ func TestCreateSuccessful(t *testing.T) {
 		Region:       "underground",
 		ServiceID:    "asdfasdfasdfasdf",
 		URL:          "https://1.2.3.4:9000/",
+		Links: map[string]interface{}{
+			"self": "https://localhost:5000/v3/endpoints/12",
+		},
 	}
 
 	th.AssertDeepEquals(t, expected, actual)
@@ -130,6 +133,9 @@ func TestListEndpoints(t *testing.T) {
 				Region:       "underground",
 				ServiceID:    "asdfasdfasdfasdf",
 				URL:          "https://1.2.3.4:9000/",
+				Links: map[string]interface{}{
+					"self": "https://localhost:5000/v3/endpoints/12",
+				},
 			},
 			{
 				ID:           "13",
@@ -138,6 +144,9 @@ func TestListEndpoints(t *testing.T) {
 				Region:       "underground",
 				ServiceID:    "asdfasdfasdfasdf",
 				URL:          "https://1.2.3.4:9001/",
+				Links: map[string]interface{}{
+					"self": "https://localhost:5000/v3/endpoints/13",
+				},
 			},
 		}
 		th.AssertDeepEquals(t, expected, actual)
@@ -194,6 +203,9 @@ func TestUpdateEndpoint(t *testing.T) {
 		Region:       "somewhere-else",
 		ServiceID:    "asdfasdfasdfasdf",
 		URL:          "https://1.2.3.4:9000/",
+		Links: map[string]interface{}{
+			"self": "https://localhost:5000/v3/endpoints/12",
+		},
 	}
 	th.AssertDeepEquals(t, expected, actual)
 }
@@ -211,4 +223,52 @@ func TestDeleteEndpoint(t *testing.T) {
 
 	res := endpoints.Delete(client.ServiceClient(), "34")
 	th.AssertNoErr(t, res.Err)
+}
+
+func TestGetEnpoint(t *testing.T) {
+	th.SetupHTTP()
+	defer th.TeardownHTTP()
+
+	th.Mux.HandleFunc("/endpoints/12", func(w http.ResponseWriter, r *http.Request) {
+		th.TestMethod(t, r, "GET")
+		th.TestHeader(t, r, "X-Auth-Token", client.TokenID)
+
+		fmt.Fprintf(w, `
+			{
+			"endpoint": {
+				"id": "12",
+				"interface": "public",
+				"links": {
+					"self": "https://localhost:5000/v3/endpoints/12"
+				},
+				"name": "renamed",
+				"region": "somewhere-else",
+				"service_id": "asdfasdfasdfasdf",
+				"url": "https://1.2.3.4:9000/",
+				"region_id": "qwerqwerqwer",
+				"enabled": true
+			}
+		}
+	`)
+	})
+
+	actual, err := endpoints.Get(client.ServiceClient(), "12").Extract()
+	if err != nil {
+		t.Fatalf("Unexpected error from Get: %v", err)
+	}
+
+	expected := &endpoints.Endpoint{
+		ID:           "12",
+		Availability: gophercloud.AvailabilityPublic,
+		Name:         "renamed",
+		Region:       "somewhere-else",
+		ServiceID:    "asdfasdfasdfasdf",
+		URL:          "https://1.2.3.4:9000/",
+		RegionID:     "qwerqwerqwer",
+		Enabled:      true,
+		Links: map[string]interface{}{
+			"self": "https://localhost:5000/v3/endpoints/12",
+		},
+	}
+	th.AssertDeepEquals(t, expected, actual)
 }

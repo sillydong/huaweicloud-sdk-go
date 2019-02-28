@@ -1,10 +1,10 @@
 package cloudimages
 
-import "github.com/sillydong/golangsdk"
+import "github.com/gophercloud/gophercloud"
 
 // ImageTagsResult represents the result of image tags query
 type ImageTagsResult struct {
-	golangsdk.Result
+	gophercloud.Result
 }
 
 // ImageTags is the golang struct of ImageTagsResult
@@ -21,22 +21,22 @@ func (r ImageTagsResult) Extract() (*ImageTags, error) {
 
 // SetImageTagResult is the result of image tag setting operation
 type SetImageTagResult struct {
-	golangsdk.Result
+	gophercloud.Result
 }
 
 // ImportResult represents the result of the image importing
 type ImportResult struct {
-	golangsdk.Result
+	gophercloud.Result
 }
 
 // ExportResult represents the result of the image exporting
 type ExportResult struct {
-	golangsdk.Result
+	gophercloud.Result
 }
 
 // CopyResult represents the result of the image copying
 type ImageCopyResult struct {
-	golangsdk.Result
+	gophercloud.Result
 }
 
 type asyncOperationJob struct {
@@ -57,7 +57,7 @@ func (r ImageCopyResult) Extract() (*ImageCopyTask, error) {
 
 // AddImageMembersResult represents the result of image members adding operation
 type AddImageMembersResult struct {
-	golangsdk.Result
+	gophercloud.Result
 }
 
 // AddImageMembersTask is the task description of image members adding operation
@@ -75,7 +75,7 @@ func (r AddImageMembersResult) Extract() (*AddImageMembersTask, error) {
 // UpdateImageMemberResult represent the result of image members updating
 // operation
 type UpdateImageMemberResult struct {
-	golangsdk.Result
+	gophercloud.Result
 }
 
 // UpdateImageMemberTask is the task description of image member update
@@ -93,7 +93,7 @@ func (r UpdateImageMemberResult) Extract() (*UpdateImageMemberTask, error) {
 // DeleteImageMembersResult represents the result of image members deleting
 // operation
 type DeleteImageMembersResult struct {
-	golangsdk.Result
+	gophercloud.Result
 }
 
 // DeleteImageMembersTask is the task description of image member deleting
@@ -124,7 +124,7 @@ type CloudImagesQuota struct {
 
 // CloudImagesQuotaResult represents the result of cloud image quota request
 type CloudImagesQuotaResult struct {
-	golangsdk.Result
+	gophercloud.Result
 }
 
 // Extract extracts the result to CloudImagesQuota
